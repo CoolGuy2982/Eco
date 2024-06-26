@@ -1,2 +1,2 @@
 runtime: python39
-entrypoint: gunicorn -b :$PORT app:create_app()
+entrypoint: gunicorn -b :$PORT app:app
