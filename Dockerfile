@@ -15,4 +15,4 @@ WORKDIR $APP_HOME
 COPY . .
 
 # Run the web service on container startup.
-CMD ["gunicorn", "-b", ":8080", "app:app"]
+CMD [gunicorn, -b, :8080, app:app]
