@@ -3,8 +3,7 @@ FROM python:3.9.17-bookworm
 # Allow statements and log messages to immediately appear in the logs
 ENV PYTHONUNBUFFERED True
 # Copy local code to the container image.
-ENV APP_HOME /back-end
-WORKDIR $APP_HOME
+WORKDIR /app
 COPY . ./
 
 RUN pip install --no-cache-dir --upgrade pip
