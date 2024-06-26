@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/iframe.css') }}" rel="stylesheet">
+    <title>Nature Sound Map</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            window.location.href = "https://earth.fm/?ref=naturesoundmap";
+        });
+    </script>
+</head>
+<body>
+    <div class="back-button">
+        <a href="/nature">&#x25C0;</a>
+    </div>
+</body>
+</html>

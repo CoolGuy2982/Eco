@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/iframe.css') }}" rel="stylesheet">
+    <title>Eco Footprint Tracker</title>
+</head>
+<body>
+    <div class="back-button">
+        <a href="/food">&#x25C0;</a>
+    </div>
+    <iframe id="food-guide-iframe" src="https://www.seasonalfoodguide.org/" allow="geolocation"></iframe>
+    
+    <script>
+        function updateIframeWithLocation(lat, lon) {
+            var iframe = document.getElementById('food-guide-iframe');
+            iframe.src = `https://www.seasonalfoodguide.org/?lat=${lat}&lon=${lon}`;
+        }
+
+        function handleLocationError(error) {
+            console.warn(`ERROR(${error.code}): ${error.message}`);
+            // Fallback URL or behavior can be handled here
+        }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                updateIframeWithLocation(position.coords.latitude, position.coords.longitude);
+            }, handleLocationError);
+        } else {
+            console.warn("Geolocation is not supported by this browser.");
+            // Fallback URL or behavior can be handled here
+        }
+    </script>
+</body>
+</html>

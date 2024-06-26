@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composting Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<style>
+  .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+        .header i {
+            margin-right: 10px;
+        }
+</style>
+<body class="bg-gray-100">
+
+    <div class="p-4">
+      <div class="header">
+        <a href="/browse" class="text-xl font-bold">
+            <i class="fas fa-chevron-left"></i>
+            Composting Tools
+        </a>
+    </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow p-4">
+            <ul>
+                <li class="py-3 border-b border-gray-200">
+                    <a href="https://www.compostguide.com/the-lazy-gardeners-guide-to-composting/" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{{ url_for('static', filename='images/composting/Browse (8).jpg') }}" alt="Earth911 icon" class="w-8 h-8">
+                            <span class="ml-4">Good Compost Guide</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="py-3 border-b border-gray-200">
+                    <a href="https://www.epa.gov/recycle/composting-home" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://www.epa.gov/themes/epa_theme/images/favicon.ico" alt="Earth911 icon" class="w-8 h-8">
+                            <span class="ml-4">EPA Compost at Home</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
+        <div class="flex justify-around">
+            <a href="/home" class="w-full py-2 text-center">
+                <i class="fas fa-home text-xl"></i>
+                <span class="block text-xs">Home</span>
+            </a>
+            <a href="/camera" class="w-full py-2 text-center">
+                <i class="fas fa-camera text-xl"></i>
+                <span class="block text-xs">Scan</span>
+            </a>
+            <a href="/browse" class="w-full py-2 text-center">
+                <i class="fas fa-th-large text-xl text-green-600"></i>
+                <span class="block text-xs">Apps</span>
+            </a>
+        </div>
+    </nav>
+
+</body>
+</html>

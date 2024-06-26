@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nature Sound Recorder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans">
+  <div class="fixed top-0 left-0 right-0 bg-white shadow-md z-10">
+    <div class="flex items-center justify-between p-4 max-w-md mx-auto">
+      <a href="/nature" class="text-green-500 text-xl">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1 class="text-2xl font-bold">Nature Sound Recorder</h1>
+    </div>
+    <div id="controls" class="flex justify-center space-x-4 p-4 bg-gray-200">
+      <button id="recordButton" class="bg-green-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-green-600 transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300">
+        <i class="fas fa-microphone fa-2x"></i>
+      </button>
+      <button id="stopButton" class="bg-red-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-red-600 transition duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-300" disabled>
+        <i class="fas fa-stop fa-2x"></i>
+      </button>
+    </div>
+  </div>
+  <div class="pt-32 pb-4 flex flex-col items-center justify-center min-h-screen p-4">
+    <div id="recordingsList" class="w-full max-w-md space-y-4 mt-4">
+      <!-- Recordings will be added here -->
+    </div>
+  </div>
+
+  <script>
+    let chunks = [];
+    let recorder;
+    const recordButton = document.getElementById('recordButton');
+    const stopButton = document.getElementById('stopButton');
+    const recordingsList = document.getElementById('recordingsList');
+
+    document.addEventListener('DOMContentLoaded', loadRecordings);
+
+    recordButton.addEventListener('click', async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = event => chunks.push(event.data);
+      recorder.onstop = saveRecording;
+
+      recorder.start();
+      recordButton.disabled = true;
+      stopButton.disabled = false;
+
+      // Animation for recording button
+      recordButton.classList.add('animate-pulse');
+    });
+
+    stopButton.addEventListener('click', () => {
+      recorder.stop();
+      recordButton.disabled = false;
+      stopButton.disabled = true;
+
+      // Remove animation from recording button
+      recordButton.classList.remove('animate-pulse');
+    });
+
+    function saveRecording() {
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const url = URL.createObjectURL(blob);
+      const audio = document.createElement('audio');
+      audio.controls = true;
+      audio.src = url;
+
+      const listItem = document.createElement('div');
+      listItem.className = 'flex items-center justify-between p-4 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105';
+      listItem.appendChild(audio);
+
+      const saveButton = document.createElement('a');
+      saveButton.href = url;
+      saveButton.download = 'nature-sound.webm';
+      saveButton.className = 'bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300';
+      saveButton.innerHTML = '<i class="fas fa-save"></i>';
+      
+      listItem.appendChild(saveButton);
+      recordingsList.insertBefore(listItem, recordingsList.firstChild);
+
+      storeRecording(blob);
+      chunks = [];
+    }
+
+    function storeRecording(blob) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        let recordings = JSON.parse(localStorage.getItem('recordings') || '[]');
+        recordings.unshift(reader.result);
+        localStorage.setItem('recordings', JSON.stringify(recordings));
+      };
+      reader.readAsDataURL(blob);
+    }
+
+    function loadRecordings() {
+      let recordings = JSON.parse(localStorage.getItem('recordings') || '[]');
+      recordings.forEach(dataUrl => {
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = dataUrl;
+
+        const listItem = document.createElement('div');
+        listItem.className = 'flex items-center justify-between p-4 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105';
+        listItem.appendChild(audio);
+
+        const saveButton = document.createElement('a');
+        saveButton.href = dataUrl;
+        saveButton.download = 'nature-sound.webm';
+        saveButton.className = 'bg-blue-500 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300';
+        saveButton.innerHTML = '<i class="fas fa-save"></i>';
+        
+        recordingsList.insertBefore(listItem, recordingsList.firstChild);
+      });
+    }
+  </script>
+</body>
+</html>

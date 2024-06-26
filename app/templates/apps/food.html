@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Apps</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<style>
+  .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+        .header i {
+            margin-right: 10px;
+        }
+</style>
+<body class="bg-gray-100">
+
+    <div class="p-4">
+      <div class="header">
+        <a href="/browse" class="text-xl font-bold">
+            <i class="fas fa-chevron-left"></i>
+            Food Stuff
+        </a>
+    </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow p-4">
+            <ul>
+                <li class="py-3 border-b border-gray-200">
+                    <a href="food/seasonal" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://www.seasonalfoodguide.org/favicon.ico" alt="Earth911 icon" class="w-8 h-8">
+                            <span class="ml-4">Good Veggies in Season</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="py-3 border-b border-gray-200">
+                    <a href="https://www.lovefoodhatewaste.com/take-action-save-food/choose-what-youll-use-quiz" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://www.lovefoodhatewaste.com/themes/custom/rutherford/images/logo-en.svg?seykn5" alt="Earth911 icon" class="w-8 h-8">
+                            <span class="ml-4">Reduce Food Waste Quiz/Site</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="py-3 border-b border-gray-200">
+                  <a href="https://www.toogoodtogo.com/en-us" class="flex items-center justify-between">
+                      <div class="flex items-center">
+                          <img src="https://cdn.sanity.io/images/nqimd3nr/production/eb37301e40a80bb500e31e5a939924c582ad7744-512x512.png?w=512&h=512" alt="Earth911 icon" class="w-8 h-8">
+                          <span class="ml-4">Get this app!! TGTG</span>
+                      </div>
+                      <i class="fas fa-chevron-right"></i>
+                  </a>
+              </li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
+        <div class="flex justify-around">
+            <a href="/home" class="w-full py-2 text-center">
+                <i class="fas fa-home text-xl"></i>
+                <span class="block text-xs">Home</span>
+            </a>
+            <a href="/camera" class="w-full py-2 text-center">
+                <i class="fas fa-camera text-xl"></i>
+                <span class="block text-xs">Scan</span>
+            </a>
+            <a href="/browse" class="w-full py-2 text-center">
+                <i class="fas fa-th-large text-xl text-green-600"></i>
+                <span class="block text-xs">Apps</span>
+            </a>
+        </div>
+    </nav>
+
+</body>
+</html>

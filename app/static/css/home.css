@@ -1,0 +1,385 @@
+@import url('https://fonts.googleapis.com/css2?family=San+Francisco&display=swap');
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding-bottom: 70px;
+        }
+
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            height: 150px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .carousel-inner {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .carousel-item {
+            min-width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: #DFF0D8;
+            border-radius: 30px;
+            height: 150px;
+            position: relative;
+        }
+
+        .carousel-item.bg-script {
+            position: relative;
+            border-radius: 20px;
+        }
+
+        .carousel-item.bg-script iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: none;
+        }
+
+        .carousel-item .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #E0F2F1;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            width: 100%;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .carousel-indicators span {
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background-color: #d4e8d5;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .carousel-indicators .active {
+            background-color: #A5D6A7;
+        }
+
+        .rounded-lg {
+            border-radius: 30px;
+        }
+
+        .border-4 {
+            border-width: 4px;
+        }
+
+        .lava-lamp-container {
+            margin-top: 20px;
+        }
+
+        .lava-lamp {
+            border: 4px solid #A5D6A7;
+        }
+
+        .eco-apps-card {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(100% - 32px);
+            max-width: 350px;
+            cursor: pointer;
+        }
+
+        .eco-apps-card img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .eco-apps-card .text {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .eco-apps-card .text h3 {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .eco-apps-card .icon {
+            font-size: 1.2rem;
+            color: gray;
+        }
+
+        .positivity-section {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-top: 10px;
+            padding: 0 16px;
+            box-sizing: border-box;
+        }
+
+        .positivity-section::-webkit-scrollbar {
+            display: none;
+        }
+
+        .positivity-section h2 {
+            margin-left: 10px;
+            margin-top: 40px;
+        }
+
+        .positivity-card {
+            display: inline-block;
+            background-color: #A5D6A7;
+            border-radius: 10px;
+            padding: 20px;
+            margin-right: 10px;
+            width: 250px;
+            color: black;
+            vertical-align: top;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+
+        .positivity-card h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            white-space: normal;
+        }
+
+        .positivity-card p {
+            font-size: 0.9rem;
+            white-space: normal;
+        }
+
+        .positivity-card .icon {
+            font-size: 1.5rem;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .food-card {
+            margin-top: 20px;
+            background-color: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            color: white;
+            width: calc(100% - 32px);
+            max-width: 350px;
+            position: relative;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .food-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .food-card-content {
+            padding: 20px;
+        }
+
+        .food-card .tag {
+            font-size: 0.8rem;
+            color: #ccc;
+        }
+
+        .food-card h3 {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .food-card p {
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .food-card .icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .info-card {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: calc(100% - 32px);
+            max-width: 350px;
+            justify-content: space-between;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .info-card .info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-card .info-content {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .info-card .info-content h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .info-card .info-content p {
+            font-size: 0.9rem;
+            color: gray;
+            margin: 0;
+        }
+
+        .info-card .info-content .info-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding-bottom: 20px;
+        }
+
+        .trends-section {
+            margin-top: 20px;
+            width: calc(100% - 32px);
+            max-width: 350px;
+            padding-bottom: 20px;
+        }
+
+        .trends-section .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .trends-section .header h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .trends-section .header .show-more {
+            color: #32CD32;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .trends-section .trends-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .trend-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .trend-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .trend-card h3 {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .trend-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .trend-card .count {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        footer {
+            background-color: white;
+            border-top: 1px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+        }
+
+        footer .icon {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            color: gray;
+            font-size: 1em;
+        }
+
+        footer .icon.active {
+            color: #32CD32;
+        }
+
+        footer .icon span {
+            font-size: 0.75em;
+        }
+
+        footer .icon i {
+            margin-bottom: 4px;
+        }
+
+        footer .icon.active i,
+        footer .icon.active span {
+            color: #32CD32;
+        }

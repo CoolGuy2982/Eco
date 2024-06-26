@@ -1,0 +1,248 @@
+.toggle-dot {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background-color: white;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  transition: transform 0.3s ease-in-out;
+}
+
+input:checked ~ .toggle-dot {
+  transform: translateX(34px);
+}
+
+.toggle-container {
+  width: 70px;
+  height: 40px;
+}
+
+/* Change the color of the toggle background when it's not checked */
+.toggle-container .block {
+  background-color: gray; /* Set your desired color here */
+}
+
+input:checked ~ .block {
+  background-color: green; /* Set the color for when the toggle is checked */
+}
+
+#loadingAnimation {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#capturedImageContainer {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9;
+  justify-content: center;
+  align-items: center;
+}
+
+#capturedImage {
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.safe-area {
+  padding: 10px;
+  padding-top: calc(env(safe-area-inset-top) + 10px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
+.fixed-navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  padding: 12px 0;
+  border-top: 2px solid #E5E7EB;
+  width: 100%;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.button-container {
+  position: fixed;
+  bottom: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  z-index: 11;
+}
+
+.top-container {
+  font-size: 1.5rem;
+  padding: 1rem;
+  margin-top: 10px;
+}
+
+.toggle-container {
+  width: 70px;
+  height: 40px;
+}
+
+.icon-size {
+  font-size: 2rem;
+}
+
+.menu-bar {
+  display: none;
+  position: fixed;
+  bottom: calc(20vh + 4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 11;
+}
+
+.menu-bar.active {
+  display: flex;
+  gap: 1rem;
+}
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  padding: 10px;
+  z-index: 15;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.triangle-btn {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.triangle-btn.up::before, .triangle-btn.down::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+}
+
+.triangle-btn.up::before {
+  transform: rotate(-135deg);
+}
+
+.triangle-btn.down::before {
+  transform: rotate(45deg);
+}
+
+#takePhotoButton {
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid lightgray;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+#focusBox {
+  width: 200px;
+  height: 200px;
+}
+
+#zoomSlider {
+  width: 200px;
+  margin-top: 10px;
+}
+
+#zoomContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bouncing-loader > div {
+  width: 15px;
+  height: 15px;
+  margin: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+
+.bouncing-loader > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bouncing-loader > div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bouncing-loader {
+  to {
+    opacity: 0.1;
+    transform: translate3d(0, -1rem, 0);
+  }
+}
+
+#textPromptModal {
+  z-index: 20;
+}
+
+#browserWarningModal {
+  z-index: 30;
+}
+
+#browserWarningOkButton {
+  margin-top: 20px;
+}

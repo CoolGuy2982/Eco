@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ url_for('static', filename='css/iframe.css') }}" rel="stylesheet">
+    <title>Google Form</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button">
+        <a href="/browse">&#x25C0;</a>
+    </div>
+    <iframe id="form-iframe" src="https://docs.google.com/forms/d/e/1FAIpQLSc90UsrqIHmF1WnjOtRNNGT1iHE9WRzgvx6HKD4LDZZx6NS3g/viewform">
+        Loading…
+    </iframe>
+    <script>
+        document.getElementById('form-iframe').onload = function() {
+            var iframe = document.getElementById('form-iframe').contentWindow;
+            iframe.open = function(url) {
+                document.getElementById('form-iframe').src = url;
+            };
+            iframe.window.open = function(url) {
+                document.getElementById('form-iframe').src = url;
+            };
+        };
+    </script>
+</body>
+</html>

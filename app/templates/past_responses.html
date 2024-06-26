@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Past Responses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .response {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.2s;
+        }
+        .response:hover {
+            transform: translateY(-5px);
+        }
+        .response h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+        .response p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+        .product {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .product img {
+            max-width: 100px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .video-frame-container {
+            margin: 10px 0;
+        }
+        .video-frame-container iframe {
+            border-radius: 15px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #000;
+        }
+        .header a:hover {
+            text-decoration: underline;
+        }
+        .header i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="header">
+        <a href="/browse" class="text-xl font-bold">
+            <i class="fas fa-chevron-left"></i>
+            Past Responses
+        </a>
+    </div>
+    <div id="responses-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
+            const container = document.getElementById('responses-container');
+
+            if (pastResponses.length === 0) {
+                container.innerHTML = '<p class="text-gray-600">No past responses found.</p>';
+            } else {
+                // Merge responses within 30 seconds
+                pastResponses = mergeResponses(pastResponses);
+                // Sort responses by most recent
+                pastResponses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                pastResponses.forEach((response, index) => {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'response';
+
+                    const timestampDiv = document.createElement('div');
+                    timestampDiv.innerHTML = `<h2 class="text-gray-700">Response Timestamp</h2><p>${new Date(response.date).toLocaleString()}</p>`;
+                    responseDiv.appendChild(timestampDiv);
+
+                    if (response.result) {
+                        const resultDiv = document.createElement('div');
+                        resultDiv.innerHTML = `<h2 class="text-gray-700">Analysis Result</h2><p>${response.result}</p>`;
+                        responseDiv.appendChild(resultDiv);
+                    }
+
+                    if (response.video_suggestion) {
+                        const videosDiv = document.createElement('div');
+                        videosDiv.className = 'video-frame-container';
+                        videosDiv.innerHTML = '<h2 class="text-gray-700">Videos</h2>';
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${response.video_suggestion}`;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                        iframe.allowFullscreen = true;
+                        videosDiv.appendChild(iframe);
+                        responseDiv.appendChild(videosDiv);
+                    }
+
+                    if (response.products && response.products.length > 0) {
+                        const productsDiv = document.createElement('div');
+                        productsDiv.innerHTML = '<h2 class="text-gray-700">Products</h2>';
+                        const uniqueProducts = response.products.reduce((acc, product) => {
+                            if (!acc.some(p => p.title === product.title && p.price === product.price)) {
+                                acc.push(product);
+                            }
+                            return acc;
+                        }, []);
+                        uniqueProducts.forEach(product => {
+                            const productElement = document.createElement('div');
+                            productElement.className = 'product';
+                            productElement.innerHTML = `
+                                <a href="${product.link}" target="_blank" class="flex items-center no-underline hover:underline">
+                                    <img src="${product.image_url}" alt="${product.title}" class="rounded-md">
+                                    <div>
+                                        <h3 class="text-gray-800">${product.title}</h3>
+                                        <p class="text-gray-600">${product.price}</p>
+                                    </div>
+                                </a>`;
+                            productsDiv.appendChild(productElement);
+                        });
+                        responseDiv.appendChild(productsDiv);
+                    }
+
+                    container.appendChild(responseDiv);
+                });
+            }
+        });
+
+        function mergeResponses(responses) {
+            const mergedResponses = [];
+
+            responses.forEach(response => {
+                const lastResponse = mergedResponses[mergedResponses.length - 1];
+
+                if (lastResponse && (new Date(response.date) - new Date(lastResponse.date)) <= 30000) {
+                    // Merge if within 30 seconds
+                    lastResponse.result = lastResponse.result || response.result;
+                    lastResponse.video_suggestion = lastResponse.video_suggestion || response.video_suggestion;
+
+                    if (response.products) {
+                        lastResponse.products = lastResponse.products || [];
+                        response.products.forEach(product => {
+                            if (!lastResponse.products.some(p => p.title === product.title && p.price === product.price)) {
+                                lastResponse.products.push(product);
+                            }
+                        });
+                    }
+                } else {
+                    mergedResponses.push(response);
+                }
+            });
+
+            return mergedResponses;
+        }
+    </script>
+</body>
+</html>

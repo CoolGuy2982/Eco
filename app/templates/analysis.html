@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLens Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/analysis.css') }}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="response-container">
+            <div class="response-title">
+                <a href="/camera" class="chevron-button">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <span class="title-text">EcoLens</span>
+            </div>
+            <div id="analysis-result" class="response-text"></div>
+        </div>
+        <div id="map-container" class="map-container">
+            <div class="section-title">Recycling Locations</div>
+        </div>
+        <div id="product-container" class="product-container" style="display: none;">
+            <div class="section-title">Recommended Products</div>
+            <div class="product-card">
+                <button class="carousel-nav prev" onclick="showPreviousProduct()">&#8249;</button>
+                <div class="product">
+                    <a href="#" target="_blank">
+                        <img src="https://placehold.co/300x400" alt="Product Image">
+                        <h3>Product Title</h3>
+                        <p>$0.00</p>
+                    </a>
+                </div>
+                <button class="carousel-nav next" onclick="showNextProduct()">&#8250;</button>
+            </div>
+        </div>
+        <div id="video-container" class="video-container">
+        </div>
+        
+    </div>
+    <!-- Include Google Maps API Key and reference to scan.js -->
+    <script type="text/javascript">
+        // Store the API key in a variable to be accessible by scan.js
+        var googleMapsApiKey = "{{ google_maps_api_key }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
+</body>
+
+</html>

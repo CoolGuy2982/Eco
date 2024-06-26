@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+        .suggestion-box {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            z-index: 10;
+            width: 100%;
+        }
+        .suggestion {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #f1f1f1;
+        }
+        .content-container {
+            margin-bottom: 80px; /* Adjust this value as needed */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="p-4 content-container">
+        <h1 class="text-2xl font-bold">Browse</h1>
+        <div class="relative mt-4">
+            <input id="search-input" type="text" placeholder="Search" class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none">
+            <div id="suggestion-box" class="suggestion-box hidden"></div>
+        </div>
+
+        <div class="mt-6 bg-white rounded-xl shadow p-4">
+            <ul id="card-list">
+                <li class="card py-3 border-b border-gray-200" data-name="General Eco">
+                    <a href="/past-responses" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{{ url_for('static', filename='images/general_eco_images/pastresponses.jpg') }}" alt="Green leaf icon" class="w-8 h-8">
+                            <span class="ml-4">Past Responses</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="General Eco">
+                    <a href="/generaleco" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{{ url_for('static', filename='images/browse_page/ecoleaves.jpg') }}" alt="Green leaf icon" class="w-8 h-8">
+                            <span class="ml-4">General Eco</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Nature">
+                    <a href="/nature" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="{{ url_for('static', filename='images/browse_page/natureicon.jpg') }}" alt="Nature icon" class="w-8 h-8">
+                            <span class="ml-4">Nature</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Recycling">
+                    <a href="/recycling" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczOoV99MIs4eFccihOwYh5RT2gqelVKdgIOHBxwNLPgZDq0lYGBHqSRYHccAgVkzRIpHrH0EUKBM9EKI2kQTAoaCUlrM-8qVcUrsVmqHaeCcZeGctdd3be9xEL5dwlL5RhgKP8pHiUEXItkUKa7hsUPj=w913-h913-s-no-gm?authuser=0" alt="Recycling icon" class="w-8 h-8">
+                            <span class="ml-4">Recycling</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Greenwashing">
+                    <a href="/greenwashing" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczP22JVr98Hk6tC8EXIsPwGHCm7Ix5ev4ABkaVqe5HXRUFGsxeCNf7ROI5-q42Xb5wIzH0TpcAwRd0IaqEWGotOfBxW-6BSDDHyLPATOeqDFafu96Zz777q7kfqdJ_PvhbAhBaVhvhQAbflvm69gS7IJ=w913-h913-s-no-gm?authuser=0" alt="Greenwashing icon" class="w-8 h-8">
+                            <span class="ml-4">Greenwashing</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Composting">
+                    <a href="/composting" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczNodGbrA37yNBo4pHpSJh_bsxMidTWN7r1vLKuuclwVwowBx-v1Ug3tWekMRQOllB3sCvBNjoPq6O6k0GHeUdmS-KcKgWACNkI2-yVg7teoiRbYX-_nOwoe9ZPe5C_r4BZIYeeotvCWhwUX3nQ2JThf=w913-h913-s-no-gm?authuser=0" alt="Composting icon" class="w-8 h-8">
+                            <span class="ml-4">Composting</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Food">
+                    <a href="/food" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczPYxYwyHv6I9ZPX73Wn5uONrVEzkiLclXnXybGSL-3nC9Am_pBMUwiwXyiY0xYwh_U182Wfa5YghKauzVyBRxJFaor82xRYVc0pjloQYoiEq_HzkaKmtvYrhCI35QiUOhnaYrlmmn0yw6c1xKSnITNZ=w913-h913-s-no-gm?authuser=0" alt="Food icon" class="w-8 h-8">
+                            <span class="ml-4">Food</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3 border-b border-gray-200" data-name="Suggestions">
+                    <a href="/suggestions" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczPa9M6VfalIRJh0kgnU3j1uY5TDkphHY5Sqle1QuMbBiQsNsBw7dlefyxwHRk5D-bGpGtZiYa_V7J5rSnCIaa8TpFVdbVW2njzFs3xAZJoMybjms_wcQVbiiAb_Spv8ayZvdCh9zQIjFY3t16ALh50Z=w913-h913-s-no-gm?authuser=0" alt="Suggestions icon" class="w-8 h-8">
+                            <span class="ml-4">Feedback</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+                <li class="card py-3" data-name="Submit Your Own App">
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfkTbkGrHgDhjA2NqIeOzgeSN4WD8kiBIjV7mk1_F5A3q5g-A/viewform?usp=sf_link" class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="https://lh3.googleusercontent.com/pw/AP1GczPo4D_cJmkX-sqPMXYGPqYoy-qkw-oNEkWNPY3-1e9GIVSLDP4zhSLahYLNLtPJtQbYwVBSpPmoDOg-dPzYe6jJvt-H2wmnULU5J617R8KV9607yRyVlbcW01llpkIlTwfUPPuVHj45ZMzutKJI61_g=w913-h913-s-no-gm?authuser=0" alt="Submit Your Own App icon" class="w-8 h-8">
+                            <span class="ml-4">Submit Your Own App</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
+        <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
+            <nav class="flex justify-around items-center text-gray-700">
+                <a href="/home" class="text-center">
+                    <i class="fas fa-home fa-lg"></i>
+                    <p>Home</p>
+                </a>
+                <a href="/camera" class="text-center">
+                    <i class="fas fa-camera fa-lg"></i>
+                    <p>Scan</p>
+                </a>
+                <a href="#" class="text-center">
+                    <i class="fas fa-th-large fa-lg text-green-600"></i>
+                    <p>Apps</p>
+                </a>
+            </nav>
+        </div>
+    </nav>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const suggestionBox = document.getElementById('suggestion-box');
+        const cards = document.querySelectorAll('.card');
+        const cardList = document.getElementById('card-list');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            suggestionBox.innerHTML = '';
+            suggestionBox.classList.remove('hidden');
+            if (!query) {
+                suggestionBox.classList.add('hidden');
+                return;
+            }
+
+            cards.forEach(card => {
+                const cardName = card.dataset.name.toLowerCase();
+                if (cardName.includes(query)) {
+                    const suggestion = document.createElement('div');
+                    suggestion.className = 'suggestion';
+                    suggestion.innerText = cardName;
+                    suggestion.addEventListener('click', () => {
+                        cards.forEach(c => c.classList.remove('highlight'));
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        card.classList.add('highlight');
+                        suggestionBox.classList.add('hidden');
+                        searchInput.value = '';
+                    });
+                    suggestionBox.appendChild(suggestion);
+                }
+            });
+
+            if (!suggestionBox.innerHTML) {
+                suggestionBox.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) && !suggestionBox.contains(event.target)) {
+                suggestionBox.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
