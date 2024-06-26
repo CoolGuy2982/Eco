@@ -1,11 +1,11 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/recycling-mobile-webapp/eco', '.']
+    args: ['build', '-t', 'gcr.io/recycling-mobile-webapp/ecolens', '.']
   
   # Step 2: Push the Docker image to Google Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/recycling-mobile-webapp/eco']
+    args: ['push', 'gcr.io/recycling-mobile-webapp/ecolens']
   
   # Step 3: Deploy to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -15,7 +15,7 @@ steps:
       - 'deploy'
       - 'eco'
       - '--image'
-      - 'gcr.io/recycling-mobile-webapp/eco'
+      - 'gcr.io/recycling-mobile-webapp/ecolens'
       - '--region'
       - 'us-central1'
       - '--platform'
