@@ -10,7 +10,7 @@ def create_app():
     app.config['GOOGLE_MAPS_API_KEY'] = google_maps_api
     app.config['AQ_MAPS_API_KEY'] = aq_maps_api
 
-    from .routes import main
+    from routes import main
     app.register_blueprint(main)
 
     return app
