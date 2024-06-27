@@ -16,9 +16,9 @@ SCOPES = [
     'https://www.googleapis.com/auth/youtube.force-ssl'
 ]
 
-creds, project = google.auth.default(scopes=SCOPES)
-#SERVICE_ACCOUNT_FILE = 'service_account_key.json'
-#creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+#creds, project = google.auth.default(scopes=SCOPES)
+SERVICE_ACCOUNT_FILE = 'service_account_key.json'
+creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
 retriever_service_client = glm.RetrieverServiceClient(credentials=creds)
 generative_service_client = glm.GenerativeServiceClient(credentials=creds)

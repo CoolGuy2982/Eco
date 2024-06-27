@@ -1,18 +1,23 @@
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.9-slim
+FROM python:3.9.17-bookworm
 
 # Allow statements and log messages to immediately appear in the logs
 ENV PYTHONUNBUFFERED True
 
-# Install pip requirements
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
 # Copy local code to the container image.
 ENV APP_HOME /app
 WORKDIR $APP_HOME
-COPY . .
+
+# Copy the app folder (containing init.py and routes.py)
+COPY app/ .
+
+# Copy the app.py file
+COPY app.py .
+
+# Copy the Dockerfile (optional, but good practice)
+COPY Dockerfile .
+
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Run the web service on container startup.
-CMD ["gunicorn", "-b", ":8080", "app:app"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app

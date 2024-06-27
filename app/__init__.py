@@ -3,7 +3,7 @@ import os
 
 def create_app():
     app = Flask(__name__)
-
+    print("Ok we got this far...")
     google_maps_api = os.getenv('GOOGLE_MAPS_API')
     aq_maps_api = os.getenv('AQ_MAPS_API')
 
