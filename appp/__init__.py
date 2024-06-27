@@ -7,7 +7,7 @@ def create_app():
     google_maps_api = os.getenv('GOOGLE_MAPS_API')
     app.config['GOOGLE_MAPS_API_KEY'] = google_maps_api
 
-    from routes import main
+    from .routes import main
     app.register_blueprint(main)
 
     return app

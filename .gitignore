@@ -5,6 +5,9 @@ instance/
 service_account_key.json
 semantic_retrieval.py
 node_modules
-.venv
 knowledgebase.py
 env/
+.env
+Lib
+Scripts
+data/
