@@ -1,4 +1,4 @@
-from .app import create_app
+from appp import create_app
 
 app = create_app()  # Create the app object
 
