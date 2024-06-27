@@ -13,9 +13,6 @@ COPY app/ .
 # Copy the app.py file
 COPY app.py .
 
-# Copy the Dockerfile (optional, but good practice)
-COPY Dockerfile .
-
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
