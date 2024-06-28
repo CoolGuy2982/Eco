@@ -30,6 +30,7 @@ def analyze_image(base64_image, spoken_text):
 
         image_parts = [{"mime_type": "image/jpeg", "data": img_data}]
         image_prompt_parts = [
+            image_parts[0],
             f"""
             Analyze the image in detail and provide a comprehensive description without mentioning people or humans. Follow these steps:
 
@@ -90,7 +91,6 @@ def analyze_image(base64_image, spoken_text):
                 "Material": "if you selected tool B <add the material of the general item if applicable (e.g., Plastic)>"
             }}
             """,
-            image_parts[0],
             "\n"
         ]
 
