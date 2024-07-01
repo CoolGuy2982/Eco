@@ -7,3 +7,5 @@ const initialize = () => {
       window.location.href = 'https://www.firley.org/products/ecolens-redirect';
   }    
 };
+
+initialize();
