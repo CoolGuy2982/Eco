@@ -20,7 +20,7 @@
         .carousel {
             position: relative;
             width: 100%;
-            max-width: 350px;
+            max-width: 90%;
             height: 150px;
             overflow: hidden;
             margin-top: 20px;
@@ -115,7 +115,7 @@
             padding: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: calc(100% - 32px);
-            max-width: 350px;
+            max-width: 90%;
             cursor: pointer;
         }
 
@@ -195,7 +195,7 @@
             overflow: hidden;
             color: white;
             width: calc(100% - 32px);
-            max-width: 350px;
+            max-width: 90%;
             position: relative;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
@@ -242,7 +242,7 @@
             padding: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: calc(100% - 32px);
-            max-width: 350px;
+            max-width: 90%;
             justify-content: space-between;
             cursor: pointer;
             margin-bottom: 30px;
@@ -286,7 +286,7 @@
         .trends-section {
             margin-top: 20px;
             width: calc(100% - 32px);
-            max-width: 350px;
+            max-width: 90%;
             padding-bottom: 20px;
         }
 
