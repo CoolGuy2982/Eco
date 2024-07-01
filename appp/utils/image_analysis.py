@@ -32,7 +32,7 @@ def analyze_image(base64_image, spoken_text):
         image_prompt_parts = [
             image_parts[0],
             f"""
-            Analyze the image in detail and provide a comprehensive description without mentioning people or humans. Follow these steps:
+            Analyze the image in detail and provide a comprehensive description without mentioning people or humans. If there is a red box in the image, the user emphasises on what's generally in that red box. Follow these steps:
 
             1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: "{spoken_text}". Use these observations to select the most fitting tool:
             - Nature (Tool A): Choose this if the image prominently features nature and natural environments such as forests, rivers, mountains, or wildlife. Look for elements that emphasize ecological dynamics, like interactions among animals, plant growth, or seasonal changes in landscapes.
