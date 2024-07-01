@@ -4,6 +4,15 @@ let currentIndex = 0;
 let autoTransition;
 let startX;
 
+const isMobileDevice = () => {
+    return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+};
+
+const initialize = () => {
+    if (!isMobileDevice()) {
+        window.location.href = 'https://www.firley.org/products/ecolens-redirect';
+    }    
+};
 function showNextCard() {
     currentIndex = (currentIndex + 1) % 3;
     updateCarousel();
