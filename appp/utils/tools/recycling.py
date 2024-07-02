@@ -17,6 +17,7 @@ SCOPES = [
 ]
 
 creds, project = google.auth.default(scopes=SCOPES)
+
 #SERVICE_ACCOUNT_FILE = 'service_account_key.json'
 #creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
@@ -67,7 +68,7 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
     aqa_response = generate_answer(corpus_resource_name, user_query)
     print("HEre's the full AQA response: \n", aqa_response)
     answerable_probability = aqa_response.answerable_probability
-    if answerable_probability <= 0.7:
+    if answerable_probability <= 0.5:
         model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                        generation_config={
                                             "temperature": 0.3,
@@ -130,7 +131,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
     Don't respond in bullet points, respond in the same syntax as if you are texting someone. Appropriately give your response so it isn't intimidating to comprehend.
     Limit response to 80 words max.
 
-    Give it in this JSON format:
+    ALWAYS give it in this JSON format NO MATTER WHAT:
     {{
     "Response": "[Your response here]",
     "Video_Suggestion": "<When appropriate, add a search query to search for a DIY project on YouTube using this item>"
@@ -167,6 +168,8 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
             alt_response = model.generate_content([text_prompt, base64_image])
             # Parse the fallback model's JSON response
+            print(alt_response)
+
             fallback_result = json.loads(alt_response.text)
             response = fallback_result.get("Response", "No response generated.")
             keyword = fallback_result.get("Keyword", "Unknown")

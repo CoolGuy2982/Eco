@@ -17,6 +17,7 @@ SCOPES = [
 ]
 
 creds, project = google.auth.default(scopes=SCOPES)
+
 #SERVICE_ACCOUNT_FILE = 'service_account_key.json'
 #creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 

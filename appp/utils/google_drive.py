@@ -8,8 +8,10 @@ from flask import current_app
 
 # Get the default credentials for the Cloud Run service account
 creds, project = default()
+
 #SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
 #creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+
 # Build the drive service using the default credentials
 drive_service = build('drive', 'v3', credentials=creds)
 
