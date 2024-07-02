@@ -36,7 +36,7 @@ def analyze_image(base64_image, spoken_text):
 
             1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: "{spoken_text}". Use these observations to select the most fitting tool:
             - Nature (Tool A): Choose this if the image prominently features nature and natural environments such as forests, rivers, mountains, or wildlife. Look for elements that emphasize ecological dynamics, like interactions among animals, plant growth, or seasonal changes in landscapes.
-            - Recycling (Tool B): Choose this if the image features any item/product in a home/outdoor setting. This could be any type of item/product.
+            - Recycling (Tool B): Choose this if the image features any item/product in a home or outdoor setting or generally looks like trash. This could be any type of item/product.
             - Greenwashing (Tool C): Opt for this if the image shows products in a commercial setting, like a store, being advertised with environmental claims. Look for labels like "eco-friendly," "sustainable," "green," "ethical," "organic," or "natural" on packaging, particularly in contexts that might suggest exaggerated or misleading claims.
             - Composting (Tool D): Use this if the image includes biodegradable materials suitable for composting. This might include food scraps, yard debris like leaves and grass, or other organic waste clearly intended to decompose in a compost setting.
             - Food (Tool E): Choose this tool if the image displays food storage or preparation areas such as kitchens, pantries, or refrigerators, featuring ingredients either being used for cooking or stored for future use.
