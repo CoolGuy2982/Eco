@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPoints</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .eco-points-container {
+            text-align: center;
+        }
+
+        .eco-points-count {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .eco-points-message {
+            background-color: #a4d4ae;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 2rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <a href="/home" class="back-button">
+        <i class="fas fa-chevron-left"></i>
+    </a>
+    <div class="eco-points-container">
+        <p class="text-lg font-medium">You have</p>
+        <p class="eco-points-count"><span id="ecopoints-count">0</span> EcoPoints</p>
+        <div class="eco-points-message">
+            <p>Nothing to spend points on yet, but stay tuned for awesome rewards!</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
+            document.getElementById('ecopoints-count').innerText = ecoPoints;
+        });
+    </script>
+</body>
+</html>

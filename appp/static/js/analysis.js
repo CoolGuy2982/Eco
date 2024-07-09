@@ -28,7 +28,7 @@ function fetchAddressAndDisplay(keyword, data) {
             displayMap([cleanedAddress], sectionTitle);
           }
 
-          // Update and save the response data
+          // Update and save the response data with address
           const completeData = {
             ...data,
             latitude,
@@ -130,7 +130,7 @@ function fetchAndDisplayProducts(keyword, data) {
           productElement.querySelector('p').textContent = product.price;
         }
 
-        // Update and save the response data
+        // Update and save the response data with products
         const completeData = {
           ...data,
           products,
@@ -168,7 +168,15 @@ function setupCarousel() {
 
 function saveResponseLocally(data) {
   const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-  pastResponses.push(data);
+  const existingIndex = pastResponses.findIndex(response => response.date === data.date);
+
+  if (existingIndex > -1) {
+    // Merge the new data with the existing data
+    pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
+  } else {
+    pastResponses.push(data);
+  }
+
   localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
   console.log('Past responses updated:', pastResponses);
 }
@@ -204,6 +212,19 @@ function mergeResponses(responses) {
   return mergedResponses;
 }
 
+function showEcoPoint() {
+  let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
+  ecoPoints += 1;
+  localStorage.setItem('ecoPoints', ecoPoints);
+
+  const ecoPoint = document.getElementById('eco-point');
+  ecoPoint.classList.add('visible');
+
+  setTimeout(() => {
+    ecoPoint.classList.remove('visible');
+  }, 3000);
+}
+
 window.onload = function() {
   const data = JSON.parse(sessionStorage.getItem('AIResponse'));
   if (!data) {
@@ -212,11 +233,25 @@ window.onload = function() {
   }
 
   const analysisResult = document.getElementById('analysis-result');
+  const ecoPoint = document.getElementById('eco-point');
   const mapContainer = document.getElementById('map-container');
   const videoContainer = document.getElementById('video-container');
 
-  analysisResult.innerHTML = data.result ? formatBoldAndNewLine(data.result) : 'Sorry bout dat, we prolly messed something up. Please try again';
-  
+  if (data.result) {
+    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
+    showEcoPoint();
+  } else {
+    analysisResult.innerHTML = 'Sorry bout dat, we prolly messed something up. Please try again';
+  }
+
+  // Save initial response data
+  const initialData = {
+    result: data.result || null,
+    video_suggestion: data.video_suggestion || null,
+    date: new Date().toISOString()
+  };
+  saveResponseLocally(initialData);
+
   // Check for recycling option and keyword before fetching address
   if (data.text_tool === 'B' && data.keyword) {
     fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
@@ -233,15 +268,6 @@ window.onload = function() {
     videoContainer.style.display = 'block';
   } else {
     videoContainer.style.display = 'none';
-  }
-
-  // Save the response data locally only if it is already complete
-  if (data.result && data.date && data.video_suggestion) {
-    const analysisData = {
-      ...data,
-      date: new Date().toISOString()
-    };
-    saveResponseLocally(analysisData);
   }
 
   sessionStorage.removeItem('AIResponse'); // Clean up after displaying

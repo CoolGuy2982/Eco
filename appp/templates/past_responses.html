@@ -87,64 +87,79 @@
             } else {
                 // Merge responses within 30 seconds
                 pastResponses = mergeResponses(pastResponses);
-                // Sort responses by most recent
-                pastResponses.sort((a, b) => new Date(b.date) - new Date(a.date));
+                // Sort responses by most recent, placing invalid dates at the bottom
+                pastResponses.sort((a, b) => {
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    if (isNaN(dateA) && isNaN(dateB)) return 0;
+                    if (isNaN(dateA)) return 1;
+                    if (isNaN(dateB)) return -1;
+                    return dateB - dateA;
+                });
 
                 pastResponses.forEach((response, index) => {
-                    const responseDiv = document.createElement('div');
-                    responseDiv.className = 'response';
+                    if (isValidResponse(response)) {
+                        const responseDiv = document.createElement('div');
+                        responseDiv.className = 'response';
 
-                    const timestampDiv = document.createElement('div');
-                    timestampDiv.innerHTML = `<h2 class="text-gray-700">Response Timestamp</h2><p>${new Date(response.date).toLocaleString()}</p>`;
-                    responseDiv.appendChild(timestampDiv);
+                        const date = new Date(response.date);
+                        const timestamp = isNaN(date) ? 'Invalid Date' : date.toLocaleString();
+                        const timestampDiv = document.createElement('div');
+                        timestampDiv.innerHTML = `<h2 class="text-gray-700">Response Timestamp</h2><p>${timestamp}</p>`;
+                        responseDiv.appendChild(timestampDiv);
 
-                    if (response.result) {
-                        const resultDiv = document.createElement('div');
-                        resultDiv.innerHTML = `<h2 class="text-gray-700">Analysis Result</h2><p>${response.result}</p>`;
-                        responseDiv.appendChild(resultDiv);
+                        if (response.result) {
+                            const resultDiv = document.createElement('div');
+                            resultDiv.innerHTML = `<h2 class="text-gray-700">Analysis Result</h2><p>${response.result}</p>`;
+                            responseDiv.appendChild(resultDiv);
+                        }
+
+                        if (response.video_suggestion) {
+                            const videosDiv = document.createElement('div');
+                            videosDiv.className = 'video-frame-container';
+                            videosDiv.innerHTML = '<h2 class="text-gray-700">Videos</h2>';
+                            const iframe = document.createElement('iframe');
+                            iframe.src = `https://www.youtube.com/embed/${response.video_suggestion}`;
+                            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                            iframe.allowFullscreen = true;
+                            videosDiv.appendChild(iframe);
+                            responseDiv.appendChild(videosDiv);
+                        }
+
+                        if (response.products && response.products.length > 0) {
+                            const productsDiv = document.createElement('div');
+                            productsDiv.innerHTML = '<h2 class="text-gray-700">Products</h2>';
+                            const uniqueProducts = response.products.reduce((acc, product) => {
+                                if (!acc.some(p => p.title === product.title && p.price === product.price)) {
+                                    acc.push(product);
+                                }
+                                return acc;
+                            }, []);
+                            uniqueProducts.forEach(product => {
+                                const productElement = document.createElement('div');
+                                productElement.className = 'product';
+                                productElement.innerHTML = `
+                                    <a href="${product.link}" target="_blank" class="flex items-center no-underline hover:underline">
+                                        <img src="${product.image_url}" alt="${product.title}" class="rounded-md">
+                                        <div>
+                                            <h3 class="text-gray-800">${product.title}</h3>
+                                            <p class="text-gray-600">${product.price}</p>
+                                        </div>
+                                    </a>`;
+                                productsDiv.appendChild(productElement);
+                            });
+                            responseDiv.appendChild(productsDiv);
+                        }
+
+                        container.appendChild(responseDiv);
                     }
-
-                    if (response.video_suggestion) {
-                        const videosDiv = document.createElement('div');
-                        videosDiv.className = 'video-frame-container';
-                        videosDiv.innerHTML = '<h2 class="text-gray-700">Videos</h2>';
-                        const iframe = document.createElement('iframe');
-                        iframe.src = `https://www.youtube.com/embed/${response.video_suggestion}`;
-                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-                        iframe.allowFullscreen = true;
-                        videosDiv.appendChild(iframe);
-                        responseDiv.appendChild(videosDiv);
-                    }
-
-                    if (response.products && response.products.length > 0) {
-                        const productsDiv = document.createElement('div');
-                        productsDiv.innerHTML = '<h2 class="text-gray-700">Products</h2>';
-                        const uniqueProducts = response.products.reduce((acc, product) => {
-                            if (!acc.some(p => p.title === product.title && p.price === product.price)) {
-                                acc.push(product);
-                            }
-                            return acc;
-                        }, []);
-                        uniqueProducts.forEach(product => {
-                            const productElement = document.createElement('div');
-                            productElement.className = 'product';
-                            productElement.innerHTML = `
-                                <a href="${product.link}" target="_blank" class="flex items-center no-underline hover:underline">
-                                    <img src="${product.image_url}" alt="${product.title}" class="rounded-md">
-                                    <div>
-                                        <h3 class="text-gray-800">${product.title}</h3>
-                                        <p class="text-gray-600">${product.price}</p>
-                                    </div>
-                                </a>`;
-                            productsDiv.appendChild(productElement);
-                        });
-                        responseDiv.appendChild(productsDiv);
-                    }
-
-                    container.appendChild(responseDiv);
                 });
             }
         });
+
+        function isValidResponse(response) {
+            return response.result || response.video_suggestion || (response.products && response.products.length > 0);
+        }
 
         function mergeResponses(responses) {
             const mergedResponses = [];

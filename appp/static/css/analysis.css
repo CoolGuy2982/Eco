@@ -23,6 +23,7 @@ body, html {
   background-color: #f9f9f9;
   border-radius: 8px;
   overflow: hidden;
+  position: relative; /* Ensure the eco-point can be positioned absolutely */
 }
 
 .response-title {
@@ -46,6 +47,7 @@ body, html {
 
 .title-text {
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .navbar {
@@ -171,4 +173,25 @@ body, html {
 
 .carousel-nav.next {
   right: 0;
+}
+
+.eco-point {
+  background-color: #10B981;
+  color: white;
+  font-size: 1.5em;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 10px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+  position: relative;
+  width: calc(100% - 20px); /* Same width as the text container */
+  display: none;
+}
+
+.eco-point.visible {
+  opacity: 1;
+  display: block;
+  margin-bottom: 10px;
 }

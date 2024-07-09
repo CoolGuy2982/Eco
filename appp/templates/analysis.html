@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +10,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
 </head>
-
 <body>
     <div class="wrapper">
         <div class="response-container">
@@ -19,9 +17,10 @@
                 <a href="/camera" class="chevron-button">
                     <i class="fas fa-chevron-left"></i>
                 </a>
-                <span class="title-text">EcoLens</span>
+                <span class="title-text" onclick="location.href='/camera'">EcoLens</span>
             </div>
             <div id="analysis-result" class="response-text"></div>
+            <div id="eco-point" class="eco-point">+1 EcoPoint</div>
         </div>
         <div id="map-container" class="map-container">
             <div class="section-title">Recycling Locations</div>
@@ -40,16 +39,13 @@
                 <button class="carousel-nav next" onclick="showNextProduct()">&#8250;</button>
             </div>
         </div>
-        <div id="video-container" class="video-container">
-        </div>
-        
+        <div id="video-container" class="video-container"></div>
     </div>
-    <!-- Include Google Maps API Key and reference to scan.js -->
+    <!-- Include Google Maps API Key -->
     <script type="text/javascript">
         // Store the API key in a variable to be accessible by scan.js
         var googleMapsApiKey = "{{ google_maps_api_key }}";
     </script>
     <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
 </body>
-
 </html>

@@ -371,6 +371,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         video.addEventListener('click', (event) => {
+            console.log("Video was clicked");
+            focusBox.style.marginTop = '0vh';
+            zoomContainer.style.marginTop = '0vh';
             const rect = video.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
@@ -380,11 +383,11 @@ document.addEventListener('DOMContentLoaded', () => {
             focusBox.style.top = `${y - size / 2}px`;
             focusBox.style.width = `${size}px`;
             focusBox.style.height = `${size}px`;
-            focusBox.classList.remove('hidden');
+            focusBox.style.display = 'block';  // Show focus box
 
             zoomContainer.style.left = `${x - 100}px`;
             zoomContainer.style.top = `${y + 110}px`;
-            zoomContainer.classList.remove('hidden');
+            zoomContainer.style.display = 'flex';  // Show zoom container
             
             resetFocusBoxTimeout();
             resetZoomSliderTimeout();
@@ -404,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearTimeout(focusBoxTimeout);
         focusBoxTimeout = setTimeout(() => {
             focusBox.classList.add('hidden');
-        }, 30000);
+        }, 10000);
     };
 
     const resetZoomSliderTimeout = () => {

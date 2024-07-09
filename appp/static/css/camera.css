@@ -7,24 +7,29 @@
   height: 30px;
   width: 30px;
   transition: transform 0.3s ease-in-out;
+  visibility: hidden;
 }
 
 input:checked ~ .toggle-dot {
   transform: translateX(34px);
+  visibility: hidden;
 }
 
 .toggle-container {
   width: 70px;
   height: 40px;
+  visibility: hidden;
 }
 
 /* Change the color of the toggle background when it's not checked */
 .toggle-container .block {
   background-color: gray; /* Set your desired color here */
+  visibility: hidden;
 }
 
 input:checked ~ .block {
   background-color: green; /* Set the color for when the toggle is checked */
+  visibility: hidden;
 }
 
 #loadingAnimation {
@@ -129,7 +134,7 @@ input:checked ~ .block {
   top: 0;
   left: 0;
   right: 0;
-  background-color: white;
+  background-color:rgba(255,255,255, 0.8);
   padding: 10px;
   z-index: 15;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -178,7 +183,22 @@ input:checked ~ .block {
   justify-content: center;
   align-items: center;
   animation: pulse 2s infinite;
+  bottom: 5%;
 }
+
+#enterTextPrompt {
+  bottom: 15%; /* Align vertically with takePhotoButton */
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+  right: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+}
+
 
 @keyframes pulse {
   0%, 100% {
@@ -192,6 +212,7 @@ input:checked ~ .block {
 #focusBox {
   width: 200px;
   height: 200px;
+  margin-top: 150vh;
 }
 
 #zoomSlider {
@@ -199,10 +220,12 @@ input:checked ~ .block {
   margin-top: 10px;
 }
 
+
 #zoomContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 150vh;
 }
 
 .bouncing-loader {
@@ -245,4 +268,14 @@ input:checked ~ .block {
 
 #browserWarningOkButton {
   margin-top: 20px;
+}
+
+/* Ensuring the video element fills the entire viewport */
+#video {
+  position: fixed; /* Use fixed positioning to ensure it covers the full screen */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  object-fit: cover; /* Ensures the aspect ratio is maintained while covering the entire viewport */ /* Set to a lower z-index to ensure it stays behind other content */
 }

@@ -30,6 +30,10 @@ def browse():
 def shop():
     return render_template('apps/earthhero.html')
 
+@main.route('/ecopoints')
+def ecopoints():
+    return render_template('ecopoints.html')
+
 #############################################################
 # Apps
 #############################################################

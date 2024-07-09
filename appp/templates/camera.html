@@ -34,16 +34,14 @@
             <input type="range" id="zoomSlider" min="1" max="3" step="0.1">
         </div>
 
-        <div class="absolute top-16 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 rounded-full p-2 flex items-center space-x-4 safe-area top-container">
-            <i class="fas fa-camera text-white icon-size"></i>
-            <label for="toggleSwitch" class="flex items-center cursor-pointer">
+        <div class="">
+            <label for="toggleSwitch" class="">
                 <div class="relative toggle-container">
                     <input type="checkbox" id="toggleSwitch" class="sr-only">
-                    <div class="block bg-gray-600 w-full h-full rounded-full"></div>
+                    <div class=""></div>
                     <div class="toggle-dot"></div>
                 </div>
             </label>
-            <i class="fas fa-microphone text-white icon-size"></i>
         </div>
 
         <div id="menuBar" class="menu-bar">
@@ -54,13 +52,14 @@
             <button id="switchCameraButton" class="bg-white rounded-full p-4">
                 <i class="fas fa-sync-alt text-gray-800 text-2xl"></i> <!-- Updated icon for changing the camera -->
             </button>
-            <button id="enterTextPrompt" class="bg-white rounded-full p-4">
-                <i class="fas fa-keyboard text-gray-800 text-2xl"></i>
-            </button>
         </div>
 
         <div id="buttonContainerCamera" class="button-container">
             <button id="takePhotoButton"></button>
+        </div>
+
+        <div id="enterTextPrompt" class="bg-white rounded-full p-4 fixed bottom-10 right-10"> <!-- Keyboard button moved -->
+            <i class="fas fa-keyboard text-gray-800 text-2xl"></i>
         </div>        
 
         <!-- Modal -->
@@ -85,7 +84,7 @@
     </div>
 
     <!-- Navigation Bar -->
-    <div class="fixed inset-x-0 bottom-0 bg-white py-3 border-t-2 border-gray-200">
+    <div class="fixed inset-x-0 bottom-0 bg-white bg-opacity-65 backdrop-blur-md py-3">
       <nav class="flex justify-around items-center text-gray-600">
         <a href="/home" class="text-center">
           <i class="fas fa-home fa-lg"></i>
