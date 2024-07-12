@@ -101,12 +101,22 @@
                     if (isValidResponse(response)) {
                         const responseDiv = document.createElement('div');
                         responseDiv.className = 'response';
+                        responseDiv.id = 'response-' + index;
 
                         const date = new Date(response.date);
                         const timestamp = isNaN(date) ? 'Invalid Date' : date.toLocaleString();
                         const timestampDiv = document.createElement('div');
                         timestampDiv.innerHTML = `<h2 class="text-gray-700">Response Timestamp</h2><p>${timestamp}</p>`;
                         responseDiv.appendChild(timestampDiv);
+
+                        if (response.b64_image) {
+                            const imageDiv = document.createElement('img');
+                            imageDiv.src = `data:image/png;base64,${response.b64_image}`;
+                            imageDiv.id = 'img-' + index; // Set ID directly on the image
+                            imageDiv.style.maxWidth = '100%'; // Adjust styling as needed
+                            responseDiv.appendChild(imageDiv);
+                        }
+
 
                         if (response.result) {
                             const resultDiv = document.createElement('div');
@@ -155,7 +165,17 @@
                     }
                 });
             }
+
+            // Handle scrolling to the specific response if a URL hash is present
+            if (window.location.hash) {
+                const responseId = window.location.hash.substring(1);
+                const responseElement = document.getElementById(responseId);
+                if (responseElement) {
+                    responseElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
         });
+
 
         function isValidResponse(response) {
             return response.result || response.video_suggestion || (response.products && response.products.length > 0);

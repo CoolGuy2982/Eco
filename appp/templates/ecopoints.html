@@ -4,67 +4,478 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoPoints</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
+            height: 100vh;
+        }
+
+        .header {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
+            padding: 10px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header a {
+            text-decoration: none;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            text-align: center;
+            width: 80px;
+        }
+
+        .dot img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 10px;
+            background: #ccc;
+            margin: 0 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 5px;
+        }
+
+        .progress {
+            height: 100%;
+            background: green;
+            border-radius: 5px;
+        }
+
+        .current-level .dot {
+            background: green;
+        }
+
+        .rewards, .upcoming-rewards {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .rewards ul, .upcoming-rewards ul {
+            list-style-type: none;
             padding: 0;
         }
 
-        .eco-points-container {
-            text-align: center;
+        .rewards li, .upcoming-rewards li {
+            background: #e0e0e0;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .eco-points-count {
-            font-size: 2rem;
+        .rewards img, .upcoming-rewards img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+
+        .upcoming-rewards {
+            display: none;
+        }
+
+        .ecopoints {
+            font-size: 24px;
             font-weight: bold;
-            margin-top: 0.5rem;
+            margin-bottom: 20px;
         }
 
-        .eco-points-message {
-            background-color: #a4d4ae;
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-top: 1rem;
+        .upgrade-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .upgrade-button.disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+
+        .claim-button {
+            background-color: black;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .test-controls {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .test-controls input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .test-controls button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            display: none;
+            z-index: 1000;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
             width: 80%;
-            max-width: 300px;
+            max-width: 400px;
+            position: relative;
         }
 
-        .back-button {
+        .popup img {
+            width: 100%;
+            max-height: 50%;
+            border-radius: 20px;
+        }
+
+        .popup .close {
             position: absolute;
-            top: 1rem;
-            left: 1rem;
-            font-size: 2rem;
-            color: #333;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2000;
         }
     </style>
 </head>
 <body>
-    <a href="/home" class="back-button">
-        <i class="fas fa-chevron-left"></i>
-    </a>
-    <div class="eco-points-container">
-        <p class="text-lg font-medium">You have</p>
-        <p class="eco-points-count"><span id="ecopoints-count">0</span> EcoPoints</p>
-        <div class="eco-points-message">
-            <p>Nothing to spend points on yet, but stay tuned for awesome rewards!</p>
+    <div class="header">
+        <a href="/home">&#8249; Home</a>
+    </div>
+    <div class="content">
+        <div class="ecopoints">
+            You Have <span id="ecoPointsDisplay">0</span> EcoPoints
+        </div>
+        <div class="tree-level">
+            <div class="dot current-level">
+                <img id="currentTreeImage" src="static/images/trees/level0.png" alt="Current Tree">
+                <p>Lvl <span id="currentLevel">0</span></p>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+            </div>
+            <div class="dot next-level" onclick="showUpcomingRewards()">
+                <img id="nextTreeImage" src="static/images/trees/level1.png" alt="Next Tree">
+                <p>Lvl <span id="nextLevel">1</span></p>
+            </div>
+        </div>
+        <button id="upgradeButton" class="upgrade-button disabled" onclick="upgradeTree()">Upgrade Your Tree</button>
+        <div class="rewards">
+            <h2>Rewards</h2>
+            <ul id="currentRewards">
+                <!-- Rewards will be added here by JavaScript -->
+            </ul>
+        </div>
+        <div class="upcoming-rewards" id="upcomingRewards">
+            <h2>Upcoming Rewards</h2>
+            <ul id="upcomingRewardsList">
+                <!-- Upcoming rewards will be added here by JavaScript -->
+            </ul>
+        </div>
+        <div class="test-controls">
+            <h3>Test Controls</h3>
+            <input type="number" id="ecoPointsInput" placeholder="Set EcoPoints" />
+            <button onclick="setEcoPoints()">Set EcoPoints</button>
         </div>
     </div>
+
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <span class="close" onclick="closePopup()">×</span>
+            <h2 id="rewardName"></h2>
+            <img id="rewardImage" src="" alt="Reward Image">
+            <button id="claimButton" class="upgrade-button" onclick="claimReward()">Claim</button>
+            <div id="claimedCode" style="display:none;">
+                <h2 id="rewardCode"></h2>
+                <p id="screenshotMessage"></p>
+            </div>
+        </div>
+    </div>
+
+    <canvas class="confetti" id="confetti"></canvas>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
-            document.getElementById('ecopoints-count').innerText = ecoPoints;
-        });
+        let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
+        let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
+
+        const goals = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]; // Goals for each level
+        const rewards = [
+            [
+                { name: "Coupon 1", cardImage: "static/images/rewards/coupon1_card.png", popupImage: "static/images/rewards/coupon1.png", code: "CPN123" },
+                { name: "Coupon 2", cardImage: "static/images/rewards/coupon2_card.png", popupImage: "static/images/rewards/coupon2.png", code: "CPN456" },
+                { name: "Coupon 3", cardImage: "static/images/rewards/coupon3_card.png", popupImage: "static/images/rewards/coupon3.png", code: "CPN789" }
+            ],
+            [
+                { name: "Coupon 4", cardImage: "static/images/rewards/coupon4_card.png", popupImage: "static/images/rewards/coupon4.png", code: "CPN1234" },
+                { name: "Coupon 5", cardImage: "static/images/rewards/coupon5_card.png", popupImage: "static/images/rewards/coupon5.png", code: "CPN4567" },
+                { name: "Coupon 6", cardImage: "static/images/rewards/coupon6_card.png", popupImage: "static/images/rewards/coupon6.png", code: "CPN7890" }
+            ],
+            [
+                { name: "Coupon 7", cardImage: "static/images/rewards/coupon7_card.png", popupImage: "static/images/rewards/coupon7.png", code: "CPN12345" },
+                { name: "Coupon 8", cardImage: "static/images/rewards/coupon8_card.png", popupImage: "static/images/rewards/coupon8.png", code: "CPN45678" },
+                { name: "Coupon 9", cardImage: "static/images/rewards/coupon9_card.png", popupImage: "static/images/rewards/coupon9.png", code: "CPN78901" }
+            ],
+            // Levels 4-10 gift cards with "Coming Soon"
+            [
+                { name: "$20 Amazon Gift Card", cardImage: "static/images/rewards/amazon_gift_card_card.png", popupImage: "static/images/rewards/amazon_gift_card.png", code: "COMING_SOON" },
+                { name: "$15 Starbucks Gift Card", cardImage: "static/images/rewards/starbucks_gift_card_card.png", popupImage: "static/images/rewards/starbucks_gift_card.png", code: "COMING_SOON" },
+                { name: "6 Month Netflix Subscription", cardImage: "static/images/rewards/netflix_subscription_card.png", popupImage: "static/images/rewards/netflix_subscription.png", code: "COMING_SOON" }
+            ]
+            // Add more rewards as needed
+        ];
+        let claimedRewards = {};
+
+        function updateUI() {
+    document.getElementById('ecoPointsDisplay').textContent = ecoPoints;
+    document.getElementById('currentLevel').textContent = level;
+    document.getElementById('currentTreeImage').src = `static/images/trees/level${level}.png`;
+
+    const nextLevel = level + 1;
+    document.getElementById('nextLevel').textContent = nextLevel;
+    document.getElementById('nextTreeImage').src = `static/images/trees/level${nextLevel}.png`;
+
+    const progressPercentage = ((ecoPoints - (goals[level - 1] || 0)) / (goals[level] - (goals[level - 1] || 0))) * 100;
+    document.getElementById('progressBar').style.width = `${Math.min(progressPercentage, 100)}%`;
+
+    const currentRewardsList = document.getElementById('currentRewards');
+    currentRewardsList.innerHTML = "";
+    rewards[level].forEach((reward, index) => {
+        const li = document.createElement('li');
+        const img = document.createElement('img');
+        img.src = reward.cardImage;
+        li.appendChild(img);
+        li.appendChild(document.createTextNode(reward.name));
+        const claimButton = document.createElement('button');
+        claimButton.className = 'claim-button';
+        claimButton.textContent = 'Claim';
+        claimButton.onclick = (event) => {
+            event.stopPropagation();
+            showPopup(reward, index);
+        };
+        li.appendChild(claimButton);
+        if (claimedRewards[level] && claimedRewards[level][index]) {
+            claimButton.style.display = 'none';
+        }
+        li.onclick = () => showPopup(reward, index);
+        currentRewardsList.appendChild(li);
+    });
+
+    const upgradeButton = document.getElementById('upgradeButton');
+    if (ecoPoints >= goals[level]) { // Correct comparison for the next level
+        upgradeButton.classList.remove('disabled');
+        upgradeButton.disabled = false;
+    } else {
+        upgradeButton.classList.add('disabled');
+        upgradeButton.disabled = true;
+    }
+}
+
+function upgradeTree() {
+    const nextLevel = level + 1;
+    if (ecoPoints >= goals[level]) { // Correct comparison for the next level
+        level = nextLevel;
+        localStorage.setItem('level', level);
+        alert(`You've upgraded to level ${level}!`);
+        updateUI();
+    }
+}
+
+        function showUpcomingRewards() {
+            const nextLevel = level + 1;
+            const upcomingRewardsList = document.getElementById('upcomingRewardsList');
+            upcomingRewardsList.innerHTML = "";
+            rewards[nextLevel].forEach(reward => {
+                const li = document.createElement('li');
+                const img = document.createElement('img');
+                img.src = reward.cardImage;
+                li.appendChild(img);
+                li.appendChild(document.createTextNode(reward.name));
+                upcomingRewardsList.appendChild(li);
+            });
+            document.getElementById('upcomingRewards').style.display = 'block';
+        }
+
+
+        function setEcoPoints() {
+            const ecoPointsInput = document.getElementById('ecoPointsInput').value;
+            ecoPoints = parseInt(ecoPointsInput, 10);
+            localStorage.setItem('ecoPoints', ecoPoints);
+            updateUI();
+        }
+
+        function showPopup(reward, index) {
+            document.getElementById('rewardName').textContent = reward.name;
+            document.getElementById('rewardImage').src = reward.popupImage;
+            document.getElementById('popupOverlay').style.display = 'flex';
+
+            if (reward.code === "COMING_SOON") {
+                document.getElementById('claimButton').style.display = 'none';
+                document.getElementById('claimedCode').style.display = 'block';
+                document.getElementById('rewardCode').textContent = "Coming Soon!";
+                document.getElementById('screenshotMessage').textContent = "";
+            } else {
+                document.getElementById('claimButton').style.display = 'block';
+                document.getElementById('claimedCode').style.display = 'none';
+                document.getElementById('claimButton').onclick = () => claimReward(reward, index);
+            }
+
+            if (claimedRewards[level] && claimedRewards[level][index]) {
+                document.getElementById('claimButton').style.display = 'none';
+                document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
+                document.getElementById('claimedCode').style.display = 'block';
+                document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
+            }
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+
+        function claimReward(reward, index) {
+            if (!claimedRewards[level]) {
+                claimedRewards[level] = {};
+            }
+            claimedRewards[level][index] = true;
+            localStorage.setItem('claimedRewards', JSON.stringify(claimedRewards));
+
+            document.getElementById('claimButton').style.display = 'none';
+            document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
+            document.getElementById('claimedCode').style.display = 'block';
+            document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
+
+            // Show confetti
+            const confetti = document.getElementById('confetti');
+            confetti.style.display = 'block';
+            setTimeout(() => {
+                confetti.style.display = 'none';
+            }, 3000);
+
+            startConfetti();
+            updateUI();
+        }
+
+        function startConfetti() {
+            const duration = 3 * 1000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Load claimed rewards from localStorage
+        if (localStorage.getItem('claimedRewards')) {
+            claimedRewards = JSON.parse(localStorage.getItem('claimedRewards'));
+        }
+
+        updateUI();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 </body>
 </html>

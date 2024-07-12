@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <style>
+        html, body {
+            overflow: auto;
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none;  /* Safari and Chrome */
+        }
         .highlight {
             background-color: yellow;
         }

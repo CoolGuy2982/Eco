@@ -1,0 +1,21 @@
+{
+  "short_name": "App",
+  "name": "Your App Name",
+  "icons": [
+    {
+      "src": "/static/images/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/images/favicon.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#FFFFFF",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#FFFFFF"
+}

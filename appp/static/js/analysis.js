@@ -248,6 +248,7 @@ window.onload = function() {
   const initialData = {
     result: data.result || null,
     video_suggestion: data.video_suggestion || null,
+    b64_image: data.image_data,
     date: new Date().toISOString()
   };
   saveResponseLocally(initialData);

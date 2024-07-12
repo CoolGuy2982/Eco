@@ -131,14 +131,14 @@ def analyze_image(base64_image, spoken_text):
         result["text_tool"] = text_tool
         result["image_response"] = response_text
         result["material_info"] = material_info
+        result["image_data"] = base64_image
+
 
         # Check if keyword is not included in the result
         if "keyword" not in result:
             result["keyword"] = []
         #it is impossible for the other three things to not be present, they are requisite
 
-        print("Whats being sent to Camera.js: ")
-        print(result)
         return result
 
     except Exception as e:

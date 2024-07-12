@@ -4,147 +4,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>EcoLens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">    
+    <link rel="manifest" href="/static/manifest.json">
 </head>
 
 <body class="bg-gray-100">
-    <main>
-        <div class="header-container w-full px-4 mt-8 flex justify-between items-center">
-            <div>
-                <h1 class="text-3xl font-bold text-left">EcoLens</h1>
-                <h2 class="text-xl mt-2 text-left mb-2">For You</h2>
+    <div class="container min-h-screen flex flex-col items-center">
+        <header class="fixed-top w-full bg-green-500 py-3 flex justify-center items-center px-4">
+            <div class="flex items-center space-x-1"> <!-- Adjusted space between items -->
+                <span class="text-xl font-bold text-green-900">Ec</span> <!-- Darker green text -->
+                <img src="{{ url_for('static', filename='images/header_pic.png') }}" alt="camera logo" class="h-6 text-green-900"> <!-- Darker green icon -->
+                <span class="text-xl font-bold text-green-900">lens</span> <!-- Darker green text -->
             </div>
-            <a href="/ecopoints" class="ecopoints-container flex items-center">
-                <img src="{{ url_for('static', filename='images/ecopoints_logo.png') }}" alt="EcoLens Logo" class="w-8 h-8">
-                <span id="ecopoints-count" class="ml-2 text-2xl font-bold">0</span>
-            </a>            
-        </div>
-        <div class="carousel mt-2 relative">
-            <div class="carousel-inner">
-                <a href="/camera" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="https://lh3.googleusercontent.com/pw/AP1GczPdIEXfJ0pYBIj9gmDTuwMengOf8FQOSXWeNNpQ0YVVRL20QsndF42_NncbzUWLZH1iYuZDi91GnkpdBUGj1Ib-yH2ZCXOb58yyMlLfRDZfYcWDGyJBS9TZ_QkvjaI85ZsYJ2hE8NCCuXVb7jz6mdch=w919-h394-s-no-gm?authuser=0" alt="Description for card 1" class="w-full h-full object-cover">
-                </a>
-                <a href="/shop" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="https://lh3.googleusercontent.com/pw/AP1GczPeyRhq1qcLaGLd7_ESSAAVwUXbsQcI8s7ovELUcAVWWnEW8KULB293wxCyublrQdDACaohrmCA6xEbdb62HLaFtIPFzVyPSfU35lL_FKClIeTaQWfxz_YbuBWFM5We2VC_5qN4BQ2yB0hGyVsojLan=w919-h394-s-no-gm?authuser=0" alt="Description for card 2" class="w-full h-full object-cover">
-                </a>
-                <a href="https://www.firley.org" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="https://lh3.googleusercontent.com/pw/AP1GczNWN262ZI6CHzLcW79baqqqBHdlHqPaaqf3xgb3UniWmePfz6_f70TytuMM1U7bxpIWZVOW93R-FVCrFuzYhozlwaUn6G5lxVZy_FTO-taQFVnyRUrbLYVb2wtUlPRvLpHNBO18oVI86u-C9jlSGLx0=w919-h394-s-no-gm?authuser=0" alt="Description for card 3" class="w-full h-full object-cover">
-                </a>
-            </div>
-        </div>
-        <div class="carousel-indicators">
-            <span class="active" data-slide-to="0"></span>
-            <span data-slide-to="1"></span>
-            <span data-slide-to="2"></span>
-        </div>
-        <div class="lava-lamp-container carousel mt-2 relative">
-            <div class="carousel-inner">
-                <div class="carousel-item bg-script lava-lamp rounded-lg" onclick="location.href='/shop'">
-                    <span class="overlay-text">Shop More Sustainably</span>
-                    <iframe src="https://docs.lume.io/examples/lava-lamp/example.html" allowfullscreen></iframe>
-                </div>
-            </div>
-        </div>
-        <h2 class="text-2xl font-bold mb-2 mt-8 w-full px-4">Eco Positivity</h2>
-        <div class="positivity-section px-4">
-            <div class="positivity-card" onclick="location.href='https://environmentamerica.org/updates/a-small-important-win-for-bees-in-colorado/'">
-                <h3>Colorado Bee Protection</h3>
-                <p>Colorado has introduced new legislative measures aimed at protecting bees, recognizing their critical role as pollinators and their importance to ecosystems globally</p>
-                <div class="icon">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            <div class="positivity-card" onclick="location.href='https://news.mongabay.com/list/happy-upbeat-environmental/'">
-                <h3>Deforestation Alerts in the Amazon at a 5-Year Low</h3>
-                <p>Brazil has reported a significant decrease in deforestation alerts, hitting a five-year low. This achievement is credited to improved monitoring and enforcement efforts</p>
-                <div class="icon">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            <div class="positivity-card" onclick="location.href='https://www.euronews.com/my-europe/2024/06/17/nature-restoration-law-gets-green-light-after-austria-flips'">
-                <h3>Nature Restoration Law gets green light after Austria flips</h3>
-                <p>After months of setbacks and difficult negotiations between the EU Council and the European Parliament, environment ministers voted today in Luxembourg to pass the Nature Restoration Law.</p>
-                <div class="icon">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            <div class="positivity-card" onclick="location.href='https://www.dailyclimate.org/paris-showcases-a-car-free-future-during-the-olympics-2668450498.html'">
-                <h3>Paris showcases a car-free future during the Olympics</h3>
-                <p>Paris is showcasing a dramatic reduction in car reliance, resulting in significantly improved air quality, as it prepares for the 2024 Olympics.</p>
-                <div class="icon">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-            <div class="positivity-card" onclick="location.href='https://www.dailyclimate.org/mexico-s-elects-its-first-woman-president-2668442585.html'">
-                <h3>Mexico elects its first woman president - a former climate scientist</h3>
-                <p>Mexico just elected Claudia Sheinbaum Pardo, former climate scientist and Mexico City mayor</p>
-                <div class="icon">
-                    <i class="fas fa-chevron-right"></i>
-                </div>
-            </div>
-        </div>
-        <div class="eco-apps-card" onclick="location.href='/browse'">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczMzxS2N-kx6luKlueeY-ohg6Hf7eSgWIv9mtNjBv0UY4vqhJAZ5yavfmo08xmU8GZ5xCiszEnI417a28cEedHddbpjEl2PN93r2I-vcqaApwKtg_3mhd0Sro7py6sg0ZP8S2QbfWlGxTP2WK6Hokav2=w913-h913-s-no-gm?authuser=0" alt="Placeholder app icon">
-            <div class="text">
-                <h3>Show All Eco Apps</h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-chevron-right"></i>
-            </div>
-        </div>
-        <div class="food-card" onclick="location.href='/camera'">
-            <img src="https://lh3.googleusercontent.com/pw/AP1GczPU7uYQCh8eTvNxN3x-goqSqgsvCrz3YOs5Wa9JrQoNLQS-CInciBmNZzN5pCOaxF4U_TxS9K5SAJqGa1bNVaTWu5wtP7R8FWhWIcQqce9dUYMaz7JUJ9BfQneCnxdaUQPvPcs1gmOPrAcLkSThRbDV=w481-h275-s-no-gm?authuser=0" alt="Placeholder image">
-            <div class="food-card-content">
-                <div class="tag">Meals</div>
-                <h3>Get Intelligent, Sustainable<br>Cooking Help</h3>
-            </div>
-            <div class="icon">
-                <i class="fas fa-chevron-right"></i>
-            </div>
-        </div>        
-        <div class="info-card" onclick="location.href='/browse'" style="cursor: pointer;">
-            <div class="info-content">
-                <h3>Tips</h3>
-                <p>How to Use EcoLens</p>
-            </div>
-            <div class="info-icon flex items-center justify-end">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
-            </div>
-        </div>
+        </header>
+        
+        
 
-    </main>
-    <footer class="bg-white border-t">
-        <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
-            <nav class="flex justify-around items-center text-gray-700">
-                <a href="#" class="text-center">
+        <main class="flex-grow w-full max-w-sm mx-auto text-center mt-16">
+            <h1 class="text-3xl font-bold">Welcome!</h1>
+            <div class="circular-progress mx-auto mt-6" id="treeProgress" style="cursor: pointer;">
+                <svg viewBox="0 0 110 110">
+                    <circle class="circle-bg" cx="55" cy="55" r="45"></circle>
+                    <circle class="circle-dark" cx="55" cy="55" r="45"></circle>
+                    <circle class="circle-light" id="progressCircle" cx="55" cy="55" r="45" stroke-dasharray="283"
+                        stroke-dashoffset="calc(283 - (283 * 0) / 100)"></circle>
+                </svg>               
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="w-16 h-16">
+                        <img src="" alt="Your Tree" id="treeImage" class="w-full h-full object-contain">
+                    </div>
+                    <span class="text-white mt-1 text-xs" id="treeName">Your Tree</span>
+                    <span class="text-white text-xs" id="treeLevel">Lvl 0</span>
+                </div>
+                            
+            </div>
+            <a href="/camera" class="block bg-green-500 text-white text-md font-semibold py-2 px-6 rounded-full mt-6 mx-auto">Scan Now</a>
+            
+            <div class="w-full flex justify-center mt-4">
+                <div class="flex w-full max-w-sm space-x-4">
+                    <a href="/ecopoints" class="flex-1">
+                        <button id="ecoPointsButton" class="w-full bg-gray-200 text-gray-700 py-2 rounded-full text-sm font-bold">25 EcoPoints</button>
+                    </a>
+                    <a href="/browse" class="flex-1">
+                        <button class="w-full bg-black text-white py-2 rounded-full text-sm font-bold">Browse All Apps</button>
+                    </a>
+                </div>
+            </div>            
+
+            <div class="horizontal-scroll mt-4">
+                <a href="/generaleco" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/ecoleaves.jpg') }}" alt="General Eco" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">General Eco</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+                <a href="/nature" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/natureicon.jpg') }}" alt="Nature" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Nature</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+                <a href="/recycling" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/purplerecycle.jpg') }}" alt="Recycling" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Recycling</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+                <a href="/greenwashing" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/greenmask.jpg') }}" alt="Greenwashing" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Greenwashing</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+                <a href="/composting" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/compost.jpg') }}" alt="Composting" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Composting</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+                <a href="/food" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/browse_page/food.jpg') }}" alt="Food" class="h-8 w-8 mr-3">
+                        <span class="text-sm font-semibold text-gray-700 mr-2">Food</span>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-400"></i>
+                </a>
+            </div>
+            
+              
+            <h2 class="text-lg font-semibold mt-3 text-left">Recent Scans</h2>
+            <div class="recent-scans mt-2">
+                <!-- JavaScript to dynamically load images from past responses -->
+            </div>
+            
+            <h2 class="text-2xl font-bold mb-2 mt-8 w-full px-4 text-left">Eco Positivity</h2>
+            <div class="positivity-section px-4 flex">
+                <div class="positivity-card ml-0" onclick="location.href='https://environmentamerica.org/updates/a-small-important-win-for-bees-in-colorado/'">
+                    <h3>Colorado Bee Protection</h3>
+                    <p>Colorado has introduced new legislative measures aimed at protecting bees, recognizing their critical role as pollinators and their importance to ecosystems globally</p>
+                    <div class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="positivity-card ml-4" onclick="location.href='https://news.mongabay.com/list/happy-upbeat-environmental/'">
+                    <h3>Deforestation Alerts in the Amazon at a 5-Year Low</h3>
+                    <p>Brazil has reported a significant decrease in deforestation alerts, hitting a five-year low. This achievement is credited to improved monitoring and enforcement efforts</p>
+                    <div class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="positivity-card ml-4" onclick="location.href='https://www.euronews.com/my-europe/2024/06/17/nature-restoration-law-gets-green-light-after-austria-flips'">
+                    <h3>Nature Restoration Law gets green light after Austria flips</h3>
+                    <p>After months of setbacks and difficult negotiations between the EU Council and the European Parliament, environment ministers voted today in Luxembourg to pass the Nature Restoration Law.</p>
+                    <div class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="positivity-card ml-4" onclick="location.href='https://www.dailyclimate.org/paris-showcases-a-car-free-future-during-the-olympics-2668450498.html'">
+                    <h3>Paris showcases a car-free future during the Olympics</h3>
+                    <p>Paris is showcasing a dramatic reduction in car reliance, resulting in significantly improved air quality, as it prepares for the 2024 Olympics.</p>
+                    <div class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                <div class="positivity-card ml-4" onclick="location.href='https://www.dailyclimate.org/mexico-s-elects-its-first-woman-president-2668442585.html'">
+                    <h3>Mexico elects its first woman president - a former climate scientist</h3>
+                    <p>Mexico just elected Claudia Sheinbaum Pardo, former climate scientist and Mexico City mayor</p>
+                    <div class="icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="mt-4 relative w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-lg" onclick="location.href='https://earthhero.com'">
+                <div class="relative w-full h-48">
+                    <iframe class="absolute inset-0 w-full h-full" src="https://docs.lume.io/examples/lava-lamp/example.html" allowfullscreen></iframe>
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
+                        <span class="text-white font-bold text-xl">Shop More Sustainably</span>
+                    </div>
+                </div>
+            </div>
+            
+            
+
+
+            <div class="eco-apps-card" onclick="location.href='/browse'">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczMzxS2N-kx6luKlueeY-ohg6Hf7eSgWIv9mtNjBv0UY4vqhJAZ5yavfmo08xmU8GZ5xCiszEnI417a28cEedHddbpjEl2PN93r2I-vcqaApwKtg_3mhd0Sro7py6sg0ZP8S2QbfWlGxTP2WK6Hokav2=w913-h913-s-no-gm?authuser=0" alt="Placeholder app icon">
+                <div class="text">
+                    <h3>Show All Eco Apps</h3>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            <div class="carousel mt-2 relative">
+                <div class="carousel-inner">
+                    <a href="/camera" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPdIEXfJ0pYBIj9gmDTuwMengOf8FQOSXWeNNpQ0YVVRL20QsndF42_NncbzUWLZH1iYuZDi91GnkpdBUGj1Ib-yH2ZCXOb58yyMlLfRDZfYcWDGyJBS9TZ_QkvjaI85ZsYJ2hE8NCCuXVb7jz6mdch=w919-h394-s-no-gm?authuser=0" alt="Description for card 1" class="w-full h-full object-cover">
+                    </a>
+                    <a href="/camera" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczPeyRhq1qcLaGLd7_ESSAAVwUXbsQcI8s7ovELUcAVWWnEW8KULB293wxCyublrQdDACaohrmCA6xEbdb62HLaFtIPFzVyPSfU35lL_FKClIeTaQWfxz_YbuBWFM5We2VC_5qN4BQ2yB0hGyVsojLan=w919-h394-s-no-gm?authuser=0" alt="Description for card 2" class="w-full h-full object-cover">
+                    </a>
+                    <a href="https://www.firley.org" class="carousel-item border border-gray-300 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://lh3.googleusercontent.com/pw/AP1GczNWN262ZI6CHzLcW79baqqqBHdlHqPaaqf3xgb3UniWmePfz6_f70TytuMM1U7bxpIWZVOW93R-FVCrFuzYhozlwaUn6G5lxVZy_FTO-taQFVnyRUrbLYVb2wtUlPRvLpHNBO18oVI86u-C9jlSGLx0=w919-h394-s-no-gm?authuser=0" alt="Description for card 3" class="w-full h-full object-cover">
+                    </a>
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <span class="active" data-slide-to="0"></span>
+                <span data-slide-to="1"></span>
+                <span data-slide-to="2"></span>
+            </div>
+            <div class="food-card" onclick="location.href='/camera'">
+                <img src="https://lh3.googleusercontent.com/pw/AP1GczPU7uYQCh8eTvNxN3x-goqSqgsvCrz3YOs5Wa9JrQoNLQS-CInciBmNZzN5pCOaxF4U_TxS9K5SAJqGa1bNVaTWu5wtP7R8FWhWIcQqce9dUYMaz7JUJ9BfQneCnxdaUQPvPcs1gmOPrAcLkSThRbDV=w481-h275-s-no-gm?authuser=0" alt="Placeholder image">
+                <div class="food-card-content">
+                    <div class="tag">Meals</div>
+                    <h3>Get Intelligent, Sustainable<br>Cooking Help</h3>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+            <div class="info-card" onclick="location.href='/browse'" style="cursor: pointer;">
+                <div class="info-content">
+                    <h3>Tips</h3>
+                    <p>How to Use EcoLens</p>
+                </div>
+                <div class="info-icon flex items-center justify-end">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                </div>
+            </div>
+        <!-- Add to Home Screen Popup -->
+<div id="addToHomeScreen" style="display: none; position: fixed; bottom: 0; width: 100%; background: #f4f4f5; padding: 10px; text-align: center; font-size: 16px; color: black; z-index: 1000;">
+    <p>Install this web app on your iPhone: tap <span style="font-size: 22px;">&#8679;</span> and then Add to Home Screen.</p>
+    <button onclick="closePopup()" style="border: none; background: red; color: white; padding: 5px 10px;">Close</button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to detect Safari on iOS
+    function isIOS() {
+        return /iphone|ipod|ipad/.test(window.navigator.userAgent.toLowerCase());
+    }
+
+    // Detects if the page is displayed in standalone mode
+    function isInStandaloneMode() {
+        return ('standalone' in window.navigator) && (window.navigator.standalone);
+    }
+
+    // Show the popup only if it's Safari on iOS and not in standalone mode
+    if (isIOS() && !isInStandaloneMode()) {
+        showPopup();
+    }
+});
+
+function showPopup() {
+    document.getElementById('addToHomeScreen').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('addToHomeScreen').style.display = 'none';
+}
+</script>
+
+        </main>
+
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
+            <div class="flex justify-around items-center text-gray-700 py-2 shadow-md">
+                <a href="/home" class="flex flex-col items-center text-center">
                     <i class="fas fa-home fa-lg text-green-600"></i>
-                    <p>Home</p>
+                    <p class="text-xs mt-1">Home</p>
                 </a>
-                <a href="/camera" class="text-center">
-                    <i class="fas fa-camera fa-lg"></i>
-                    <p>Scan</p>
+                <a href="/camera" class="flex flex-col items-center text-center">
+                    <i class="fas fa-camera fa-lg text-gray-600"></i>
+                    <p class="text-xs mt-1">Scan</p>
                 </a>
-                <a href="/browse" class="text-center">
+                <a href="/browse" class="flex flex-col items-center text-center">
                     <i class="fas fa-th-large fa-lg text-gray-600"></i>
-                    <p>Apps</p>
+                    <p class="text-xs mt-1">Apps</p>
                 </a>
-            </nav>
-        </div>
-    </footer>
+            </div>
+        </nav>
+        
+
+    </div>
     <script>
-        // Fetch and display EcoPoints
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function () {
+            const levelGoals = [50, 100, 200, 300, 450, 550, 700, 900, 1300, 2050];
+            const levelColors = ['#a8f28a', '#f2c94c', '#f2994a', '#eb5757', '#6fcf97', '#56ccf2', '#bb6bd9', '#2f80ed', '#9b51e0', '#27ae60'];
+            const levelImages = [
+                    'static/images/trees/level0.png',
+                    'static/images/trees/level1.png',
+                    'static/images/trees/level2.png',
+                    'static/images/trees/level3.png',
+                    'static/images/trees/level4.png',
+                    'static/images/trees/level5.png',
+                    'static/images/trees/level6.png',
+                    'static/images/trees/level7.png',
+                    'static/images/trees/level8.png',
+                    'static/images/trees/level9.png',
+                    'static/images/trees/level10.png',
+                ];
+
+            // Retrieve EcoPoints and Level from localStorage
             const ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
-            document.getElementById('ecopoints-count').innerText = ecoPoints;
+            let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
+
+            const treeName = localStorage.getItem('treeName') || 'Your Tree';
+            document.getElementById('treeName').innerText = treeName;
+
+            // Update progress based on EcoPoints
+            function updateProgress() {
+                const progressCircle = document.getElementById('progressCircle');
+                const levelText = document.getElementById('treeLevel');
+                const treeImage = document.getElementById('treeImage');
+                const nextLevelPoints = levelGoals[level] || 150;
+
+                let progress = (ecoPoints / nextLevelPoints) * 100;
+                if (progress > 100) progress = 100;
+
+                const radius = progressCircle.r.baseVal.value;
+                const circumference = radius * 2 * Math.PI;
+                const offset = circumference - (progress / 100) * circumference;
+                progressCircle.style.strokeDasharray = `${circumference}`;
+                progressCircle.style.strokeDashoffset = `${offset}`;
+                progressCircle.style.stroke = levelColors[level] || '#a8f28a';
+                
+                levelText.innerText = `Lvl ${level}`;
+                treeImage.src = levelImages[level] || levelImages[0];
+                document.getElementById('ecoPointsButton').innerText = `${ecoPoints} EcoPoints`;
+            }
+
+            // Handle tree click
+            document.getElementById('treeProgress').addEventListener('click', function () {
+                window.location.href = '/ecopoints';
+            });
+
+            // Initial progress update
+            updateProgress();
+
+            // Retrieve past responses and update the recent scans section
+            let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
+            const container = document.querySelector('.recent-scans');
+
+            pastResponses.reverse().forEach((response, index) => {
+                if (response.b64_image) {
+                    const link = document.createElement('a');
+                    link.href = `/past-responses#response-${index}`;
+                    link.className = 'scan-item';
+                    link.innerHTML = `<img src="data:image/png;base64,${response.b64_image}" alt="Response ${index}" class="scan-image">`;
+                    container.appendChild(link);
+                }
+            });
         });
+
+        const carousel = document.querySelector('.carousel-inner');
+        const indicators = document.querySelectorAll('.carousel-indicators span');
+        let currentIndex = 0;
+        let autoTransition;
+        let startX;
+
+        const isMobileDevice = () => {
+            return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+        };
+
+        const initialize = () => {
+            if (!isMobileDevice()) {
+                window.location.href = 'https://www.firley.org/products/ecolens-redirect';
+            }
+        };
+
+        initialize();
+
+        function showNextCard() {
+            currentIndex = (currentIndex + 1) % 3;
+            updateCarousel();
+            resetAutoTransition();
+        }
+
+        function showPreviousCard() {
+            currentIndex = (currentIndex - 1 + 3) % 3;
+            updateCarousel();
+            resetAutoTransition();
+        }
+
+        function updateCarousel() {
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function startAutoTransition() {
+            autoTransition = setTimeout(showNextCard, currentIndex === 0 ? 5000 : 5000);
+        }
+
+        function stopAutoTransition() {
+            clearTimeout(autoTransition);
+        }
+
+        function resetAutoTransition() {
+            stopAutoTransition();
+            setTimeout(startAutoTransition, 10000);
+        }
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+                resetAutoTransition();
+            });
+        });
+
+        document.querySelector('.carousel').addEventListener('touchstart', (e) => {
+            stopAutoTransition();
+            startX = e.touches[0].clientX;
+        });
+
+        document.querySelector('.carousel').addEventListener('touchend', (e) => {
+            const endX = e.changedTouches[0].clientX;
+            if (startX > endX + 50) {
+                showNextCard();
+            } else if (startX < endX - 50) {
+                showPreviousCard();
+            }
+            setTimeout(startAutoTransition, 10000);
+        });
+
+        startAutoTransition();
     </script>
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
 
 </html>

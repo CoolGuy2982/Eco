@@ -10,7 +10,7 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
 </head>
 <body class="bg-gray-100">
-    <div class="top-bar">
+    <div class="top-bar fixed top-0 left-0 right-0 bg-white bg-opacity-65 backdrop-blur-md p-2 z-15 shadow-md flex justify-center items-center">
         <div class="triangle-btn up" id="toggleMenu"></div>
     </div>
 
@@ -91,9 +91,9 @@
           <p>Home</p>
         </a>
         <a href="/camera" class="text-center">
-          <i class="fas fa-camera fa-lg text-green-600"></i>
-          <p>Scan</p>
-        </a>
+            <i class="fas fa-camera fa-lg" style="color: #4CAF50;"></i> <!-- Adjusted green color -->
+            <p>Scan</p>
+          </a>
         <a href="/browse" class="text-center">
           <i class="fas fa-th-large fa-lg"></i>
           <p>Apps</p>

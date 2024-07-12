@@ -1,20 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=San+Francisco&display=swap');
 
+
+html, body {
+    overflow: auto;
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-}
-
-main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    padding-bottom: 70px;
 }
 
 .header-container {
@@ -24,29 +26,8 @@ main {
     width: 100%;
 }
 
-.ecopoints-container {
-    display: flex;
-    align-items: center;
-    background-color: #E5F4E3;
-    padding: 5px 10px;
-    border-radius: 15px;
-}
-
-.ecopoints-container img {
-    width: 24px;
-    height: 24px;
-}
-
-.ecopoints-container span {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #2F855A;
-}
-
 .carousel {
     position: relative;
-    width: 100%;
-    max-width: 90%;
     height: 150px;
     overflow: hidden;
     margin-top: 20px;
@@ -125,7 +106,7 @@ main {
 }
 
 .lava-lamp-container {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .lava-lamp {
@@ -133,15 +114,14 @@ main {
 }
 
 .eco-apps-card {
-    margin-top: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     display: flex;
     align-items: center;
     background-color: white;
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: calc(100% - 32px);
-    max-width: 90%;
     cursor: pointer;
 }
 
@@ -165,63 +145,69 @@ main {
     color: gray;
 }
 
-.positivity-section {
-    width: 100%;
-    overflow-x: auto;
-    white-space: nowrap;
-    margin-top: 10px;
-    padding: 0 16px;
-    box-sizing: border-box;
-}
+    .positivity-section {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-top: 10px;
+        margin-bottom: 40px;
+        padding: 0; /* Remove padding */
+        box-sizing: border-box;
+    }
 
-.positivity-section::-webkit-scrollbar {
-    display: none;
-}
+    .positivity-section::-webkit-scrollbar {
+        display: none;
+    }
 
-.positivity-section h2 {
-    margin-left: 10px;
-    margin-top: 40px;
-}
+    .positivity-card {
+        display: inline-block;
+        background-color: #A5D6A7;
+        border-radius: 10px;
+        padding: 20px;
+        color: black;
+        vertical-align: top;
+        box-sizing: border-box;
+        cursor: pointer;
+        text-align: left;
+        height: 300px; /* Fixed height for all cards */
+        width: 250px; /* Ensure consistent width */
+        flex-shrink: 0; /* Prevent shrinking */
+        margin-left: 0; /* Ensure no margin on the first card */
+    }
 
-.positivity-card {
-    display: inline-block;
-    background-color: #A5D6A7;
-    border-radius: 10px;
-    padding: 20px;
-    margin-right: 10px;
-    width: 250px;
-    color: black;
-    vertical-align: top;
-    box-sizing: border-box;
-    cursor: pointer;
-}
+    .positivity-card + .positivity-card {
+        margin-left: 1rem; /* Add margin to the left of all cards except the first one */
+    }
 
-.positivity-card h3 {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    white-space: normal;
-}
+    .positivity-card h3 {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+        white-space: normal;
+    }
 
-.positivity-card p {
-    font-size: 0.9rem;
-    white-space: normal;
-}
+    .positivity-card p {
+        font-size: 0.9rem;
+        white-space: normal;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 5; /* Limit the text to 5 lines */
+        -webkit-box-orient: vertical;
+    }
 
-.positivity-card .icon {
-    font-size: 1.5rem;
-    color: white;
-    margin-top: 10px;
-}
+    .positivity-card .icon {
+        font-size: 1.5rem;
+        color: white;
+        margin-top: 10px;
+    }
 
 .food-card {
-    margin-top: 20px;
+    margin-top: 30px;
     background-color: #000;
     border-radius: 20px;
     overflow: hidden;
     color: white;
-    width: calc(100% - 32px);
-    max-width: 90%;
     position: relative;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -260,18 +246,16 @@ main {
 }
 
 .info-card {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
     align-items: center;
     background-color: white;
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: calc(100% - 32px);
-    max-width: 90%;
     justify-content: space-between;
     cursor: pointer;
-    margin-bottom: 30px;
+    margin-bottom: 100px;
 }
 
 .info-card .info-icon {
@@ -309,71 +293,6 @@ main {
     padding-bottom: 20px;
 }
 
-.trends-section {
-    margin-top: 20px;
-    width: calc(100% - 32px);
-    max-width: 90%;
-    padding-bottom: 20px;
-}
-
-.trends-section .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.trends-section .header h2 {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.trends-section .header .show-more {
-    color: #32CD32;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-.trends-section .trends-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.trend-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-}
-
-.trend-card .icon {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-
-.trend-card h3 {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0;
-}
-
-.trend-card p {
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.trend-card .count {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
 footer {
     background-color: white;
     border-top: 1px solid #ddd;
@@ -408,4 +327,124 @@ footer .icon i {
 footer .icon.active i,
 footer .icon.active span {
     color: #32CD32;
+}
+
+.container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.circular-progress {
+    position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+.circular-progress svg {
+    width: 100%;
+    height: 100%;
+}
+
+.circular-progress .circle-bg {
+    fill: none;
+    stroke: #4b5563;
+    stroke-width: 12;
+}
+
+.circular-progress .circle-dark {
+    fill: #1f2937;
+}
+
+.circular-progress .circle-light {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.fixed-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon i {
+    font-size: 1.5rem;
+}
+
+.nav-icon span {
+    font-size: 0.75rem;
+}
+
+.horizontal-scroll {
+    display: flex;
+    overflow-x: auto;
+    padding: 1rem 0;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.horizontal-scroll .item {
+    flex: 0 0 auto;
+    text-align: center;
+    margin-right: 1.2rem;
+}
+
+.horizontal-scroll .item:last-child {
+    margin-right: 0;
+}
+
+.recent-scans {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    margin-bottom: 30px;
+}
+
+.recent-scans::-webkit-scrollbar {
+    display: none;
+}
+
+.recent-scans .scan-item {
+    flex: 0 0 auto;
+    margin-right: 0.5rem;
+}
+
+.scan-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0.5rem;
 }

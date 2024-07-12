@@ -26,10 +26,6 @@ def camera():
 def browse():
     return render_template('browse.html')
 
-@main.route('/shop')
-def shop():
-    return render_template('apps/earthhero.html')
-
 @main.route('/ecopoints')
 def ecopoints():
     return render_template('ecopoints.html')
