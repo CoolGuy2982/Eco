@@ -205,38 +205,63 @@
                     </svg>
                 </div>
             </div>
-        <!-- Add to Home Screen Popup -->
-        <div id="addToHomeScreen" style="display: none; position: fixed; bottom: 0; width: 100%; background: #ffffff; border-top: 2px solid #cccccc; padding: 15px; text-align: center; font-size: 16px; color: #333; z-index: 1000; box-shadow: 0 -4px 6px rgba(0,0,0,0.1);">
-            <p style="margin: 10px 0;">Install this web app on your iPhone: tap <img src="/static/images/share-ios.png" alt="Share Icon" style="width: 24px; vertical-align: middle;"> and then 'Add to Home Screen.'</p>
-            <button onclick="closePopup()" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 24px; color: #333;">&times;</button>
-        </div>
+<!-- Dark Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
+
+<!-- Popup -->
+<div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
+    <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
+    <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4">
+    <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block"> and then <strong>Add to Home Screen</strong>.</p>
+</div>
+
+<!-- Long Triangle pointing down -->
+<div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
+    <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
+</div>
+
+<!-- Tailwind CSS Script -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Custom Styles -->
+<style>
+    #triangle-container {
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+    }
+</style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Function to detect Safari on iOS
-    function isIOS() {
-        return /iphone|ipod|ipad/.test(window.navigator.userAgent.toLowerCase());
+    function isIos() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     }
 
-    // Detects if the page is displayed in standalone mode
     function isInStandaloneMode() {
         return ('standalone' in window.navigator) && (window.navigator.standalone);
     }
 
-    // Show the popup only if it's Safari on iOS and not in standalone mode
-    if (isIOS() && !isInStandaloneMode()) {
-        showPopup();
+    function shouldShowPopup() {
+        return isIos() && !isInStandaloneMode() && !localStorage.getItem('popupShown');
     }
-});
 
-function showPopup() {
-    document.getElementById('addToHomeScreen').style.display = 'block';
-}
+    if (shouldShowPopup()) {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('triangle-container').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        localStorage.setItem('popupShown', 'true');
+    }
 
-function closePopup() {
-    document.getElementById('addToHomeScreen').style.display = 'none';
-}
+    document.getElementById('closeButton').onclick = function() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('triangle-container').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
 </script>
+
+            
 
         </main>
 

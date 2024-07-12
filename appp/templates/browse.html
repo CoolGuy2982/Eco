@@ -134,6 +134,62 @@
         </div>
     </div>
 
+    <!-- Dark Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
+
+<!-- Popup -->
+<div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
+    <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
+    <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4">
+    <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block"> and then <strong>Add to Home Screen</strong>.</p>
+</div>
+
+<!-- Long Triangle pointing down -->
+<div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
+    <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
+</div>
+
+<!-- Tailwind CSS Script -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Custom Styles -->
+<style>
+    #triangle-container {
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+    }
+</style>
+
+<script>
+    function isIos() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    }
+
+    function isInStandaloneMode() {
+        return ('standalone' in window.navigator) && (window.navigator.standalone);
+    }
+
+    function shouldShowPopup() {
+        return isIos() && !isInStandaloneMode() && !localStorage.getItem('popupShown');
+    }
+
+    if (shouldShowPopup()) {
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('triangle-container').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        localStorage.setItem('popupShown', 'true');
+    }
+
+    document.getElementById('closeButton').onclick = function() {
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('triangle-container').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+</script>
+
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
         <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
             <nav class="flex justify-around items-center text-gray-700">
