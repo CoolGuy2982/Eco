@@ -1,0 +1,228 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header a {
+  text-decoration: none;
+  font-size: 24px;
+  color: #333;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.tree-level {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  text-align: center;
+  width: 80px;
+}
+
+.dot img {
+  width: 50px;
+  height: 50px;
+}
+
+.progress-bar-container {
+  flex-grow: 1;
+  height: 10px;
+  background: #ccc;
+  margin: 0 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 5px;
+}
+
+.progress {
+  height: 100%;
+  background: green;
+  border-radius: 5px;
+}
+
+.current-level .dot {
+  background: green;
+}
+
+.rewards, .upcoming-rewards {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 20px;
+}
+
+.rewards ul, .upcoming-rewards ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.rewards li, .upcoming-rewards li {
+  background: #e0e0e0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rewards img, .upcoming-rewards img {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.upcoming-rewards {
+  display: none;
+}
+
+.ecopoints {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.upgrade-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 20px 0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.upgrade-button.disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.claim-button {
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.test-controls {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.test-controls input {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.test-controls button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  width: 80%;
+  max-width: 400px;
+  position: relative;
+}
+
+.popup img {
+  width: 100%;
+  max-height: 50%;
+  border-radius: 20px;
+}
+
+.popup .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+#triangle-container {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+}
