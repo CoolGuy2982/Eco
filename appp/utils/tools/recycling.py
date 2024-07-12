@@ -78,7 +78,7 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
                                             "response_mime_type": "application/json"
                                         },
                                         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
-        response = model.generate_content(user_query, base64_image)
+        response = model.generate_content([user_query, base64_image])
         return response.text
 
     try:
