@@ -1,6 +1,6 @@
 {
-  "short_name": "App",
-  "name": "Your App Name",
+  "short_name": "EcoLens",
+  "name": "EcoLens",
   "icons": [
     {
       "src": "/static/images/favicon.png",

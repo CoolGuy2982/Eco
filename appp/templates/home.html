@@ -206,10 +206,10 @@
                 </div>
             </div>
         <!-- Add to Home Screen Popup -->
-<div id="addToHomeScreen" style="display: none; position: fixed; bottom: 0; width: 100%; background: #f4f4f5; padding: 10px; text-align: center; font-size: 16px; color: black; z-index: 1000;">
-    <p>Install this web app on your iPhone: tap <span style="font-size: 22px;">&#8679;</span> and then Add to Home Screen.</p>
-    <button onclick="closePopup()" style="border: none; background: red; color: white; padding: 5px 10px;">Close</button>
-</div>
+        <div id="addToHomeScreen" style="display: none; position: fixed; bottom: 0; width: 100%; background: #ffffff; border-top: 2px solid #cccccc; padding: 15px; text-align: center; font-size: 16px; color: #333; z-index: 1000; box-shadow: 0 -4px 6px rgba(0,0,0,0.1);">
+            <p style="margin: 10px 0;">Install this web app on your iPhone: tap <img src="/static/images/share-ios.png" alt="Share Icon" style="width: 24px; vertical-align: middle;"> and then 'Add to Home Screen.'</p>
+            <button onclick="closePopup()" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 24px; color: #333;">&times;</button>
+        </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -241,19 +241,21 @@ function closePopup() {
         </main>
 
         <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
-            <div class="flex justify-around items-center text-gray-700 py-2 shadow-md">
-                <a href="/home" class="flex flex-col items-center text-center">
-                    <i class="fas fa-home fa-lg text-green-600"></i>
-                    <p class="text-xs mt-1">Home</p>
-                </a>
-                <a href="/camera" class="flex flex-col items-center text-center">
-                    <i class="fas fa-camera fa-lg text-gray-600"></i>
-                    <p class="text-xs mt-1">Scan</p>
-                </a>
-                <a href="/browse" class="flex flex-col items-center text-center">
-                    <i class="fas fa-th-large fa-lg text-gray-600"></i>
-                    <p class="text-xs mt-1">Apps</p>
-                </a>
+            <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
+                <nav class="flex justify-around items-center text-gray-700">
+                    <a class="text-center">
+                        <i class="fas fa-home fa-lg text-green-600"></i>
+                        <p>Home</p>
+                    </a>
+                    <a href="/camera" class="text-center">
+                        <i class="fas fa-camera fa-lg"></i>
+                        <p>Scan</p>
+                    </a>
+                    <a href="/browse" class="text-center">
+                        <i class="fas fa-th-large fa-lg"></i>
+                        <p>Apps</p>
+                    </a>
+                </nav>
             </div>
         </nav>
         
@@ -401,6 +403,34 @@ function closePopup() {
             }
             setTimeout(startAutoTransition, 10000);
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    function isIOS() {
+        return /iphone|ipod|ipad/.test(window.navigator.userAgent.toLowerCase());
+    }
+
+    function isInStandaloneMode() {
+        return ('standalone' in window.navigator) && (window.navigator.standalone);
+    }
+
+    // Retrieve the 'dismissed' state from localStorage
+    var dismissed = localStorage.getItem('addToHomeScreenDismissed');
+
+    if (isIOS() && !isInStandaloneMode() && !dismissed) {
+        showPopup();
+    }
+});
+
+function showPopup() {
+    document.getElementById('addToHomeScreen').style.display = 'block';
+}
+
+function closePopup() {
+    document.getElementById('addToHomeScreen').style.display = 'none';
+    // Save a flag in localStorage when the user dismisses the popup
+    localStorage.setItem('addToHomeScreenDismissed', 'true');
+}
+
 
         startAutoTransition();
     </script>
