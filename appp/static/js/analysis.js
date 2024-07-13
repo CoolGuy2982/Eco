@@ -43,8 +43,9 @@ function fetchAddressAndDisplay(keyword, data) {
           console.error('Error fetching address:', error);
           document.getElementById('map-container').style.display = 'none'; // Hide map on error
         });
-    }, () => {
-      alert('Unable to retrieve your location');
+    }, error => {
+      console.error('Geolocation error:', error);
+      alert('Geolocation error: ' + error.message + ". Please enable location services in your device settings.");
     });
   } else {
     alert('Geolocation is not supported by this browser.');
@@ -146,26 +147,6 @@ function fetchAndDisplayProducts(keyword, data) {
     });
 }
 
-function setupCarousel() {
-  const carousel = document.querySelector('.carousel');
-  const nextButton = document.createElement('button');
-  nextButton.textContent = '>';
-  nextButton.classList.add('next');
-  nextButton.onclick = () => {
-    carousel.scrollBy({left: 300, behavior: 'smooth'});
-  };
-
-  const prevButton = document.createElement('button');
-  prevButton.textContent = '<';
-  prevButton.classList.add('prev');
-  prevButton.onclick = () => {
-    carousel.scrollBy({left: -300, behavior: 'smooth'});
-  };
-
-  carousel.before(prevButton);
-  carousel.after(nextButton);
-}
-
 function saveResponseLocally(data) {
   const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
   const existingIndex = pastResponses.findIndex(response => response.date === data.date);
@@ -179,50 +160,6 @@ function saveResponseLocally(data) {
 
   localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
   console.log('Past responses updated:', pastResponses);
-}
-
-function mergeResponses(responses) {
-  const mergedResponses = [];
-
-  responses.forEach(response => {
-    const lastResponse = mergedResponses[mergedResponses.length - 1];
-
-    if (lastResponse && (new Date(response.date) - new Date(lastResponse.date)) <= 30000) {
-      // Merge if within 30 seconds
-      lastResponse.result = lastResponse.result || response.result;
-      lastResponse.keyword = lastResponse.keyword || response.keyword;
-      lastResponse.latitude = lastResponse.latitude || response.latitude;
-      lastResponse.longitude = lastResponse.longitude || response.longitude;
-      lastResponse.video_suggestion = lastResponse.video_suggestion || response.video_suggestion;
-      lastResponse.product_option_chosen = lastResponse.product_option_chosen || response.product_option_chosen;
-
-      if (response.products) {
-        lastResponse.products = lastResponse.products || [];
-        response.products.forEach(product => {
-          if (!lastResponse.products.some(p => p.title === product.title && p.price === product.price)) {
-            lastResponse.products.push(product);
-          }
-        });
-      }
-    } else {
-      mergedResponses.push(response);
-    }
-  });
-
-  return mergedResponses;
-}
-
-function showEcoPoint() {
-  let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
-  ecoPoints += 1;
-  localStorage.setItem('ecoPoints', ecoPoints);
-
-  const ecoPoint = document.getElementById('eco-point');
-  ecoPoint.classList.add('visible');
-
-  setTimeout(() => {
-    ecoPoint.classList.remove('visible');
-  }, 3000);
 }
 
 window.onload = function() {
@@ -239,7 +176,6 @@ window.onload = function() {
 
   if (data.result) {
     analysisResult.innerHTML = formatBoldAndNewLine(data.result);
-    showEcoPoint();
   } else {
     analysisResult.innerHTML = 'Sorry bout dat, we prolly messed something up. Please try again';
   }
