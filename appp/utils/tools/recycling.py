@@ -126,7 +126,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
     {response_text} 
     Material Info: {material_info}
 
-    Ensure the response is concise, relevant, and helpful, avoiding any irrelevant or obvious information. The response should feel conversational and caring:
+    Ensure the response is concise, relevant, and helpful, avoiding any irrelevant or obious information. The response should feel conversational and caring:
     
     Don't respond in bullet points, respond in the same syntax as if you are texting someone. Appropriately give your response so it isn't intimidating to comprehend.
     Limit response to 80 words max.
@@ -170,10 +170,12 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
             # Parse the fallback model's JSON response
             print(alt_response)
 
-            fallback_result = json.loads(alt_response.text)
-            response = fallback_result.get("Response", "No response generated.")
-            keyword = fallback_result.get("Keyword", "Unknown")
-            video_suggestion = fallback_result.get("Video_Suggestion")
+            fallback_result = alt_response.text
+
+            text_analysis_result = json.loads(fallback_result)
+            response = text_analysis_result.get("Response", "No response generated.")
+            keyword = text_analysis_result.get("Keyword", "Unknown")
+            video_suggestion = text_analysis_result.get("Video_Suggestion")
 
         result = {'result': response, 'keyword': keyword}
 

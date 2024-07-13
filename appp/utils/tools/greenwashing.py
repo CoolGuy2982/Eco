@@ -158,10 +158,14 @@ def generate_greenwashing_response(response_text, spoken_text, material_info, ba
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
             alt_response = model.generate_content([text_prompt, base64_image])
             # Parse the fallback model's JSON response
-            fallback_result = json.loads(alt_response.text)
-            response = fallback_result.get("Response", "No response generated.")
-            keyword = fallback_result.get("Keyword", "Unknown")
-            video_suggestion = fallback_result.get("Video_Suggestion")
+            print(alt_response)
+
+            fallback_result = alt_response.text
+
+            text_analysis_result = json.loads(fallback_result)
+            response = text_analysis_result.get("Response", "No response generated.")
+            keyword = text_analysis_result.get("Keyword", "Unknown")
+            video_suggestion = text_analysis_result.get("Video_Suggestion")
 
         result = {'result': response, 'keyword': keyword}
 

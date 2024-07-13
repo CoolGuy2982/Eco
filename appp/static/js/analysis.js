@@ -46,10 +46,24 @@ function fetchAddressAndDisplay(keyword, data) {
     }, error => {
       console.error('Geolocation error:', error);
       alert('Geolocation error: ' + error.message + ". Please enable location services in your device settings.");
+      // Prompt again for geolocation
+      requestGeolocationPermission();
     });
   } else {
     alert('Geolocation is not supported by this browser.');
   }
+}
+
+function requestGeolocationPermission() {
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      console.log('Geolocation granted.');
+    },
+    error => {
+      console.error('Geolocation permission denied.', error);
+      alert('Geolocation permission is required for this feature. Please enable location services.');
+    }
+  );
 }
 
 function displayMap(addresses, sectionTitle) {
@@ -208,4 +222,7 @@ window.onload = function() {
   }
 
   sessionStorage.removeItem('AIResponse'); // Clean up after displaying
+
+  // Request geolocation permission on page load
+  requestGeolocationPermission();
 };
