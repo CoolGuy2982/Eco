@@ -1,56 +1,63 @@
 function fetchAddressAndDisplay(keyword, data) {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const keywordString = encodeURIComponent(keyword); // Ensure keyword is URL encoded
-      const url = `/scrape_address?what=${keywordString}&latitude=${latitude}&longitude=${longitude}`;
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        displayLocationInfo(latitude, longitude);
+        const keywordString = encodeURIComponent(keyword); // Ensure keyword is URL encoded
+        const url = `/scrape_address?what=${keywordString}&latitude=${latitude}&longitude=${longitude}`;
 
-      fetch(url)
-        .then(response => response.json())
-        .then(addressData => {
-          console.log('Scraped Address:', addressData.address);
-          const cleanedAddress = addressData.address.replace(/[^\x20-\x7E]/g, '');
-          const earth911Link = `https://search.earth911.com/?what=${keywordString}&latitude=${latitude}&longitude=${longitude}&max_distance=25`;
-          const sectionTitle = document.createElement('a');
-          sectionTitle.href = earth911Link;
-          sectionTitle.target = "_blank";
-          sectionTitle.className = 'section-title';
+        fetch(url)
+          .then(response => response.json())
+          .then(addressData => {
+            console.log('Scraped Address:', addressData.address);
+            const cleanedAddress = addressData.address.replace(/[^\x20-\x7E]/g, '');
+            const earth911Link = `https://search.earth911.com/?what=${keywordString}&latitude=${latitude}&longitude=${longitude}&max_distance=25`;
+            const sectionTitle = document.createElement('a');
+            sectionTitle.href = earth911Link;
+            sectionTitle.target = "_blank";
+            sectionTitle.className = 'section-title';
 
-          if (addressData.address === "Not found, Not found") {
-            console.log('Address not valid:', cleanedAddress);
-            document.getElementById('map-container').style.display = 'none'; // Hide the map container if address is not valid
-          } else if (cleanedAddress.startsWith(', ')) {
-            sectionTitle.textContent = 'Mail In Location';
-            displayMap([cleanedAddress], sectionTitle);
-          } else {
-            sectionTitle.textContent = 'Recycling Location';
-            displayMap([cleanedAddress], sectionTitle);
-          }
+            if (addressData.address === "Not found, Not found") {
+              console.log('Address not valid:', cleanedAddress);
+              document.getElementById('map-container').style.display = 'none'; // Hide the map container if address is not valid
+            } else if (cleanedAddress.startsWith(', ')) {
+              sectionTitle.textContent = 'Mail In Location';
+              displayMap([cleanedAddress], sectionTitle);
+            } else {
+              sectionTitle.textContent = 'Recycling Location';
+              displayMap([cleanedAddress], sectionTitle);
+            }
 
-          // Update and save the response data with address
-          const completeData = {
-            ...data,
-            latitude,
-            longitude,
-            address: cleanedAddress,
-            date: new Date().toISOString()
-          };
-          console.log('Saving complete analysis data:', completeData);
-          saveResponseLocally(completeData);
-        })
-        .catch(error => {
-          console.error('Error fetching address:', error);
-          document.getElementById('map-container').style.display = 'none'; // Hide map on error
-        });
-    }, error => {
-      console.error('Geolocation error:', error);
-      alert('Geolocation error: ' + error.message + ". Please enable location services in your device settings.");
-      // Prompt again for geolocation
-      requestGeolocationPermission();
-    });
+            // Update and save the response data with address
+            const completeData = {
+              ...data,
+              latitude,
+              longitude,
+              address: cleanedAddress,
+              date: new Date().toISOString()
+            };
+            console.log('Saving complete analysis data:', completeData);
+            saveResponseLocally(completeData);
+          })
+          .catch(error => {
+            console.error('Error fetching address:', error);
+            displayError('Error fetching address: ' + error.message);
+            document.getElementById('map-container').style.display = 'none'; // Hide map on error
+          });
+      },
+      error => {
+        console.error('Geolocation error:', error);
+        displayError('Geolocation error: ' + error.message);
+        alert('Geolocation error: ' + error.message + ". Please enable location services in your device settings.");
+        // Prompt again for geolocation
+        requestGeolocationPermission();
+      }
+    );
   } else {
     alert('Geolocation is not supported by this browser.');
+    displayError('Geolocation is not supported by this browser.');
   }
 }
 
@@ -61,9 +68,25 @@ function requestGeolocationPermission() {
     },
     error => {
       console.error('Geolocation permission denied.', error);
+      displayError('Geolocation permission denied: ' + error.message);
       alert('Geolocation permission is required for this feature. Please enable location services.');
     }
   );
+}
+
+function displayLocationInfo(latitude, longitude) {
+  const locationInfo = document.createElement('div');
+  locationInfo.id = 'location-info';
+  locationInfo.innerHTML = `Latitude: ${latitude}, Longitude: ${longitude}`;
+  document.body.appendChild(locationInfo);
+}
+
+function displayError(errorMessage) {
+  const errorInfo = document.createElement('div');
+  errorInfo.id = 'error-info';
+  errorInfo.style.color = 'red';
+  errorInfo.innerHTML = errorMessage;
+  document.body.appendChild(errorInfo);
 }
 
 function displayMap(addresses, sectionTitle) {
@@ -157,29 +180,36 @@ function fetchAndDisplayProducts(keyword, data) {
     })
     .catch(error => {
       console.error('Error fetching products:', error);
+      displayError('Error fetching products: ' + error.message);
       document.getElementById('product-container').style.display = 'none'; // Hide on error
     });
 }
 
 function saveResponseLocally(data) {
-  const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-  const existingIndex = pastResponses.findIndex(response => response.date === data.date);
+  try {
+    const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
+    const existingIndex = pastResponses.findIndex(response => response.date === data.date);
 
-  if (existingIndex > -1) {
-    // Merge the new data with the existing data
-    pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
-  } else {
-    pastResponses.push(data);
+    if (existingIndex > -1) {
+      // Merge the new data with the existing data
+      pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
+    } else {
+      pastResponses.push(data);
+    }
+
+    localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
+    console.log('Past responses updated:', pastResponses);
+  } catch (error) {
+    console.error('Error saving response locally:', error);
+    displayError('Error saving response locally: ' + error.message);
   }
-
-  localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
-  console.log('Past responses updated:', pastResponses);
 }
 
 window.onload = function() {
   const data = JSON.parse(sessionStorage.getItem('AIResponse'));
   if (!data) {
     console.error('No AI response data found in session storage.');
+    displayError('No AI response data found in session storage.');
     return;
   }
 
