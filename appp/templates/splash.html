@@ -4,17 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Splash Screen</title>
+    <meta name="google-signin-client_id" content="569729035262-oqehkq4js7sj805it6pvsldkq2h1benm.apps.googleusercontent.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/splash.css') }}" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="manifest" href="/static/manifest.json">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body class="bg-green-500 flex items-center justify-center h-screen">
     <div class="text-center">
         <div class="text-green-950 text-5xl font-bold font-montserrat">EcoLens</div>
         <div class="text-green-950 text-xl font-roboto mt-2">by Firley</div>
+        <div id="signInButtonContainer" class="hidden mt-4">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
     </div>
-    <script src="{{ url_for('static', filename='js/splash.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const email = localStorage.getItem('email');
+            if (email) {
+                // User is signed in, redirect after a delay
+                setTimeout(function() {
+                    window.location.href = "/home";
+                }, 750); // Delay of 0.75 seconds
+            } else {
+                // User is not signed in, show the sign-in button
+                document.getElementById('signInButtonContainer').classList.remove('hidden');
+            }
+        });
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            var email = profile.getEmail();
+            var idToken = googleUser.getAuthResponse().id_token;
+
+            // Send the ID token to the backend for verification and to create a session
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('email', email);
+                    window.location.href = '/home';
+                } else {
+                    console.error('Login failed');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

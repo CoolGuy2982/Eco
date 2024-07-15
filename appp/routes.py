@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, current_app
+from flask import Blueprint, render_template, request, jsonify, current_app, session
 import threading
 from .utils.image_analysis import analyze_image
 from .utils.google_drive import upload_to_drive
@@ -6,9 +6,28 @@ import base64
 import requests
 from bs4 import BeautifulSoup
 import urllib.parse
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import os
 
 # Create a Blueprint instance for the main app
 main = Blueprint('main', __name__)
+main.secret_key = os.getenv('FLASK_SECRET_KEY', 'your_default_secret_key')
+
+CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
+
+
+@main.route('/login', methods=['POST'])
+def login():
+    token = request.json.get('idToken')
+    try:
+        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        user_email = idinfo['email']
+        session['user_email'] = user_email
+        return jsonify({'success': True})
+    except ValueError:
+        return jsonify({'success': False}), 401
 
 @main.route('/')
 def splash():

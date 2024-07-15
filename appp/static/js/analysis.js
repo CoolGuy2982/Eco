@@ -1,3 +1,136 @@
+function saveResponseLocally(data) {
+  try {
+    let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
+    console.log('Initial pastResponses:', pastResponses); // Debugging log
+    const existingIndex = pastResponses.findIndex(response => response.date === data.date);
+
+    if (existingIndex > -1) {
+      // Merge the new data with the existing data
+      pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
+    } else {
+      pastResponses.push(data);
+    }
+
+    try {
+      localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
+      console.log('Past responses updated:', pastResponses);
+      displayPastResponses(); // Display past responses for testing
+    } catch (error) {
+      if (error.code === 22) {
+        // QuotaExceededError
+        console.warn('Quota exceeded, removing oldest entries');
+        while (error.code === 22 && pastResponses.length > 0) {
+          pastResponses.shift(); // Remove the oldest entry
+          try {
+            localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
+            error = null;
+            console.log('Past responses updated after removing oldest entry:', pastResponses);
+          } catch (e) {
+            error = e;
+            console.warn('Still exceeding quota, removing more entries');
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error saving response locally:', error);
+    displayError('Error saving response locally: ' + error.message);
+  }
+}
+
+function displayPastResponses() {
+  const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
+  const responsesContainer = document.getElementById('responses-container');
+  responsesContainer.innerHTML = ''; // Clear previous content
+
+  pastResponses.forEach((response, index) => {
+    const responseDiv = document.createElement('div');
+    responseDiv.className = 'response';
+
+    const responseJson = document.createElement('pre');
+    responseJson.className = 'response-json';
+    responseJson.textContent = JSON.stringify(response, null, 2); // Format JSON with indentation
+
+    responseDiv.appendChild(responseJson);
+    responsesContainer.appendChild(responseDiv);
+  });
+}
+
+function getEcoPoint() {
+  return parseInt(localStorage.getItem('ecoPoints') || '0', 10);
+}
+
+function incrementEcoPoint() {
+  let ecoPoint = getEcoPoint();
+  ecoPoint += 1;
+  localStorage.setItem('ecoPoints', ecoPoint.toString());
+  displayEcoPoint();
+}
+
+function displayEcoPoint() {
+  let ecoPoint = getEcoPoint();
+  const ecoPointElement = document.getElementById('eco-point');
+  ecoPointElement.textContent = `+1 EcoPoint`;
+  ecoPointElement.classList.add('visible');
+
+  setTimeout(() => {
+    ecoPointElement.classList.remove('visible');
+  }, 3000); // Hide after 3 seconds
+}
+
+window.onload = function() {
+  displayEcoPoint();
+  //displayPastResponses(); // Display past responses on load for testing
+  const data = JSON.parse(sessionStorage.getItem('AIResponse'));
+  if (!data) {
+    console.error('No AI response data found in session storage.');
+    displayError('No AI response data found in session storage.');
+    return;
+  }
+
+  const analysisResult = document.getElementById('analysis-result');
+  const mapContainer = document.getElementById('map-container');
+  const videoContainer = document.getElementById('video-container');
+
+  if (data.result) {
+    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
+    incrementEcoPoint(); // Increment EcoPoint on valid AI response
+  } else {
+    analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
+  }
+
+  // Save initial response data
+  const initialData = {
+    result: data.result || null,
+    video_suggestion: data.video_suggestion || null,
+    date: new Date().toISOString()
+  };
+  saveResponseLocally(initialData);
+
+  // Check for recycling option and keyword before fetching address
+  if (data.text_tool === 'B' && data.keyword) {
+    fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
+  } else {
+    mapContainer.style.display = 'none'; // Hide the map container if not "Recycling"
+  }
+
+  if (data.keyword) {
+    fetchAndDisplayProducts(data.keyword, data); // Fetch and display products based on the keyword
+  }
+
+  if (data.video_suggestion) {
+    displayYouTubeVideos([data.video_suggestion]);
+    videoContainer.style.display = 'block';
+  } else {
+    videoContainer.style.display = 'none';
+  }
+
+  sessionStorage.removeItem('AIResponse'); // Clean up after displaying
+
+  // Request geolocation permission on page load
+  requestGeolocationPermission();
+};
+
 function fetchAddressAndDisplay(keyword, data) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -5,7 +138,7 @@ function fetchAddressAndDisplay(keyword, data) {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
         displayLocationInfo(latitude, longitude);
-        const keywordString = encodeURIComponent(keyword); // Ensure keyword is URL encoded
+        const keywordString = encodeURIComponent(keyword);
         const url = `/scrape_address?what=${keywordString}&latitude=${latitude}&longitude=${longitude}`;
 
         fetch(url)
@@ -21,7 +154,7 @@ function fetchAddressAndDisplay(keyword, data) {
 
             if (addressData.address === "Not found, Not found") {
               console.log('Address not valid:', cleanedAddress);
-              document.getElementById('map-container').style.display = 'none'; // Hide the map container if address is not valid
+              document.getElementById('map-container').style.display = 'none';
             } else if (cleanedAddress.startsWith(', ')) {
               sectionTitle.textContent = 'Mail In Location';
               displayMap([cleanedAddress], sectionTitle);
@@ -30,7 +163,6 @@ function fetchAddressAndDisplay(keyword, data) {
               displayMap([cleanedAddress], sectionTitle);
             }
 
-            // Update and save the response data with address
             const completeData = {
               ...data,
               latitude,
@@ -44,14 +176,13 @@ function fetchAddressAndDisplay(keyword, data) {
           .catch(error => {
             console.error('Error fetching address:', error);
             displayError('Error fetching address: ' + error.message);
-            document.getElementById('map-container').style.display = 'none'; // Hide map on error
+            document.getElementById('map-container').style.display = 'none';
           });
       },
       error => {
         console.error('Geolocation error:', error);
         displayError('Geolocation error: ' + error.message);
         alert('Geolocation error: ' + error.message + ". Please enable location services in your device settings.");
-        // Prompt again for geolocation
         requestGeolocationPermission();
       }
     );
@@ -135,7 +266,7 @@ function displayYouTubeVideos(videoIDs) {
 }
 
 function fetchAndDisplayProducts(keyword, data) {
-  const keywordString = keyword; // Handle multi-word keywords
+  const keywordString = keyword;
   fetch(`/scrape_products?keyword=${keywordString}`)
     .then(response => response.json())
     .then(products => {
@@ -143,7 +274,7 @@ function fetchAndDisplayProducts(keyword, data) {
         let currentIndex = 0;
 
         const productContainer = document.getElementById('product-container');
-        productContainer.style.display = 'block';  // Show the container once products are loaded
+        productContainer.style.display = 'block';
         const productCard = productContainer.querySelector('.product-card');
 
         updateProductDisplay(products, currentIndex);
@@ -168,7 +299,6 @@ function fetchAndDisplayProducts(keyword, data) {
           productElement.querySelector('p').textContent = product.price;
         }
 
-        // Update and save the response data with products
         const completeData = {
           ...data,
           products,
@@ -181,78 +311,6 @@ function fetchAndDisplayProducts(keyword, data) {
     .catch(error => {
       console.error('Error fetching products:', error);
       displayError('Error fetching products: ' + error.message);
-      document.getElementById('product-container').style.display = 'none'; // Hide on error
+      document.getElementById('product-container').style.display = 'none';
     });
 }
-
-function saveResponseLocally(data) {
-  try {
-    const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-    const existingIndex = pastResponses.findIndex(response => response.date === data.date);
-
-    if (existingIndex > -1) {
-      // Merge the new data with the existing data
-      pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
-    } else {
-      pastResponses.push(data);
-    }
-
-    localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
-    console.log('Past responses updated:', pastResponses);
-  } catch (error) {
-    console.error('Error saving response locally:', error);
-    displayError('Error saving response locally: ' + error.message);
-  }
-}
-
-window.onload = function() {
-  const data = JSON.parse(sessionStorage.getItem('AIResponse'));
-  if (!data) {
-    console.error('No AI response data found in session storage.');
-    displayError('No AI response data found in session storage.');
-    return;
-  }
-
-  const analysisResult = document.getElementById('analysis-result');
-  const ecoPoint = document.getElementById('eco-point');
-  const mapContainer = document.getElementById('map-container');
-  const videoContainer = document.getElementById('video-container');
-
-  if (data.result) {
-    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
-  } else {
-    analysisResult.innerHTML = 'Sorry bout dat, we prolly messed something up. Please try again';
-  }
-
-  // Save initial response data
-  const initialData = {
-    result: data.result || null,
-    video_suggestion: data.video_suggestion || null,
-    b64_image: data.image_data,
-    date: new Date().toISOString()
-  };
-  saveResponseLocally(initialData);
-
-  // Check for recycling option and keyword before fetching address
-  if (data.text_tool === 'B' && data.keyword) {
-    fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
-  } else {
-    mapContainer.style.display = 'none'; // Hide the map container if not "Recycling"
-  }
-
-  if (data.keyword) {
-    fetchAndDisplayProducts(data.keyword, data); // Fetch and display products based on the keyword
-  }
-
-  if (data.video_suggestion) {
-    displayYouTubeVideos([data.video_suggestion]);
-    videoContainer.style.display = 'block';
-  } else {
-    videoContainer.style.display = 'none';
-  }
-
-  sessionStorage.removeItem('AIResponse'); // Clean up after displaying
-
-  // Request geolocation permission on page load
-  requestGeolocationPermission();
-};

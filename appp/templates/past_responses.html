@@ -111,12 +111,11 @@
 
                         if (response.b64_image) {
                             const imageDiv = document.createElement('img');
-                            imageDiv.src = `data:image/png;base64,${response.b64_image}`;
+                            imageDiv.src = response.b64_image; // Directly use the base64 string
                             imageDiv.id = 'img-' + index; // Set ID directly on the image
                             imageDiv.style.maxWidth = '100%'; // Adjust styling as needed
                             responseDiv.appendChild(imageDiv);
                         }
-
 
                         if (response.result) {
                             const resultDiv = document.createElement('div');
@@ -176,7 +175,6 @@
             }
         });
 
-
         function isValidResponse(response) {
             return response.result || response.video_suggestion || (response.products && response.products.length > 0);
         }
@@ -207,6 +205,9 @@
 
             return mergedResponses;
         }
+
+        // Debugging: Log stored responses
+        console.log('Stored responses:', JSON.parse(localStorage.getItem('pastResponses')));
     </script>
 </body>
 </html>

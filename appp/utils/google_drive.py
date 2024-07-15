@@ -12,12 +12,12 @@ creds, project = default()
 #SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
 #creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
 
-# Build the drive service using the default credentials
+# Build the drive service using the credentials
 drive_service = build('drive', 'v3', credentials=creds)
 
 DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw'  # drive folder ID from link
 
-def upload_to_drive(file_name, file_data):
+def upload_to_drive(file_name, file_data, user_email):
     file_metadata = {
         'name': file_name,
         'parents': [DRIVE_FOLDER_ID]
@@ -28,4 +28,17 @@ def upload_to_drive(file_name, file_data):
         media_body=media,
         fields='id'
     ).execute()
+
+    # Share the file with the user's email
+    permission = {
+        'type': 'user',
+        'role': 'reader',
+        'emailAddress': user_email
+    }
+    drive_service.permissions().create(
+        fileId=file.get('id'),
+        body=permission,
+        fields='id'
+    ).execute()
+
     return file.get('id')

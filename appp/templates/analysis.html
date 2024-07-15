@@ -12,6 +12,27 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="EcoLens Analysis">
     <link rel="manifest" href="/static/manifest.json">
+    <style>
+        /* Additional CSS for JSON display */
+        .response-json {
+            white-space: pre-wrap; /* Wrap JSON content */
+            word-wrap: break-word; /* Break long words */
+            background-color: #f4f4f4; /* Light grey background */
+            border: 1px solid #ddd; /* Light grey border */
+            border-radius: 5px; /* Rounded corners */
+            padding: 10px; /* Padding */
+            margin: 10px 0; /* Margin */
+            font-size: 14px; /* Smaller font size */
+            overflow-x: auto; /* Horizontal scroll for overflow */
+        }
+
+        @media (max-width: 600px) {
+            .response-json {
+                font-size: 12px; /* Even smaller font size for mobile */
+                padding: 8px; /* Less padding for mobile */
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -23,7 +44,7 @@
                 <span class="title-text" onclick="location.href='/camera'">EcoLens</span>
             </div>
             <div id="analysis-result" class="response-text"></div>
-            <div id="eco-point" class="eco-point">+1 EcoPoint</div>
+            <div id="eco-point" class="eco-point">+0 EcoPoint</div>
         </div>
         <div id="map-container" class="map-container">
             <div class="section-title">Recycling Locations</div>
@@ -43,10 +64,10 @@
             </div>
         </div>
         <div id="video-container" class="video-container"></div>
+        <div id="responses-container" class="responses-container"></div> <!-- Container for displaying JSON data -->
     </div>
     <!-- Include Google Maps API Key -->
     <script type="text/javascript">
-        // Store the API key in a variable to be accessible by scan.js
         var googleMapsApiKey = "{{ google_maps_api_key }}";
     </script>
     <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>

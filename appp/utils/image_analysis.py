@@ -131,7 +131,6 @@ def analyze_image(base64_image, spoken_text):
         result["text_tool"] = text_tool
         result["image_response"] = response_text
         result["material_info"] = material_info
-        result["image_data"] = base64_image
 
 
         # Check if keyword is not included in the result
