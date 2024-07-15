@@ -4,20 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Splash Screen</title>
-    <meta name="google-signin-client_id" content="569729035262-oqehkq4js7sj805it6pvsldkq2h1benm.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/splash.css') }}" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="manifest" href="/static/manifest.json">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- Load the new Google Identity Services library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-green-500 flex items-center justify-center h-screen">
     <div class="text-center">
         <div class="text-green-950 text-5xl font-bold font-montserrat">EcoLens</div>
         <div class="text-green-950 text-xl font-roboto mt-2">by Firley</div>
         <div id="signInButtonContainer" class="hidden mt-4">
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <!-- New button container for Google Identity Services -->
+            <div id="g_id_onload"
+                 data-client_id="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com"
+                 data-auto_prompt="false">
+            </div>
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="outline"
+                 data-text="sign_in_with"
+                 data-shape="rectangular"
+                 data-logo_alignment="left"
+                 data-width="250">
+            </div>
         </div>
     </div>
     <script>
@@ -34,11 +48,9 @@
             }
         });
 
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            var email = profile.getEmail();
-            var idToken = googleUser.getAuthResponse().id_token;
-
+        function handleCredentialResponse(response) {
+            const idToken = response.credential;
+            
             // Send the ID token to the backend for verification and to create a session
             fetch('/login', {
                 method: 'POST',
@@ -49,6 +61,7 @@
             }).then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    const email = data.email;
                     localStorage.setItem('email', email);
                     window.location.href = '/home';
                 } else {
@@ -56,6 +69,18 @@
                 }
             });
         }
+
+        window.onload = function() {
+            google.accounts.id.initialize({
+                client_id: '569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com',
+                callback: handleCredentialResponse
+            });
+            google.accounts.id.renderButton(
+                document.getElementById('signInButtonContainer'),
+                { theme: 'outline', size: 'large' }
+            );
+            google.accounts.id.prompt(); // Automatically display the One Tap prompt if applicable
+        };
     </script>
 </body>
 </html>
