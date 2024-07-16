@@ -109,6 +109,36 @@
             width: 20px;
             height: 20px;
         }
+        .subscribe-container {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+        .subscribe-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        .subscribe-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .subscribe-list img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .auto-renew {
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -131,15 +161,16 @@
             </div>
         </div>
         <!-- New standalone setup -->
-        <div id="subscribePage" class="hidden">
+        <div id="subscribePage" class="hidden subscribe-container">
             <div class="main-text">Subscribe to EcoLens</div>
             <div class="sub-text">Subscribe to use the app. No ads. Feed your curiosity of the Earth</div>
-            <ul style="list-style: none; padding: 0; text-align: left;">
+            <ul class="subscribe-list">
                 <li><img src="/mnt/data/Welcome! (1).png" alt="Full access to EcoLens"> Full access to EcoLens</li>
                 <li><img src="/mnt/data/Welcome! (2).png" alt="Access to all current and upcoming Eco Apps"> Access to all current and upcoming Eco Apps</li>
                 <li><img src="/mnt/data/Welcome! (3).png" alt="Quality AI Responses fed with quality private data"> Quality AI Responses fed with quality private data</li>
             </ul>
             <button id="subscribeButton" class="button">Subscribe to EcoLens</button>
+            <div class="auto-renew">Auto-renews for $1.00/month until canceled</div>
         </div>
         <div id="freeForNowPage" class="hidden">
             <img src="https://via.placeholder.com/80" alt="Shhh Emoji" style="width: 80px; height: 80px;">
@@ -155,7 +186,7 @@
             </div>
         </div>
         <div id="videoPage" class="hidden">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe id="youtubeVideo" width="560" height="315" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
         <div id="allSetPage" class="hidden">
             <div class="main-text">Ok you're all set!</div>
@@ -164,18 +195,9 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const email = localStorage.getItem('email');
-            const profilePic = localStorage.getItem('profilePic');
             const setupCompleted = localStorage.getItem('setupCompleted');
-            const addedToHomeScreen = localStorage.getItem('addedToHomeScreen');
-
-            console.log('isLocalhost:', isLocalhost);
-            console.log('isStandalone:', isStandalone);
-            console.log('email:', email);
-            console.log('setupCompleted:', setupCompleted);
-            console.log('addedToHomeScreen:', addedToHomeScreen);
 
             if (isStandalone) {
                 if (!email) {
@@ -188,10 +210,8 @@
             } else {
                 if (!email) {
                     document.getElementById('signInButtonContainer').classList.remove('hidden');
-                } else if (!setupCompleted) {
-                    runSetupProcess();
                 } else {
-                    window.location.href = '/home';
+                    runSetupProcess();
                 }
             }
         });
@@ -208,9 +228,7 @@
             .then(data => {
                 if (data.success) {
                     const email = data.email;
-                    const profilePic = data.profilePic; 
                     localStorage.setItem('email', email);
-                    localStorage.setItem('profilePic', profilePic);
                     if (window.matchMedia('(display-mode: standalone)').matches) {
                         runStandaloneSetup();
                     } else {
@@ -223,15 +241,14 @@
         }
 
         function runSetupProcess() {
-            console.log('Running setup process...');
             const splashContent = document.getElementById('splashContent');
             const subContent = document.getElementById('subContent');
             const signInButtonContainer = document.getElementById('signInButtonContainer');
-            
+
             if (signInButtonContainer) {
                 signInButtonContainer.classList.add('hidden');
             }
-            
+
             splashContent.classList.add('fade-in');
             subContent.classList.add('fade-in');
             setTimeout(() => {
@@ -267,12 +284,6 @@
                                     `;
                                     splashContent.classList.remove('fade-out');
                                     splashContent.classList.add('fade-in');
-                                    setTimeout(() => {
-                                        window.addEventListener('appinstalled', () => {
-                                            localStorage.setItem('addedToHomeScreen', true);
-                                            showAllSetScreen();
-                                        });
-                                    }, 3000);
                                 }, 3000);
                             }, 3000);
                         }, 3000);
@@ -282,9 +293,9 @@
         }
 
         function runStandaloneSetup() {
-            console.log('Running standalone setup...');
             document.getElementById('splashContent').classList.add('hidden');
             document.getElementById('subContent').classList.add('hidden');
+            document.body.style.backgroundColor = "#fff";
             document.getElementById('subscribePage').classList.remove('hidden');
 
             document.getElementById('subscribeButton').addEventListener('click', () => {
@@ -303,13 +314,28 @@
             if (termsChecked && privacyChecked) {
                 document.getElementById('freeForNowPage').classList.add('hidden');
                 document.getElementById('videoPage').classList.remove('hidden');
+                trackVideoCompletion();
+            }
+        }
 
-                const iframe = document.querySelector('iframe');
-                iframe.addEventListener('ended', () => {
-                    document.getElementById('videoPage').classList.add('hidden');
-                    document.getElementById('allSetPage').classList.remove('hidden');
-                    localStorage.setItem('setupCompleted', true);
-                });
+        function trackVideoCompletion() {
+            const player = new YT.Player('youtubeVideo', {
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                document.getElementById('videoPage').classList.add('hidden');
+                document.getElementById('allSetPage').classList.remove('hidden');
+                localStorage.setItem('setupCompleted', true);
             }
         }
 
@@ -324,6 +350,15 @@
             );
             google.accounts.id.prompt();
         };
+
+        function onYouTubeIframeAPIReady() {
+            trackVideoCompletion();
+        }
+
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
     </script>
 </body>
 </html>
