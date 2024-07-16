@@ -207,6 +207,17 @@
         </div>
     </div>
     <script>
+        const isMobileDevice = () => {
+        return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+        };
+
+        const initialize = () => {
+        if (!isMobileDevice()) {
+            window.location.href = 'https://www.firley.org/products/ecolens-redirect';
+        }    
+        };
+
+        initialize();
         document.addEventListener("DOMContentLoaded", function(event) {
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const setupCompleted = localStorage.getItem('setupCompleted');
