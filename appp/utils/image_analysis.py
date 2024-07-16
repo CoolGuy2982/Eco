@@ -39,12 +39,12 @@ def analyze_image(base64_image, spoken_text):
             - Recycling (Tool B): Choose this if the image features any item/product in a home or outdoor setting or generally looks like trash. This could be any type of item/product.
             - Greenwashing (Tool C): Opt for this if the image shows products in a commercial setting, like a store, being advertised with environmental claims. Look for labels like "eco-friendly," "sustainable," "green," "ethical," "organic," or "natural" on packaging, particularly in contexts that might suggest exaggerated or misleading claims.
             - Composting (Tool D): Use this if the image includes biodegradable materials suitable for composting. This might include food scraps, yard debris like leaves and grass, or other organic waste clearly intended to decompose in a compost setting.
-            - Food (Tool E): Choose this tool if the image displays food storage or preparation areas such as kitchens, pantries, or refrigerators, featuring ingredients either being used for cooking or stored for future use.
+            - Food (Tool E): Choose this tool if the image displays food storage or preparation areas such as kitchens, pantries, or refrigerators, featuring ingredients either being used for cooking or stored for future use, or food items.
             - General Specialist (Tool F): Use this tool if the image doesn't fit any of the other categories even vaguely. This is for ambiguous queries where physical items are generally tools B & C, not F. YOU WILL RARELY CHOOSE THIS TOOL.
 
             Hints: Generally, the item in question if there is one will be in the center of the frame.
             
-            ANY PICTURE WITH AN ITEM WILL ALWAYS GO TO TOOLS B or C. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
+            ANY PICTURE WITH AN ITEM (not food, compost, or nature things) WILL ALWAYS GO TO TOOLS B or C. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
             IF IT IS AN ITEM IN QUESTION IN A HOME OR A SPECIFIC PRODUCT IN FOCUS OUTDOORS ENVIRONMENT, IT WILL ALWAYS GO TO RECYCLING (Tool B)
             IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE, IT WILL ALWAYS GO TO GREENWASHING (Tool C) 
 

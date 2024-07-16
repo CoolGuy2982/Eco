@@ -165,29 +165,41 @@
             <div class="main-text">Subscribe to EcoLens</div>
             <div class="sub-text">Subscribe to use the app. No ads. Feed your curiosity of the Earth</div>
             <ul class="subscribe-list">
-                <li><img src="/mnt/data/Welcome! (1).png" alt="Full access to EcoLens"> Full access to EcoLens</li>
-                <li><img src="/mnt/data/Welcome! (2).png" alt="Access to all current and upcoming Eco Apps"> Access to all current and upcoming Eco Apps</li>
-                <li><img src="/mnt/data/Welcome! (3).png" alt="Quality AI Responses fed with quality private data"> Quality AI Responses fed with quality private data</li>
+                <li><img src="/static/images/checkmark.jpg" alt="Full access to EcoLens"> Full access to EcoLens</li>
+                <li><img src="/static/images/checkmark.jpg" alt="Access to all current and upcoming Eco Apps"> Access to all current and upcoming Eco Apps</li>
+                <li><img src="/static/images/checkmark.jpg" alt="Quality AI Responses fed with quality private data"> Quality AI Responses fed with quality private data</li>
             </ul>
             <button id="subscribeButton" class="button">Subscribe to EcoLens</button>
             <div class="auto-renew">Auto-renews for $1.00/month until canceled</div>
         </div>
         <div id="freeForNowPage" class="hidden">
-            <img src="https://via.placeholder.com/80" alt="Shhh Emoji" style="width: 80px; height: 80px;">
+            <div style="display: flex; justify-content: center;">
+                <img src="/static/images/shhh.jpg" alt="Shhh Emoji" style="width: 80px; height: 80px;">
+            </div>
             <div class="main-text">EcoLens is free for now!!</div>
-            <div class="sub-text">We just want to see if you’d be willing to pay when we eventually charge.</div>
+            <div class="sub-text">We just want to see if you'd be willing to pay when we eventually charge.</div>
             <div class="checkbox-label">
                 <input type="checkbox" id="termsCheckbox">
-                <label for="termsCheckbox">I agree to <a href="https://example.com/terms" target="_blank">Terms of Service</a></label>
+                <label for="termsCheckbox">I agree to <a href="https://www.firley.net/terms-of-service" target="_blank">Terms of Service</a></label>
             </div>
             <div class="checkbox-label">
                 <input type="checkbox" id="privacyCheckbox">
-                <label for="privacyCheckbox">I agree to <a href="https://example.com/privacy" target="_blank">Privacy Policy</a></label>
+                <label for="privacyCheckbox">I agree to <a href="https://www.firley.net/privacy-policy" target="_blank">Privacy Policy</a></label>
             </div>
-        </div>
-        <div id="videoPage" class="hidden">
-            <iframe id="youtubeVideo" width="560" height="315" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW&enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
+        </div>        
+        <div id="videoPage" class="hidden" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <iframe 
+                id="youtubeVideo" 
+                width="100%" 
+                height="100%" 
+                src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW&enablejsapi=1&autoplay=1&mute=1" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>
+        </div>        
         <div id="allSetPage" class="hidden">
             <div class="main-text">Ok you're all set!</div>
             <div class="sub-text">Sorry about the wait.</div>
@@ -229,6 +241,7 @@
                 if (data.success) {
                     const email = data.email;
                     localStorage.setItem('email', email);
+                    localStorage.setItem('profilePic', data.profilePic);
                     if (window.matchMedia('(display-mode: standalone)').matches) {
                         runStandaloneSetup();
                     } else {
@@ -264,7 +277,7 @@
                     splashContent.classList.add('quick-fade-in');
                     setTimeout(() => {
                         splashContent.classList.remove('quick-fade-in');
-                        splashContent.classList.add('quick-fade-out');
+                        splashContent.classList.add('quick-fade-out')
                         setTimeout(() => {
                             splashContent.innerHTML = 'Welcome to <span class="highlight">EcoLens</span>';
                             splashContent.classList.remove('quick-fade-out');
@@ -280,7 +293,7 @@
                                         <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
                                         <div class="sub-text left-align">2 - Scroll down a bit</div>
                                         <div class="sub-text left-align">3 - Tap Add to Home</div>
-                                        <div><img class="step-img" src="/static/images/add2hs.png" alt="Step 3"></div>
+                                        <div><img class="step-img" src="/static/images/add2hs.jpg" alt="Step 3"></div>
                                     `;
                                     splashContent.classList.remove('fade-out');
                                     splashContent.classList.add('fade-in');
@@ -341,7 +354,6 @@
                 }, 2000);
             }
         }
-
 
         window.onload = function() {
             google.accounts.id.initialize({

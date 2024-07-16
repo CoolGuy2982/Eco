@@ -430,7 +430,7 @@ footer .icon.active span {
     white-space: nowrap;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .recent-scans::-webkit-scrollbar {

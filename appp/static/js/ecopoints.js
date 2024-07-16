@@ -1,34 +1,71 @@
 let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
-        let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
+let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
 
-        const goals = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]; // Goals for each level
-        const rewards = [
-            [
-                { name: "10% Off Lochtree ", cardImage: "static/images/rewards/lochtree.png", popupImage: "static/images/rewards/lochtree.png", code: "WELCOME-10" },
-                { name: "15% Off Terra Thread", cardImage: "https://d13wriz42ny3t5.cloudfront.net/production/2020/11/06111407/TerraThread_Banner2.jpg?width=1000", popupImage: "https://earthhero.com/cdn/shop/files/1D6042-logomark-and-wordmark_400x.png?v=1657915460", code: "" },
-                { name: "Free Ecoternatives Floss (Order $35+)", cardImage: "https://ecoternatives.co/cdn/shop/files/Screenshot_2024-02-20_at_8.48.00_PM_3.png?v=1708426636&width=230", popupImage: "https://ecoternatives.co/cdn/shop/files/Screenshot_2024-02-20_at_8.48.00_PM_3.png?v=1708426636&width=230", code: "FREEFLOSS " }
-            ],
-            [
-                { name: "Coupon 4", cardImage: "static/images/rewards/coupon4_card.png", popupImage: "static/images/rewards/coupon4.png", code: "CPN1234" },
-                { name: "Coupon 5", cardImage: "static/images/rewards/coupon5_card.png", popupImage: "static/images/rewards/coupon5.png", code: "CPN4567" },
-                { name: "Coupon 6", cardImage: "static/images/rewards/coupon6_card.png", popupImage: "static/images/rewards/coupon6.png", code: "CPN7890" }
-            ],
-            [
-                { name: "Coupon 7", cardImage: "static/images/rewards/coupon7_card.png", popupImage: "static/images/rewards/coupon7.png", code: "CPN12345" },
-                { name: "Coupon 8", cardImage: "static/images/rewards/coupon8_card.png", popupImage: "static/images/rewards/coupon8.png", code: "CPN45678" },
-                { name: "Coupon 9", cardImage: "static/images/rewards/coupon9_card.png", popupImage: "static/images/rewards/coupon9.png", code: "CPN78901" }
-            ],
-            // Levels 4-10 gift cards with "Coming Soon"
-            [
-                { name: "$20 Amazon Gift Card", cardImage: "static/images/rewards/amazon_gift_card_card.png", popupImage: "static/images/rewards/amazon_gift_card.png", code: "COMING_SOON" },
-                { name: "$15 Starbucks Gift Card", cardImage: "static/images/rewards/starbucks_gift_card_card.png", popupImage: "static/images/rewards/starbucks_gift_card.png", code: "COMING_SOON" },
-                { name: "6 Month Netflix Subscription", cardImage: "static/images/rewards/netflix_subscription_card.png", popupImage: "static/images/rewards/netflix_subscription.png", code: "COMING_SOON" }
-            ]
-            // Add more rewards as needed
-        ];
-        let claimedRewards = {};
+const goals = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]; // Goals for each level
+const rewards = [
+    [
+        { 
+            name: "Free Ecoternatives Floss (Order $35+)", 
+            cardImage: "https://ecoternatives.co/cdn/shop/files/The_World_s_Most_5.png?crop=center&height=32&v=1708425732&width=32", 
+            popupImage: "https://ecoternatives.co/cdn/shop/files/Screenshot_2024-02-20_at_8.48.00_PM_3.png?v=1708426636&width=230", 
+            code: "FREEFLOSS", 
+            link: "https://ecoternatives.co/products/strong-bamboo-floss" 
+        },
+        { 
+            name: "Exclusive Eco Wallpaper", 
+            cardImage: "https://lh3.googleusercontent.com/pw/AP1GczO6Sem5UzEvBOtQhjpetfwM4PzuQK0PFpp-NpyWco9PHzXGeWfp1GnKHO6A7gm3jy2Ek1cNE3CNMsKoivnd4EQ9ZFN4Q2cC04o4Lq2cfXQAMcJCOIsxZ6kQxus2LbU5hi1d7MRNFmnJsEmwECPBU6aB=w1598-h913-s-no-gm?authuser=0", 
+            popupImage: "https://lh3.googleusercontent.com/pw/AP1GczO6Sem5UzEvBOtQhjpetfwM4PzuQK0PFpp-NpyWco9PHzXGeWfp1GnKHO6A7gm3jy2Ek1cNE3CNMsKoivnd4EQ9ZFN4Q2cC04o4Lq2cfXQAMcJCOIsxZ6kQxus2LbU5hi1d7MRNFmnJsEmwECPBU6aB=w1598-h913-s-no-gm?authuser=0", 
+            code: "Enjoy :)", 
+            link: "https://photos.google.com/share/AF1QipOt6VJARXqi0qUa65Cv6PAQIKj78CwSvOd5uYSGqYfpLzGQBbwigfp6nl5zbIZsJQ/photo/AF1QipPHy7iYaeS2PEEk_9A_Dmw3FzYXYqkalRt36s-c?key=TDdDZjQ5Umd3ekxqOWF6V3NxOV9BMGU4aGZKLVJn" 
+        },
+    ],
+    [
+        { 
+            name: "50% Off Terra Thread Apparel", 
+            cardImage: "https://cdn.pushowl.com/images/tr:cm-pad_resize,w-192,h-192,bg-FFFFFF00/terra-thread/default-c2c03e44-0acc-47da-8ad5-6f63e87cb764-TerraThreadLogo.png?ik-sdk-version=python-2.2.4&ik-t=9999999999&ik-s=ba9432aaf4a4be2f0c75ae7b27d60b15338fd470", 
+            popupImage: "https://d13wriz42ny3t5.cloudfront.net/production/2020/11/06111407/TerraThread_Banner2.jpg?width=1000", 
+            code: "", 
+            link: "https://terrathread.com/" 
+        },
+        { 
+            name: "Exclusive Eco Story Ebook- Ethan", 
+            cardImage: "https://lh5.googleusercontent.com/EpVQMKcsk1nq0rVKbf2Lbn-HE32VaRned1C_E-2oUHmiAJPd0sbQ_NlGyuyaZEDophe4JZu2FstpUjrxPwzwJjPNTp2fXR1c1LgDL4YKV_fm3BKaeNPOMo3O9ET8JfOsSg=w1280", 
+            popupImage: "https://lh5.googleusercontent.com/EpVQMKcsk1nq0rVKbf2Lbn-HE32VaRned1C_E-2oUHmiAJPd0sbQ_NlGyuyaZEDophe4JZu2FstpUjrxPwzwJjPNTp2fXR1c1LgDL4YKV_fm3BKaeNPOMo3O9ET8JfOsSg=w1280", 
+            code: "Tap the image", 
+            link: "https://sites.google.com/view/sparkfirley/authors/f_john-baker/books/ethan-john-baker?authuser=0" 
+        },
+    ],
+    [
+        { 
+            name: "10% Off Lochtree", 
+            cardImage: "https://lochtree.com/cdn/shop/files/Favicon-2_fdf9acae-7925-42b3-a0bf-18cc3b6548cc_180x180.png?v=1651499050", 
+            popupImage: "static/images/rewards/lochtree.png", 
+            code: "WELCOME-10", 
+            link: "https://lochtree.com" 
+        },
+        { 
+            name: "Exclusive Env Book Club [Secret]", 
+            cardImage: "https://lh6.googleusercontent.com/bSRk3VgAikoon7J_dRNUq9QE-Grm9vd50jCXcy1ju-HDOg29x2oZTLUteJvK02PRztQ6GRfWkz5GzCfTB5y0wvLXIcZzdoC9E2exxOibkphgNLCN", 
+            popupImage: "https://lh6.googleusercontent.com/bSRk3VgAikoon7J_dRNUq9QE-Grm9vd50jCXcy1ju-HDOg29x2oZTLUteJvK02PRztQ6GRfWkz5GzCfTB5y0wvLXIcZzdoC9E2exxOibkphgNLCN", 
+            code: "Tap the pic ^", 
+            link: "https://sites.google.com/view/sparkfirley/spark?authuser=0" 
+        },
+    ],
+    // Levels 4-10 gift cards with "Coming Soon"
+    [
+        { 
+            name: "Coming Soon", 
+            cardImage: "", 
+            popupImage: "", 
+            code: "Coming Soon lol", 
+            link: "" 
+        },
+    ]
+    // Add more rewards as needed
+];
+let claimedRewards = {};
 
-        function updateUI() {
+function updateUI() {
     document.getElementById('ecoPointsDisplay').textContent = ecoPoints;
     document.getElementById('currentLevel').textContent = level;
     document.getElementById('currentTreeImage').src = `static/images/trees/level${level}.png`;
@@ -83,133 +120,135 @@ function upgradeTree() {
     }
 }
 
-        function showUpcomingRewards() {
-            const nextLevel = level + 1;
-            const upcomingRewardsList = document.getElementById('upcomingRewardsList');
-            upcomingRewardsList.innerHTML = "";
-            rewards[nextLevel].forEach(reward => {
-                const li = document.createElement('li');
-                const img = document.createElement('img');
-                img.src = reward.cardImage;
-                li.appendChild(img);
-                li.appendChild(document.createTextNode(reward.name));
-                upcomingRewardsList.appendChild(li);
-            });
-            document.getElementById('upcomingRewards').style.display = 'block';
+function showUpcomingRewards() {
+    const nextLevel = level + 1;
+    const upcomingRewardsList = document.getElementById('upcomingRewardsList');
+    upcomingRewardsList.innerHTML = "";
+    rewards[nextLevel].forEach(reward => {
+        const li = document.createElement('li');
+        const img = document.createElement('img');
+        img.src = reward.cardImage;
+        li.appendChild(img);
+        li.appendChild(document.createTextNode(reward.name));
+        upcomingRewardsList.appendChild(li);
+    });
+    document.getElementById('upcomingRewards').style.display = 'block';
+}
+
+function setEcoPoints() {
+    const ecoPointsInput = document.getElementById('ecoPointsInput').value;
+    ecoPoints = parseInt(ecoPointsInput, 10);
+    localStorage.setItem('ecoPoints', ecoPoints);
+    updateUI();
+}
+
+function showPopup(reward, index) {
+    document.getElementById('rewardName').textContent = reward.name;
+    document.getElementById('rewardImage').src = reward.popupImage;
+    document.getElementById('popupOverlay').style.display = 'flex';
+
+    document.getElementById('rewardImage').onclick = () => {
+        window.location.href = reward.link;
+    };
+
+    if (reward.code === "COMING_SOON") {
+        document.getElementById('claimButton').style.display = 'none';
+        document.getElementById('claimedCode').style.display = 'block';
+        document.getElementById('rewardCode').textContent = "Coming Soon!";
+        document.getElementById('screenshotMessage').textContent = "";
+    } else {
+        document.getElementById('claimButton').style.display = 'block';
+        document.getElementById('claimedCode').style.display = 'none';
+        document.getElementById('claimButton').onclick = () => claimReward(reward, index);
+    }
+
+    if (claimedRewards[level] && claimedRewards[level][index]) {
+        document.getElementById('claimButton').style.display = 'none';
+        document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
+        document.getElementById('claimedCode').style.display = 'block';
+        document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
+    }
+}
+
+function closePopup() {
+    document.getElementById('popupOverlay').style.display = 'none';
+}
+
+function claimReward(reward, index) {
+    if (!claimedRewards[level]) {
+        claimedRewards[level] = {};
+    }
+    claimedRewards[level][index] = true;
+    localStorage.setItem('claimedRewards', JSON.stringify(claimedRewards));
+
+    document.getElementById('claimButton').style.display = 'none';
+    document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
+    document.getElementById('claimedCode').style.display = 'block';
+    document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
+
+    // Show confetti
+    const confetti = document.getElementById('confetti');
+    confetti.style.display = 'block';
+    setTimeout(() => {
+        confetti.style.display = 'none';
+    }, 3000);
+
+    startConfetti();
+    updateUI();
+}
+
+function startConfetti() {
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 2,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 }
+        });
+        confetti({
+            particleCount: 2,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 }
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
         }
+    }());
+}
 
+// Load claimed rewards from localStorage
+if (localStorage.getItem('claimedRewards')) {
+    claimedRewards = JSON.parse(localStorage.getItem('claimedRewards'));
+}
 
-        function setEcoPoints() {
-            const ecoPointsInput = document.getElementById('ecoPointsInput').value;
-            ecoPoints = parseInt(ecoPointsInput, 10);
-            localStorage.setItem('ecoPoints', ecoPoints);
-            updateUI();
-        }
+updateUI();
 
-        function showPopup(reward, index) {
-            document.getElementById('rewardName').textContent = reward.name;
-            document.getElementById('rewardImage').src = reward.popupImage;
-            document.getElementById('popupOverlay').style.display = 'flex';
+function isIos() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
 
-            if (reward.code === "COMING_SOON") {
-                document.getElementById('claimButton').style.display = 'none';
-                document.getElementById('claimedCode').style.display = 'block';
-                document.getElementById('rewardCode').textContent = "Coming Soon!";
-                document.getElementById('screenshotMessage').textContent = "";
-            } else {
-                document.getElementById('claimButton').style.display = 'block';
-                document.getElementById('claimedCode').style.display = 'none';
-                document.getElementById('claimButton').onclick = () => claimReward(reward, index);
-            }
+function isInStandaloneMode() {
+    return ('standalone' in window.navigator) && (window.navigator.standalone);
+}
 
-            if (claimedRewards[level] && claimedRewards[level][index]) {
-                document.getElementById('claimButton').style.display = 'none';
-                document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
-                document.getElementById('claimedCode').style.display = 'block';
-                document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
-            }
-        }
+function shouldShowPopup() {
+    return isIos() && !isInStandaloneMode() && !localStorage.getItem('popupShown');
+}
 
-        function closePopup() {
-            document.getElementById('popupOverlay').style.display = 'none';
-        }
+if (shouldShowPopup()) {
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById('triangle-container').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    localStorage.setItem('popupShown', 'true');
+}
 
-        function claimReward(reward, index) {
-            if (!claimedRewards[level]) {
-                claimedRewards[level] = {};
-            }
-            claimedRewards[level][index] = true;
-            localStorage.setItem('claimedRewards', JSON.stringify(claimedRewards));
-
-            document.getElementById('claimButton').style.display = 'none';
-            document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
-            document.getElementById('claimedCode').style.display = 'block';
-            document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
-
-            // Show confetti
-            const confetti = document.getElementById('confetti');
-            confetti.style.display = 'block';
-            setTimeout(() => {
-                confetti.style.display = 'none';
-            }, 3000);
-
-            startConfetti();
-            updateUI();
-        }
-
-        function startConfetti() {
-            const duration = 3 * 1000;
-            const end = Date.now() + duration;
-
-            (function frame() {
-                confetti({
-                    particleCount: 2,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 }
-                });
-                confetti({
-                    particleCount: 2,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 }
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-        }
-
-        // Load claimed rewards from localStorage
-        if (localStorage.getItem('claimedRewards')) {
-            claimedRewards = JSON.parse(localStorage.getItem('claimedRewards'));
-        }
-
-        updateUI();
-
-
-        function isIos() {
-          return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      }
-  
-      function isInStandaloneMode() {
-          return ('standalone' in window.navigator) && (window.navigator.standalone);
-      }
-  
-      function shouldShowPopup() {
-          return isIos() && !isInStandaloneMode() && !localStorage.getItem('popupShown');
-      }
-  
-      if (shouldShowPopup()) {
-          document.getElementById('popup').style.display = 'block';
-          document.getElementById('triangle-container').style.display = 'block';
-          document.getElementById('overlay').style.display = 'block';
-          localStorage.setItem('popupShown', 'true');
-      }
-  
-      document.getElementById('closeButton').onclick = function() {
-          document.getElementById('popup').style.display = 'none';
-          document.getElementById('triangle-container').style.display = 'none';
-          document.getElementById('overlay').style.display = 'none';
-      }
+document.getElementById('closeButton').onclick = function() {
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById('triangle-container').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+};

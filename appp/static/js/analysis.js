@@ -14,7 +14,7 @@ function saveResponseLocally(data) {
     try {
       localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
       console.log('Past responses updated:', pastResponses);
-      displayPastResponses(); // Display past responses for testing
+      //displayPastResponses(); // Display past responses for testing
     } catch (error) {
       if (error.code === 22) {
         // QuotaExceededError
@@ -36,24 +36,6 @@ function saveResponseLocally(data) {
     console.error('Error saving response locally:', error);
     displayError('Error saving response locally: ' + error.message);
   }
-}
-
-function displayPastResponses() {
-  const pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-  const responsesContainer = document.getElementById('responses-container');
-  responsesContainer.innerHTML = ''; // Clear previous content
-
-  pastResponses.forEach((response, index) => {
-    const responseDiv = document.createElement('div');
-    responseDiv.className = 'response';
-
-    const responseJson = document.createElement('pre');
-    responseJson.className = 'response-json';
-    responseJson.textContent = JSON.stringify(response, null, 2); // Format JSON with indentation
-
-    responseDiv.appendChild(responseJson);
-    responsesContainer.appendChild(responseDiv);
-  });
 }
 
 function getEcoPoint() {
@@ -137,7 +119,6 @@ function fetchAddressAndDisplay(keyword, data) {
       position => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        displayLocationInfo(latitude, longitude);
         const keywordString = encodeURIComponent(keyword);
         const url = `/scrape_address?what=${keywordString}&latitude=${latitude}&longitude=${longitude}`;
 
@@ -205,12 +186,6 @@ function requestGeolocationPermission() {
   );
 }
 
-function displayLocationInfo(latitude, longitude) {
-  const locationInfo = document.createElement('div');
-  locationInfo.id = 'location-info';
-  locationInfo.innerHTML = `Latitude: ${latitude}, Longitude: ${longitude}`;
-  document.body.appendChild(locationInfo);
-}
 
 function displayError(errorMessage) {
   const errorInfo = document.createElement('div');
