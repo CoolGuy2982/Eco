@@ -116,6 +116,11 @@
             const profilePic = localStorage.getItem('profilePic');
             const setupCompleted = localStorage.getItem('setupCompleted');
 
+            console.log('isLocalhost:', isLocalhost);
+            console.log('isStandalone:', isStandalone);
+            console.log('email:', email);
+            console.log('setupCompleted:', setupCompleted);
+
             if (isStandalone) {
                 if (!email) {
                     document.getElementById('signInButtonContainer').classList.remove('hidden');
@@ -156,6 +161,7 @@
         }
 
         function runSetupProcess() {
+            console.log('Running setup process...');
             const splashContent = document.getElementById('splashContent');
             const subContent = document.getElementById('subContent');
             const signInButtonContainer = document.getElementById('signInButtonContainer');
@@ -197,6 +203,8 @@
                                         <div class="sub-text left-align">3 - Tap Add to Home</div>
                                         <div><img class="step-img" src="/static/images/add2hs.png" alt="Step 3"></div>
                                     `;
+                                    splashContent.classList.remove('fade-out');
+                                    splashContent.classList.add('fade-in');
                                     setTimeout(() => {
                                         window.addEventListener('appinstalled', () => {
                                             localStorage.setItem('addedToHomeScreen', true);
