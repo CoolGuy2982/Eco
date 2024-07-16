@@ -64,12 +64,12 @@
         .main-text {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 48px;
+            font-size: 48px; 
             color: #000;
             margin: 10px 0;
         }
         .sub-text {
-            font-size: 24px;
+            font-size: 24px; 
             color: #000;
             margin: 10px 0;
         }
@@ -177,14 +177,22 @@
             console.log('setupCompleted:', setupCompleted);
             console.log('addedToHomeScreen:', addedToHomeScreen);
 
-            if (isStandalone && !setupCompleted && addedToHomeScreen) {
-                runStandaloneSetup();
-            } else if (!email) {
-                document.getElementById('signInButtonContainer').classList.remove('hidden');
-            } else if (!setupCompleted) {
-                runSetupProcess();
+            if (isStandalone) {
+                if (!email) {
+                    document.getElementById('signInButtonContainer').classList.remove('hidden');
+                } else if (!setupCompleted) {
+                    runStandaloneSetup();
+                } else {
+                    window.location.href = '/home';
+                }
             } else {
-                runSetupProcess();
+                if (!email) {
+                    document.getElementById('signInButtonContainer').classList.remove('hidden');
+                } else if (!setupCompleted) {
+                    runSetupProcess();
+                } else {
+                    window.location.href = '/home';
+                }
             }
         });
 
@@ -200,10 +208,14 @@
             .then(data => {
                 if (data.success) {
                     const email = data.email;
-                    const profilePic = data.profilePic; // Ensure your backend sends this
+                    const profilePic = data.profilePic; 
                     localStorage.setItem('email', email);
                     localStorage.setItem('profilePic', profilePic);
-                    window.location.href = '/home';
+                    if (window.matchMedia('(display-mode: standalone)').matches) {
+                        runStandaloneSetup();
+                    } else {
+                        window.location.href = '/home';
+                    }
                 } else {
                     console.error('Login failed');
                 }
