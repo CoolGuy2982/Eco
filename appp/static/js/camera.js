@@ -189,13 +189,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendImageToServer = (imageData, spokenText) => {
         console.log('Sending image and spoken text to server:', spokenText);
         loadingAnimation.style.display = 'flex';
-        fetch('/analyze', {
+
+        let photoID = null;
+
+        // Upload the image to get the photo ID
+        fetch('/upload', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: imageData.split(',')[1], text: spokenText || '' })
+            body: JSON.stringify({ image: imageData.split(',')[1] })
         })
         .then(response => response.json())
         .then(data => {
+            photoID = data.photoID;
+            // Proceed with sending the image and spoken text for analysis
+            return fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData.split(',')[1], text: spokenText || '', photoID: photoID })
+            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            data.photoID = photoID;
             sessionStorage.setItem('AIResponse', JSON.stringify(data));
             window.location.href = '/analysis';
         })
@@ -203,12 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error sending image:', err);
             loadingAnimation.style.display = 'none';
         });
-
-        fetch('/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: imageData.split(',')[1] })
-        }).catch(err => console.error('Error uploading image:', err));
     };
 
     const startVoiceRecognition = () => {

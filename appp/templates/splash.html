@@ -12,11 +12,85 @@
     <link rel="manifest" href="/static/manifest.json">
     <!-- Load the new Google Identity Services library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 1s forwards;
+        }
+        .fade-out {
+            animation: fadeOut 1s forwards;
+        }
+        .quick-fade-in {
+            animation: fadeIn 0.5s forwards;
+        }
+        .quick-fade-out {
+            animation: fadeOut 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .ellipsis::after {
+            content: '...';
+            animation: ellipsis 1s infinite;
+        }
+        @keyframes ellipsis {
+            0% { content: ''; }
+            33% { content: '.'; }
+            66% { content: '..'; }
+            100% { content: '...'; }
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            transition: background-color 1s;
+            background-color: #3AA76D;
+        }
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .main-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 48px; /* Restored original size */
+            color: #000;
+            margin: 10px 0;
+        }
+        .sub-text {
+            font-size: 24px; /* Adjusted size for mobile */
+            color: #000;
+            margin: 10px 0;
+        }
+        .highlight {
+            color: #3AA76D;
+        }
+        .step-img {
+            display: block;
+            margin: 10px auto;
+            width: 80px;
+            height: 80px;
+        }
+        .left-align {
+            text-align: left;
+        }
+    </style>
 </head>
-<body class="bg-green-500 flex items-center justify-center h-screen">
-    <div class="text-center">
-        <div class="text-green-950 text-5xl font-bold font-montserrat">EcoLens</div>
-        <div class="text-green-950 text-xl font-roboto mt-2">by Firley</div>
+<body>
+    <div class="container">
+        <div id="splashContent" class="main-text">EcoLens</div>
+        <div id="subContent" class="sub-text">by Firley</div>
         <div id="signInButtonContainer" class="hidden mt-4">
             <!-- New button container for Google Identity Services -->
             <div id="g_id_onload"
@@ -36,22 +110,23 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
+            const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const email = localStorage.getItem('email');
-            if (email) {
-                // User is signed in, redirect after a delay
-                setTimeout(function() {
-                    window.location.href = "/home";
-                }, 750); // Delay of 0.75 seconds
+            const setupCompleted = localStorage.getItem('setupCompleted');
+            const addedToHomeScreen = localStorage.getItem('addedToHomeScreen');
+            
+            if (!isStandalone && (isLocalhost || (email && setupCompleted))) {
+                runSetupProcess();
+            } else if (email && !setupCompleted) {
+                runSetupProcess();
             } else {
-                // User is not signed in, show the sign-in button
                 document.getElementById('signInButtonContainer').classList.remove('hidden');
             }
         });
 
         function handleCredentialResponse(response) {
             const idToken = response.credential;
-            
-            // Send the ID token to the backend for verification and to create a session
             fetch('/login', {
                 method: 'POST',
                 headers: {
@@ -63,11 +138,74 @@
                 if (data.success) {
                     const email = data.email;
                     localStorage.setItem('email', email);
-                    window.location.href = '/home';
+                    runSetupProcess();
                 } else {
                     console.error('Login failed');
                 }
             });
+        }
+
+        function runSetupProcess() {
+            const splashContent = document.getElementById('splashContent');
+            const subContent = document.getElementById('subContent');
+            splashContent.classList.add('fade-in');
+            subContent.classList.add('fade-in');
+            setTimeout(() => {
+                splashContent.classList.remove('fade-in');
+                splashContent.classList.add('fade-out');
+                subContent.classList.remove('fade-in');
+                subContent.classList.add('fade-out');
+                document.body.style.backgroundColor = "#fff";
+                setTimeout(() => {
+                    splashContent.innerHTML = 'Hi there!<br> <span class="ellipsis"></span>';
+                    subContent.style.display = "none";
+                    splashContent.classList.remove('fade-out');
+                    splashContent.classList.add('quick-fade-in');
+                    setTimeout(() => {
+                        splashContent.classList.remove('quick-fade-in');
+                        splashContent.classList.add('quick-fade-out');
+                        setTimeout(() => {
+                            splashContent.innerHTML = 'Welcome to <span class="highlight">EcoLens</span>';
+                            splashContent.classList.remove('quick-fade-out');
+                            splashContent.classList.add('fade-in');
+                                    setTimeout(() => {
+                                        splashContent.classList.remove('fade-in');
+                                        splashContent.classList.add('fade-out');
+                                        setTimeout(() => {
+                                            splashContent.innerHTML = `
+                                                <div class="main-text">Install <span class="highlight">EcoLens</span></div>
+                                                <div class="sub-text">😊</div>
+                                                <div class="sub-text left-align">1 - Tap the Share Button</div>
+                                                <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
+                                                <div class="sub-text left-align">2 - Scroll down a bit</div>
+                                                <div class="sub-text left-align">3 - Tap Add to Home</div>
+                                                <div><img class="step-img" src="/static/images/add2hs.png" alt="Step 3"></div>
+                                            `;
+                                            splashContent.classList.remove('fade-out');
+                                            splashContent.classList.add('fade-in');
+                                            setTimeout(() => {
+                                                window.addEventListener('appinstalled', () => {
+                                                    localStorage.setItem('addedToHomeScreen', true);
+                                                    showAllSetScreen();
+                                                });
+                                            }, 3000);
+                                        }, 3000);
+                                    }, 3000);
+                                }, 3000);
+                            }, 3000);
+                    }, 2000);
+                }, 2000);
+        }
+
+        function showAllSetScreen() {
+            const splashContent = document.getElementById('splashContent');
+            splashContent.classList.remove('fade-in');
+            splashContent.classList.add('fade-out');
+            setTimeout(() => {
+                splashContent.innerHTML = 'Ok! You\'re all set.<br>Enjoy!<br><img class="step-img" src="https://via.placeholder.com/80" alt="Checkmark">';
+                splashContent.classList.remove('fade-out');
+                splashContent.classList.add('fade-in');
+            }, 1000);
         }
 
         window.onload = function() {
@@ -79,7 +217,7 @@
                 document.getElementById('signInButtonContainer'),
                 { theme: 'outline', size: 'large' }
             );
-            google.accounts.id.prompt(); // Automatically display the One Tap prompt if applicable
+            google.accounts.id.prompt();
         };
     </script>
 </body>

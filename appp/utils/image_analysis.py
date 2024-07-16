@@ -32,7 +32,7 @@ def analyze_image(base64_image, spoken_text):
         image_prompt_parts = [
             image_parts[0],
             f"""
-            Analyze the image in detail and provide a comprehensive description without mentioning people or humans. If there is a red box in the image, the user emphasises on what's generally in that red box. Follow these steps:
+            Analyze the image in detail and provide a comprehensive description without mentioning people or humans. If there is a red box in the image, the user emphasises on what's in that red box. Follow these steps:
 
             1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: "{spoken_text}". Use these observations to select the most fitting tool:
             - Nature (Tool A): Choose this if the image prominently features nature and natural environments such as forests, rivers, mountains, or wildlife. Look for elements that emphasize ecological dynamics, like interactions among animals, plant growth, or seasonal changes in landscapes.
@@ -44,6 +44,10 @@ def analyze_image(base64_image, spoken_text):
 
             Hints: Generally, the item in question if there is one will be in the center of the frame.
             
+            ANY PICTURE WITH AN ITEM WILL ALWAYS GO TO TOOLS B or C. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
+            IF IT IS AN ITEM IN QUESTION IN A HOME OR A SPECIFIC PRODUCT IN FOCUS OUTDOORS ENVIRONMENT, IT WILL ALWAYS GO TO RECYCLING (Tool B)
+            IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE, IT WILL ALWAYS GO TO GREENWASHING (Tool C) 
+
             2. Detailed Description: Based on the selected tool, provide a detailed description focusing on the following aspects:
             - Nature (Tool A):
                 - Identification: Identify the primary object or scene, including specific species of plants and animals.
@@ -86,6 +90,7 @@ def analyze_image(base64_image, spoken_text):
 
             3. JSON Response: Format the response as follows (example):
             {{
+                "COT": "<State your reasoning, throught process, and chain of thought for why you chose the tool you did. Be very descriptive and cite evidence from the image>"
                 "Response": "<detailed description>",
                 "Text_Tool": "A",
                 "Material": "if you selected tool B <add the material of the general item if applicable (e.g., Plastic)>"

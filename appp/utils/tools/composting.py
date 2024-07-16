@@ -35,7 +35,7 @@ Limit each response to 80 words max. Respond as if you are texting someone and e
             "temperature": 0.8,
             "top_p": 1,
             "top_k": 40,
-            "max_output_tokens": 2048,
+            "max_output_tokens": 800,
         },
         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
     )

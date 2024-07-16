@@ -12,7 +12,6 @@ import os
 
 # Create a Blueprint instance for the main app
 main = Blueprint('main', __name__)
-main.secret_key = os.getenv('FLASK_SECRET_KEY', 'your_default_secret_key')
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
 CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
