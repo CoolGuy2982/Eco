@@ -89,38 +89,25 @@
             display: none;
         }
         .button {
-            background-color: #3AA76D;
+            background-color: #000;
             color: #fff;
-            padding: 10px 20px;
+            padding: 15px 30px;
             border: none;
             border-radius: 5px;
+            font-size: 20px;
             cursor: pointer;
-        }
-        .page {
-            display: none;
-            width: 100%;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            flex-direction: column;
-        }
-        .page.active {
-            display: flex;
+            margin: 20px 0;
         }
         .checkbox-label {
             display: flex;
             align-items: center;
+            font-size: 18px;
             margin: 10px 0;
         }
         .checkbox-label input {
             margin-right: 10px;
-        }
-        .youtube-video {
-            width: 100%;
-            max-width: 560px;
-            height: 315px;
-            margin: 20px 0;
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -129,7 +116,6 @@
         <div id="splashContent" class="main-text">EcoLens</div>
         <div id="subContent" class="sub-text">by Firley</div>
         <div id="signInButtonContainer" class="hidden mt-4 flex justify-center items-center w-full">
-            <!-- New button container for Google Identity Services -->
             <div id="g_id_onload"
                  data-client_id="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com"
                  data-auto_prompt="false">
@@ -144,30 +130,34 @@
                  data-width="250">
             </div>
         </div>
-    </div>
-    <div id="setupContainer" class="hidden">
-        <div id="subscribePage" class="page">
+        <!-- New standalone setup -->
+        <div id="subscribePage" class="hidden">
             <div class="main-text">Subscribe to EcoLens</div>
             <div class="sub-text">Subscribe to use the app. No ads. Feed your curiosity of the Earth</div>
-            <ul class="list-disc text-left m-4">
-                <li>Full access to EcoLens</li>
-                <li>Access to all current and upcoming Eco Apps</li>
-                <li>Quality AI Responses fed with quality private data</li>
+            <ul style="list-style: none; padding: 0; text-align: left;">
+                <li><img src="/mnt/data/Welcome! (1).png" alt="Full access to EcoLens"> Full access to EcoLens</li>
+                <li><img src="/mnt/data/Welcome! (2).png" alt="Access to all current and upcoming Eco Apps"> Access to all current and upcoming Eco Apps</li>
+                <li><img src="/mnt/data/Welcome! (3).png" alt="Quality AI Responses fed with quality private data"> Quality AI Responses fed with quality private data</li>
             </ul>
             <button id="subscribeButton" class="button">Subscribe to EcoLens</button>
-            <div>Auto-renews for $1.00/month until canceled</div>
         </div>
-        <div id="freePage" class="page">
-            <img src="https://via.placeholder.com/80" alt="Shushing Face Emoji" class="step-img">
+        <div id="freeForNowPage" class="hidden">
+            <img src="https://via.placeholder.com/80" alt="Shhh Emoji" style="width: 80px; height: 80px;">
             <div class="main-text">EcoLens is free for now!!</div>
             <div class="sub-text">We just want to see if you’d be willing to pay when we eventually charge.</div>
-            <label class="checkbox-label"><input type="checkbox" id="termsCheckbox"> I agree to <a href="https://www.example.com/terms">Terms of Service</a></label>
-            <label class="checkbox-label"><input type="checkbox" id="privacyCheckbox"> I agree to <a href="https://www.example.com/privacy">Privacy Policy</a></label>
+            <div class="checkbox-label">
+                <input type="checkbox" id="termsCheckbox">
+                <label for="termsCheckbox">I agree to <a href="https://example.com/terms" target="_blank">Terms of Service</a></label>
+            </div>
+            <div class="checkbox-label">
+                <input type="checkbox" id="privacyCheckbox">
+                <label for="privacyCheckbox">I agree to <a href="https://example.com/privacy" target="_blank">Privacy Policy</a></label>
+            </div>
         </div>
-        <div id="videoPage" class="page">
-            <iframe class="youtube-video" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div id="videoPage" class="hidden">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        <div id="allSetPage" class="page">
+        <div id="allSetPage" class="hidden">
             <div class="main-text">Ok you're all set!</div>
             <div class="sub-text">Sorry about the wait.</div>
         </div>
@@ -179,35 +169,22 @@
             const email = localStorage.getItem('email');
             const profilePic = localStorage.getItem('profilePic');
             const setupCompleted = localStorage.getItem('setupCompleted');
-            const setupRedirected = localStorage.getItem('setupRedirected');
+            const addedToHomeScreen = localStorage.getItem('addedToHomeScreen');
 
             console.log('isLocalhost:', isLocalhost);
             console.log('isStandalone:', isStandalone);
             console.log('email:', email);
             console.log('setupCompleted:', setupCompleted);
-            console.log('setupRedirected:', setupRedirected);
+            console.log('addedToHomeScreen:', addedToHomeScreen);
 
-            if (isStandalone) {
-                if (!setupCompleted) {
-                    runStandaloneSetupProcess();
-                } else {
-                    if (!email) {
-                        document.getElementById('signInButtonContainer').classList.remove('hidden');
-                    } else {
-                        window.location.href = '/home';
-                    }
-                }
+            if (isStandalone && !setupCompleted && addedToHomeScreen) {
+                runStandaloneSetup();
+            } else if (!email) {
+                document.getElementById('signInButtonContainer').classList.remove('hidden');
+            } else if (!setupCompleted) {
+                runSetupProcess();
             } else {
-                if (!setupRedirected) {
-                    localStorage.setItem('setupRedirected', true);
-                    window.location.href = '/setup';
-                } else if (!email) {
-                    runBrowserSetupProcess();
-                } else if (!setupCompleted) {
-                    runBrowserSetupProcess();
-                } else {
-                    window.location.href = '/home';
-                }
+                runSetupProcess();
             }
         });
 
@@ -233,8 +210,8 @@
             });
         }
 
-        function runBrowserSetupProcess() {
-            console.log('Running browser setup process...');
+        function runSetupProcess() {
+            console.log('Running setup process...');
             const splashContent = document.getElementById('splashContent');
             const subContent = document.getElementById('subContent');
             const signInButtonContainer = document.getElementById('signInButtonContainer');
@@ -292,45 +269,36 @@
             }, 2000);
         }
 
-        function runStandaloneSetupProcess() {
-            console.log('Running standalone setup process...');
-            document.querySelector('.container').classList.add('hidden');
-            document.getElementById('setupContainer').classList.remove('hidden');
-            document.getElementById('subscribePage').classList.add('active');
-            
+        function runStandaloneSetup() {
+            console.log('Running standalone setup...');
+            document.getElementById('splashContent').classList.add('hidden');
+            document.getElementById('subContent').classList.add('hidden');
+            document.getElementById('subscribePage').classList.remove('hidden');
+
             document.getElementById('subscribeButton').addEventListener('click', () => {
-                document.getElementById('subscribePage').classList.remove('active');
-                document.getElementById('freePage').classList.add('active');
+                document.getElementById('subscribePage').classList.add('hidden');
+                document.getElementById('freeForNowPage').classList.remove('hidden');
             });
-            
+
             document.getElementById('termsCheckbox').addEventListener('change', checkCheckboxes);
             document.getElementById('privacyCheckbox').addEventListener('change', checkCheckboxes);
         }
 
         function checkCheckboxes() {
-            const termsCheckbox = document.getElementById('termsCheckbox').checked;
-            const privacyCheckbox = document.getElementById('privacyCheckbox').checked;
-            if (termsCheckbox && privacyCheckbox) {
-                document.getElementById('freePage').classList.remove('active');
-                document.getElementById('videoPage').classList.add('active');
-                const video = document.querySelector('.youtube-video');
-                video.addEventListener('ended', () => {
-                    document.getElementById('videoPage').classList.remove('active');
-                    document.getElementById('allSetPage').classList.add('active');
+            const termsChecked = document.getElementById('termsCheckbox').checked;
+            const privacyChecked = document.getElementById('privacyCheckbox').checked;
+
+            if (termsChecked && privacyChecked) {
+                document.getElementById('freeForNowPage').classList.add('hidden');
+                document.getElementById('videoPage').classList.remove('hidden');
+
+                const iframe = document.querySelector('iframe');
+                iframe.addEventListener('ended', () => {
+                    document.getElementById('videoPage').classList.add('hidden');
+                    document.getElementById('allSetPage').classList.remove('hidden');
                     localStorage.setItem('setupCompleted', true);
                 });
             }
-        }
-
-        function showAllSetScreen() {
-            const splashContent = document.getElementById('splashContent');
-            splashContent.classList.remove('fade-in');
-            splashContent.classList.add('fade-out');
-            setTimeout(() => {
-                splashContent.innerHTML = 'Ok! You\'re all set.<br>Enjoy!<br><img class="step-img" src="https://via.placeholder.com/80" alt="Checkmark">';
-                splashContent.classList.remove('fade-out');
-                splashContent.classList.add('fade-in');
-            }, 1000);
         }
 
         window.onload = function() {
