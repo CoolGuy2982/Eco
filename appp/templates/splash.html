@@ -85,54 +85,26 @@
         .left-align {
             text-align: left;
         }
-        .g_id_signin button {
-            background-color: #4285f4;
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            border-radius: 9999px;
-            padding: 10px 20px;
-            font-size: 18px;
-            font-weight: 500;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .g_id_signin button:hover {
-            background-color: #357ae8;
-            transform: translateY(-2px);
-        }
-        .g_id_signin button:active {
-            background-color: #3367d6;
-            transform: translateY(0);
-        }
-        #signInButtonContainer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%; /* Ensure the container spans the full width */
-            visibility: hidden;
-        }
-
     </style>
 </head>
 <body>
     <div class="container">
         <div id="splashContent" class="main-text">EcoLens</div>
         <div id="subContent" class="sub-text">by Firley</div>
-        <div id="signInButtonContainer" class="hidden mt-4">
+        <div id="signInButtonContainer" class="hidden mt-4 flex justify-center items-center w-full">
             <!-- New button container for Google Identity Services -->
             <div id="g_id_onload"
                  data-client_id="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com"
                  data-auto_prompt="false">
             </div>
-            
             <div class="g_id_signin"
-            data-type="standard"
-            data-size="large"
-            data-theme="outline"
-            data-text="sign_in_with"
-            data-shape="rectangular"
-            data-logo_alignment="left"
-            data-width="250">
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="outline"
+                 data-text="sign_in_with"
+                 data-shape="rectangular"
+                 data-logo_alignment="left"
+                 data-width="250">
             </div>
         </div>
     </div>
