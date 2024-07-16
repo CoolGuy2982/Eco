@@ -85,11 +85,6 @@
         .left-align {
             text-align: left;
         }
-        #signInButtonContainer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
         .g_id_signin button {
             background-color: #4285f4;
             color: #fff;
@@ -122,14 +117,14 @@
                  data-auto_prompt="false">
             </div>
             <div class="g_id_signin"
-                 data-type="standard"
-                 data-size="large"
-                 data-theme="outline"
-                 data-text="sign_in_with"
-                 data-shape="rectangular"
-                 data-logo_alignment="left"
-                 data-width="250">
-            </div>
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left"
+            data-width="250">
+       </div>
         </div>
     </div>
     <script>
@@ -152,7 +147,13 @@
                     window.location.href = '/home';
                 }
             } else {
-                runSetupProcess();
+                if (!email) {
+                    runSetupProcess();
+                } else if (!setupCompleted) {
+                    runSetupProcess();
+                } else {
+                    runSetupProcess();
+                }
             }
         });
 
