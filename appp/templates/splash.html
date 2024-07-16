@@ -187,7 +187,7 @@
                 <label for="privacyCheckbox">I agree to <a href="https://www.firley.net/privacy-policy" target="_blank">Privacy Policy</a></label>
             </div>
         </div>        
-        <div id="videoPage" class="hidden">
+        <div id="videoPage" class="hidden" style="justify-content: center; align-items: center; height: 100vh;">
             <iframe 
                 id="youtubeVideo" 
                 width="100%" 
@@ -218,7 +218,9 @@
                 } else if (!setupCompleted) {
                     runStandaloneSetup();
                 } else {
+                    setTimeout(() => {
                     window.location.href = '/home';
+                }, 2000);
                 }
             } else {
                 if (!email) {
@@ -246,7 +248,9 @@
                     if (window.matchMedia('(display-mode: standalone)').matches) {
                         runStandaloneSetup();
                     } else {
-                        window.location.href = '/home';
+                        setTimeout(() => {
+                    window.location.href = '/home';
+                }, 2000);
                     }
                 } else {
                     console.error('Login failed');
