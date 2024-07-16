@@ -166,7 +166,7 @@ function showPopup(reward, index) {
         document.getElementById('claimButton').style.display = 'none';
         document.getElementById('rewardCode').textContent = `Reward Code: ${reward.code}`;
         document.getElementById('claimedCode').style.display = 'block';
-        document.getElementById('screenshotMessage').textContent = "Take a screenshot!";
+        document.getElementById('screenshotMessage').textContent = "Take a screenshot! Tap the photo";
     }
 }
 
