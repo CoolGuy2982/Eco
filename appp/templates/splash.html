@@ -116,12 +116,17 @@
             const setupCompleted = localStorage.getItem('setupCompleted');
             const addedToHomeScreen = localStorage.getItem('addedToHomeScreen');
             
-            if (!isStandalone && (isLocalhost || (email && setupCompleted))) {
-                runSetupProcess();
-            } else if (email && !setupCompleted) {
+            if (isStandalone) {
+                window.location.href = '/home';
+                return;
+            }
+
+            if (!email) {
+                document.getElementById('signInButtonContainer').classList.remove('hidden');
+            } else if (!setupCompleted) {
                 runSetupProcess();
             } else {
-                document.getElementById('signInButtonContainer').classList.remove('hidden');
+                runSetupProcess();
             }
         });
 
@@ -138,6 +143,7 @@
                 if (data.success) {
                     const email = data.email;
                     localStorage.setItem('email', email);
+                    document.getElementById('signInButtonContainer').classList.add('hidden');
                     runSetupProcess();
                 } else {
                     console.error('Login failed');
@@ -168,33 +174,31 @@
                             splashContent.innerHTML = 'Welcome to <span class="highlight">EcoLens</span>';
                             splashContent.classList.remove('quick-fade-out');
                             splashContent.classList.add('fade-in');
+                            setTimeout(() => {
+                                splashContent.classList.remove('fade-in');
+                                splashContent.classList.add('fade-out');
+                                setTimeout(() => {
+                                    splashContent.innerHTML = `
+                                        <div class="main-text">Install <span class="highlight">EcoLens</span></div>
+                                        <div class="sub-text">😊</div>
+                                        <div class="sub-text left-align">1 - Tap the Share Button</div>
+                                        <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
+                                        <div class="sub-text left-align">2 - Scroll down a bit</div>
+                                        <div class="sub-text left-align">3 - Tap Add to Home</div>
+                                        <div><img class="step-img" src="/static/images/add2hs.png" alt="Step 3"></div>
+                                    `;
                                     setTimeout(() => {
-                                        splashContent.classList.remove('fade-in');
-                                        splashContent.classList.add('fade-out');
-                                        setTimeout(() => {
-                                            splashContent.innerHTML = `
-                                                <div class="main-text">Install <span class="highlight">EcoLens</span></div>
-                                                <div class="sub-text">😊</div>
-                                                <div class="sub-text left-align">1 - Tap the Share Button</div>
-                                                <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
-                                                <div class="sub-text left-align">2 - Scroll down a bit</div>
-                                                <div class="sub-text left-align">3 - Tap Add to Home</div>
-                                                <div><img class="step-img" src="/static/images/add2hs.png" alt="Step 3"></div>
-                                            `;
-                                            splashContent.classList.remove('fade-out');
-                                            splashContent.classList.add('fade-in');
-                                            setTimeout(() => {
-                                                window.addEventListener('appinstalled', () => {
-                                                    localStorage.setItem('addedToHomeScreen', true);
-                                                    showAllSetScreen();
-                                                });
-                                            }, 3000);
-                                        }, 3000);
+                                        window.addEventListener('appinstalled', () => {
+                                            localStorage.setItem('addedToHomeScreen', true);
+                                            showAllSetScreen();
+                                        });
                                     }, 3000);
                                 }, 3000);
                             }, 3000);
+                        }, 3000);
                     }, 2000);
                 }, 2000);
+            }, 2000);
         }
 
         function showAllSetScreen() {
