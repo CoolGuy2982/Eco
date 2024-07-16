@@ -96,6 +96,32 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            flex-direction: column;
+        }
+        .page.active {
+            display: flex;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .checkbox-label input {
+            margin-right: 10px;
+        }
+        .youtube-video {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -120,7 +146,7 @@
         </div>
     </div>
     <div id="setupContainer" class="hidden">
-        <div id="subscribePage" class="container hidden">
+        <div id="subscribePage" class="page">
             <div class="main-text">Subscribe to EcoLens</div>
             <div class="sub-text">Subscribe to use the app. No ads. Feed your curiosity of the Earth</div>
             <ul class="list-disc text-left m-4">
@@ -131,19 +157,17 @@
             <button id="subscribeButton" class="button">Subscribe to EcoLens</button>
             <div>Auto-renews for $1.00/month until canceled</div>
         </div>
-        <div id="freePage" class="container hidden">
+        <div id="freePage" class="page">
             <img src="https://via.placeholder.com/80" alt="Shushing Face Emoji" class="step-img">
             <div class="main-text">EcoLens is free for now!!</div>
             <div class="sub-text">We just want to see if you’d be willing to pay when we eventually charge.</div>
-            <input type="checkbox" id="termsCheckbox"><label for="termsCheckbox"> I agree to <a href="https://www.example.com/terms">Terms of Service</a></label><br>
-            <input type="checkbox" id="privacyCheckbox"><label for="privacyCheckbox"> I agree to <a href="https://www.example.com/privacy">Privacy Policy</a></label><br>
+            <label class="checkbox-label"><input type="checkbox" id="termsCheckbox"> I agree to <a href="https://www.example.com/terms">Terms of Service</a></label>
+            <label class="checkbox-label"><input type="checkbox" id="privacyCheckbox"> I agree to <a href="https://www.example.com/privacy">Privacy Policy</a></label>
         </div>
-        <div id="videoPage" class="container hidden">
-            <video id="introVideo" controls>
-                <source src="https://www.youtube.com/embed/ktr1Ahnaa3E" type="video/mp4">
-            </video>
+        <div id="videoPage" class="page">
+            <iframe class="youtube-video" src="https://www.youtube.com/embed/ktr1Ahnaa3E?si=DJ85zD0ogUq83SoW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
-        <div id="allSetPage" class="container hidden">
+        <div id="allSetPage" class="page">
             <div class="main-text">Ok you're all set!</div>
             <div class="sub-text">Sorry about the wait.</div>
         </div>
@@ -272,11 +296,11 @@
             console.log('Running standalone setup process...');
             document.querySelector('.container').classList.add('hidden');
             document.getElementById('setupContainer').classList.remove('hidden');
-            document.getElementById('subscribePage').classList.remove('hidden');
+            document.getElementById('subscribePage').classList.add('active');
             
             document.getElementById('subscribeButton').addEventListener('click', () => {
-                document.getElementById('subscribePage').classList.add('hidden');
-                document.getElementById('freePage').classList.remove('hidden');
+                document.getElementById('subscribePage').classList.remove('active');
+                document.getElementById('freePage').classList.add('active');
             });
             
             document.getElementById('termsCheckbox').addEventListener('change', checkCheckboxes);
@@ -287,11 +311,12 @@
             const termsCheckbox = document.getElementById('termsCheckbox').checked;
             const privacyCheckbox = document.getElementById('privacyCheckbox').checked;
             if (termsCheckbox && privacyCheckbox) {
-                document.getElementById('freePage').classList.add('hidden');
-                document.getElementById('videoPage').classList.remove('hidden');
-                document.getElementById('introVideo').addEventListener('ended', () => {
-                    document.getElementById('videoPage').classList.add('hidden');
-                    document.getElementById('allSetPage').classList.remove('hidden');
+                document.getElementById('freePage').classList.remove('active');
+                document.getElementById('videoPage').classList.add('active');
+                const video = document.querySelector('.youtube-video');
+                video.addEventListener('ended', () => {
+                    document.getElementById('videoPage').classList.remove('active');
+                    document.getElementById('allSetPage').classList.add('active');
                     localStorage.setItem('setupCompleted', true);
                 });
             }
