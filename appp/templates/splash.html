@@ -113,20 +113,23 @@
             const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
             const email = localStorage.getItem('email');
+            const profilePic = localStorage.getItem('profilePic');
             const setupCompleted = localStorage.getItem('setupCompleted');
-            const addedToHomeScreen = localStorage.getItem('addedToHomeScreen');
-            
-            if (isStandalone) {
-                window.location.href = '/home';
-                return;
-            }
 
-            if (!email) {
-                document.getElementById('signInButtonContainer').classList.remove('hidden');
-            } else if (!setupCompleted) {
-                runSetupProcess();
+            if (isStandalone) {
+                if (!email) {
+                    document.getElementById('signInButtonContainer').classList.remove('hidden');
+                } else {
+                    window.location.href = '/home';
+                }
             } else {
-                runSetupProcess();
+                if (!email) {
+                    runSetupProcess();
+                } else if (!setupCompleted) {
+                    runSetupProcess();
+                } else {
+                    runSetupProcess();
+                }
             }
         });
 
@@ -142,9 +145,10 @@
             .then(data => {
                 if (data.success) {
                     const email = data.email;
+                    const profilePic = data.profilePic; // Ensure your backend sends this
                     localStorage.setItem('email', email);
-                    document.getElementById('signInButtonContainer').classList.add('hidden');
-                    runSetupProcess();
+                    localStorage.setItem('profilePic', profilePic);
+                    window.location.href = '/home';
                 } else {
                     console.error('Login failed');
                 }
@@ -154,6 +158,12 @@
         function runSetupProcess() {
             const splashContent = document.getElementById('splashContent');
             const subContent = document.getElementById('subContent');
+            const signInButtonContainer = document.getElementById('signInButtonContainer');
+            
+            if (signInButtonContainer) {
+                signInButtonContainer.classList.add('hidden');
+            }
+            
             splashContent.classList.add('fade-in');
             subContent.classList.add('fade-in');
             setTimeout(() => {
