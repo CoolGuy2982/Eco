@@ -204,7 +204,6 @@
                     document.getElementById('signInButtonContainer').classList.remove('hidden');
                 } else if (!setupCompleted) {
                     runStandaloneSetup();
-                    window.location.href = '/home';
                 } else {
                     window.location.href = '/home';
                 }
@@ -337,8 +336,12 @@
                 document.getElementById('videoPage').classList.add('hidden');
                 document.getElementById('allSetPage').classList.remove('hidden');
                 localStorage.setItem('setupCompleted', true);
+                setTimeout(() => {
+                    window.location.href = '/home';
+                }, 2000);
             }
         }
+
 
         window.onload = function() {
             google.accounts.id.initialize({
