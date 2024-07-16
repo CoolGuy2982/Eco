@@ -204,6 +204,7 @@
                     document.getElementById('signInButtonContainer').classList.remove('hidden');
                 } else if (!setupCompleted) {
                     runStandaloneSetup();
+                    window.location.href = '/home';
                 } else {
                     window.location.href = '/home';
                 }
