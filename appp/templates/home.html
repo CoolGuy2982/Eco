@@ -212,6 +212,17 @@
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>
 
+<div id="subscriptionPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
+    <div class="bg-white rounded-lg p-6 shadow-lg w-11/12 max-w-md text-center">
+        <p id="popupMessage" class="text-lg mb-4">EcoLens requires a $1.00 subscription every month.</p>
+        <div id="popupActions">
+            <button id="subscribeButton" class="bg-purple-500 text-white py-2 px-4 rounded-lg mr-2">Subscribe</button>
+            <button id="cancelButton" class="bg-gray-300 text-black py-2 px-4 rounded-lg">Cancel</button>
+        </div>
+        <button id="closePopupButton" class="bg-green-500 text-white py-2 px-4 rounded-lg mt-4" style="display: none;">Close</button>
+    </div>
+</div>
+
 <!-- Tailwind CSS Script -->
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -440,6 +451,7 @@
 
 function showPopup() {
     document.getElementById('addToHomeScreen').style.display = 'block';
+    document.getElementById('subscriptionPopup').style.display = 'block';
 }
 
 function closePopup() {

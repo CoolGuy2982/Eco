@@ -3,11 +3,11 @@ import threading
 from .utils.image_analysis import analyze_image
 from .utils.google_drive import upload_to_drive
 import base64
-import requests
+import requests  # Standard requests module
 from bs4 import BeautifulSoup
 import urllib.parse
 from google.oauth2 import id_token
-from google.auth.transport import requests
+from google.auth.transport import requests as google_requests  # Renamed to avoid conflict
 import os
 
 # Create a Blueprint instance for the main app
@@ -21,7 +21,7 @@ CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 def login():
     token = request.json.get('idToken')
     try:
-        idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+        idinfo = id_token.verify_oauth2_token(token, google_requests.Request(), CLIENT_ID)
         user_email = idinfo['email']
         session['user_email'] = user_email
         return jsonify({'success': True})

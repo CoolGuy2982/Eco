@@ -88,12 +88,13 @@ def analyze_image(base64_image, spoken_text):
                 - Contextual Clues: Consider surrounding elements that provide context.
                 - Special Characteristics: Highlight any unique features relevant to the environmental query.
 
+            MAKE SURE TO PROVIDE REASONING, THOUGHT PROCESS, CHAIN OF THOUGHT FOR WHY YOU CHOSE THE TOOL YOU CHOOSE. WHAT IN THE IMAGE/WHAT REASONING MADE YOU CHOOSE IT. Be very descriptive and cite evidence from the image
             3. JSON Response: Format the response as follows (example):
             {{
-                "COT": "<State your reasoning, throught process, and chain of thought for why you chose the tool you did. Be very descriptive and cite evidence from the image>"
                 "Response": "<detailed description>",
                 "Text_Tool": "A",
                 "Material": "if you selected tool B <add the material of the general item if applicable (e.g., Plastic)>"
+                "COT": "<State your reasoning HERE>"
             }}
             """,
             "\n"
