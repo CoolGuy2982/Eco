@@ -218,60 +218,57 @@
         };
 
         initialize();
+
         document.addEventListener("DOMContentLoaded", function(event) {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-            const setupCompleted = localStorage.getItem('setupCompleted');
-            
-            if (window.location.href === 'http://127.0.0.1:5000/') {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const setupCompleted = localStorage.getItem('setupCompleted');
+    
+    if (window.location.href === 'http://127.0.0.1:5000/') {
         localStorage.setItem('email', 'dummy@example.com');
     }
     const email = localStorage.getItem('email');
 
-            if (isStandalone) {
-                if (!email) {
-                    document.getElementById('signInButtonContainer').classList.remove('hidden');
-                } else if (!setupCompleted) {
-                    runStandaloneSetup();
-                } else {
-                    setTimeout(() => {
-                    window.location.href = '/home';
-                }, 4000);
-                }
-            } else {
-                if (!email) {
-                    document.getElementById('signInButtonContainer').classList.remove('hidden');
-                } else {
-                    runSetupProcess();
-                }
-            }
-        });
-
-        function handleCredentialResponse(response) {
-            const idToken = response.credential;
-            fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ idToken: idToken })
-            }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const email = data.email;
-                    localStorage.setItem('email', email);
-                    localStorage.setItem('profilePic', data.profilePic);
-                    if (window.matchMedia('(display-mode: standalone)').matches) {
-                        runStandaloneSetup();
-                    } else {
-                        setTimeout(() => {
-                    window.location.href = '/home';
-                }, 4000);
-                    }
-                } else {
-                    console.error('Login failed');
-                }
-            });
+    if (isStandalone) {
+        if (!email) {
+            document.getElementById('signInButtonContainer').classList.remove('hidden');
+        } else if (!setupCompleted) {
+            runStandaloneSetup();
+        } else {
+            setTimeout(() => {
+                window.location.href = '/home';
+            }, 4000);
         }
+    } else {
+        if (!email) {
+            runSetupProcess();
+        } else {
+            runSetupProcess();
+        }
+    }
+});
+
+function handleCredentialResponse(response) {
+    const idToken = response.credential;
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ idToken: idToken })
+    }).then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const email = data.email;
+            localStorage.setItem('email', email);
+            localStorage.setItem('profilePic', data.profilePic);
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                runStandaloneSetup();
+            }
+        } else {
+            console.error('Login failed');
+        }
+    });
+}
 
         function runSetupProcess() {
             const splashContent = document.getElementById('splashContent');
