@@ -1,8 +1,9 @@
 import os
-from google.oauth2 import service_account
+from google.auth import default
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 from io import BytesIO
+from google.oauth2 import service_account
 from google.auth import default
 from flask import current_app
 
@@ -15,9 +16,9 @@ creds, project = default()
 # Build the drive service using the credentials
 drive_service = build('drive', 'v3', credentials=creds)
 
-DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw'  # drive folder ID from link
+DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw'  # Drive folder ID from link
 
-def upload_to_drive(file_name, file_data, user_email):
+def upload_to_drive(file_name, file_data):
     file_metadata = {
         'name': file_name,
         'parents': [DRIVE_FOLDER_ID]
@@ -26,18 +27,6 @@ def upload_to_drive(file_name, file_data, user_email):
     file = drive_service.files().create(
         body=file_metadata,
         media_body=media,
-        fields='id'
-    ).execute()
-
-    # Share the file with the user's email
-    permission = {
-        'type': 'user',
-        'role': 'reader',
-        'emailAddress': user_email
-    }
-    drive_service.permissions().create(
-        fileId=file.get('id'),
-        body=permission,
         fields='id'
     ).execute()
 
