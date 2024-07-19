@@ -101,6 +101,12 @@
         </a>
       </nav>
     </div>
+    <!-- Hidden file input for iPhone's built-in camera -->
+<input type="file" id="fileInput" accept="image/*;capture=camera" style="display:none;">
+
+<!-- Button to trigger the fallback image capture -->
+<button id="fallbackCaptureButton" style="display:none;">Take Photo</button>
+
 
     <canvas id="canvas" class="hidden"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>

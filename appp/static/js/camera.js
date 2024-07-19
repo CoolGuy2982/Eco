@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveTextPrompt = document.getElementById('saveTextPrompt');
     const browserWarningModal = document.getElementById('browserWarningModal');
     const browserWarningOkButton = document.getElementById('browserWarningOkButton');
+    const fallbackCaptureButton = document.getElementById('fallbackCaptureButton');
+    const fileInput = document.getElementById('fileInput'); // Add a hidden file input for capturing images
     let stream = null;
     let imageCapture = null;
     let recognition;
@@ -93,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error requesting camera and microphone permissions:', error);
+            showFallbackCaptureButton();
         }
     };
 
@@ -116,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error accessing camera: ', error);
+            showFallbackCaptureButton();
         }
     };
 
@@ -147,25 +151,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const captureImageAndSend = () => {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-    
+
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
+
         if (isFocusBoxUsed) {
             const boxRect = focusBox.getBoundingClientRect();
             const videoRect = video.getBoundingClientRect();
-    
+
             const scaleX = video.videoWidth / videoRect.width;
             const scaleY = video.videoHeight / videoRect.height;
-    
+
             const x = (boxRect.left - videoRect.left) * scaleX;
             const y = (boxRect.top - videoRect.top) * scaleY;
             const size = Math.min(boxRect.width, boxRect.height) * scaleX; // Ensure the box is square
-    
+
             context.strokeStyle = 'red';
             context.lineWidth = 5;
             context.strokeRect(x, y, size, size);
         }
-    
+
         const imageData = canvas.toDataURL('image/jpeg');
         sessionStorage.setItem('capturedImage', imageData);
         displayCapturedImage(imageData);
@@ -334,8 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 switchToCameraMode();
             }
         }
-    }; 
-    
+    };
 
     const switchToVoiceMode = () => {
         document.getElementById('buttonContainerCamera').style.display = 'none';
@@ -351,6 +354,10 @@ document.addEventListener('DOMContentLoaded', () => {
         browserWarningModal.classList.remove('hidden');
     };
 
+    const showFallbackCaptureButton = () => {
+        fallbackCaptureButton.style.display = 'block';
+    };
+
     const setupEventListeners = () => {
         toggleSwitch.addEventListener('change', toggleMode);
         uploadButton.addEventListener('change', handleImageUpload);
@@ -364,6 +371,10 @@ document.addEventListener('DOMContentLoaded', () => {
         browserWarningOkButton.addEventListener('click', () => {
             browserWarningModal.classList.add('hidden');
         });
+        fallbackCaptureButton.addEventListener('click', () => {
+            fileInput.click();
+        });
+        fileInput.addEventListener('change', handleImageUpload);
 
         toggleMenu.addEventListener('click', () => {
             if (menuBar.classList.contains('active')) {
