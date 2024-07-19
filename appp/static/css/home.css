@@ -484,3 +484,11 @@ footer .icon.active span {
     position: relative;
     z-index: 1; /* Ensure the button text stays above the ripple effect */
 }
+
+#triangle-container {
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+}
