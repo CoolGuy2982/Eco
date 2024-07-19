@@ -1,14 +1,14 @@
 let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
 let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
 
-const goals = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500]; // Goals for each level
+const goals = [50, 110, 220, 350, 500, 650, 800, 950, 1100, 1300]; // Goals for each level
 const rewards = [
     [
         { 
-            name: "Free Ecoternatives Floss (Order $35+)", 
+            name: "Free Ecoternatives Floss", 
             cardImage: "https://ecoternatives.co/cdn/shop/files/The_World_s_Most_5.png?crop=center&height=32&v=1708425732&width=32", 
             popupImage: "https://ecoternatives.co/cdn/shop/files/Screenshot_2024-02-20_at_8.48.00_PM_3.png?v=1708426636&width=230", 
-            code: "FREEFLOSS", 
+            code: "FREEFLOSS (Order $35+)", 
             link: "https://ecoternatives.co/products/strong-bamboo-floss" 
         },
         { 
@@ -28,9 +28,9 @@ const rewards = [
             link: "https://terrathread.com/" 
         },
         { 
-            name: "Exclusive Eco Story Ebook- Ethan", 
-            cardImage: "https://lh5.googleusercontent.com/EpVQMKcsk1nq0rVKbf2Lbn-HE32VaRned1C_E-2oUHmiAJPd0sbQ_NlGyuyaZEDophe4JZu2FstpUjrxPwzwJjPNTp2fXR1c1LgDL4YKV_fm3BKaeNPOMo3O9ET8JfOsSg=w1280", 
-            popupImage: "https://lh5.googleusercontent.com/EpVQMKcsk1nq0rVKbf2Lbn-HE32VaRned1C_E-2oUHmiAJPd0sbQ_NlGyuyaZEDophe4JZu2FstpUjrxPwzwJjPNTp2fXR1c1LgDL4YKV_fm3BKaeNPOMo3O9ET8JfOsSg=w1280", 
+            name: "Eco Ebook - Ethan [Exclusive]", 
+            cardImage: "static/images/rewards/ethan_cover.png", 
+            popupImage: "static/images/rewards/ethan_cover.png", 
             code: "Tap the image", 
             link: "https://sites.google.com/view/sparkfirley/authors/f_john-baker/books/ethan-john-baker?authuser=0" 
         },
