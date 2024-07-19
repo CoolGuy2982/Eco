@@ -57,7 +57,7 @@ Limit each response to 80 words max. Respond as if you are texting someone and e
 
 
     text_model = genai.GenerativeModel(
-        model_name="gemini-1.0-pro",
+        model_name="gemini-1.5-flash",
         generation_config={
             "temperature": 0.8,
             "top_p": 1,
