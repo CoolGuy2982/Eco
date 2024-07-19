@@ -451,10 +451,10 @@ footer .icon.active span {
 
 @keyframes ripple {
     0% {
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
     }
     70% {
-        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+        box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
     }
     100% {
         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
@@ -463,10 +463,12 @@ footer .icon.active span {
 
 .ripple-effect {
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Allow the ripple to expand outside the button */
+    border: 2px solid black; /* Black rounded border */
+    border-radius: 50px; /* Ensure the border is rounded */
 }
 
-.ripple-effect::after {
+.ripple-effect::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -475,15 +477,16 @@ footer .icon.active span {
     height: 100%;
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.1);
-    animation: ripple 1s infinite;
+    background: transparent; /* No background color */
+    animation: ripple 1.5s infinite; /* Adjust duration for ripple effect */
+    z-index: -1; /* Ensure it is behind the button */
 }
 
 #ecoPointsButton {
-    border: 2px solid black;
     position: relative;
     z-index: 1; /* Ensure the button text stays above the ripple effect */
 }
+
 
 #triangle-container {
     width: 0;
