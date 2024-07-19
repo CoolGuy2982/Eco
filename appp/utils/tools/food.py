@@ -4,7 +4,7 @@ import os
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 
-def generate_food_response(response_text, spoken_text):
+def generate_food_response(response_text, spoken_text, base64_image):
     text_prompt = f"""
 You are in the app EcoLens, an app that takes in an image and gives sutainability suggestions by looking at the image and routing it to a expert that can best give advice for the image to help the user. 
 The goal is to make the world more sustainable, subconsciously. 
@@ -63,7 +63,7 @@ Take a deep breath and work on this problem step-by-step.
         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
     )
 
-    text_response = text_model.generate_content([text_prompt])
+    text_response = text_model.generate_content([base64_image, text_prompt])
     text_analysis_result = text_response.text
 
     return {
