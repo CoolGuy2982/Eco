@@ -391,6 +391,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         video.addEventListener('click', (event) => {
+            if (event.target === fallbackCaptureButton || fallbackCaptureButton.contains(event.target)) {
+                return; // Do nothing if the click was on the fallbackCaptureButton
+            }
+            
             console.log("Video was clicked");
             focusBox.style.marginTop = '0vh';
             zoomContainer.style.marginTop = '0vh';

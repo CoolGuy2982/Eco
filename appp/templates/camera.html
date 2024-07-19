@@ -29,6 +29,13 @@
                 <div></div>
             </div>
         </div>
+                    <!-- Hidden file input for iPhone's built-in camera -->
+        <!-- Hidden file input for iPhone's built-in camera -->
+        <input type="file" id="fileInput" accept="image/*;capture=camera" style="display:none;">
+
+        <!-- Button to trigger the fallback image capture -->
+        <button id="fallbackCaptureButton" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: black; color: white; border: none; border-radius: 50px; padding: 15px 30px; font-size: 16px; cursor: pointer;">Take Photo</button>
+
 
         <div id="focusBox" class="absolute border-2 border-yellow-500 hidden"></div>
         <div id="zoomContainer" class="absolute hidden">
@@ -101,12 +108,6 @@
         </a>
       </nav>
     </div>
-    <!-- Hidden file input for iPhone's built-in camera -->
-<input type="file" id="fileInput" accept="image/*;capture=camera" style="display:none;">
-
-<!-- Button to trigger the fallback image capture -->
-<button id="fallbackCaptureButton" style="display:none;">Take Photo</button>
-
 
     <canvas id="canvas" class="hidden"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
