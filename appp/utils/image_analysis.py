@@ -127,7 +127,7 @@ def analyze_image(base64_image, spoken_text):
         elif text_tool == "E":
             result = generate_food_response(response_text, spoken_text)
         elif text_tool == "F":
-            result = generate_eco_response(response_text, spoken_text)
+            result = generate_eco_response(response_text, spoken_text,image_parts[0])
         else:
             raise ValueError("Invalid Text_Tool")
 
