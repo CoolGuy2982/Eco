@@ -82,12 +82,6 @@
             </div>
         </div>
     </div>
-<!-- Hidden file input for iPhone's built-in camera -->
-<input type="file" id="fileInput" accept="image/*;capture=camera" style="display:none;">
-
-<!-- Button to trigger the fallback image capture -->
-<button id="fallbackCaptureButton" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: black; color: white; border: none; border-radius: 50px; padding: 15px 30px; font-size: 16px; cursor: pointer; z-index: 10;">Take Photo</button>
-
     <!-- Navigation Bar -->
     <div class="fixed inset-x-0 bottom-0 bg-white bg-opacity-65 backdrop-blur-md py-3">
       <nav class="flex justify-around items-center text-gray-600">
@@ -107,6 +101,12 @@
     </div>
 
     <canvas id="canvas" class="hidden"></canvas>
+    <!-- Hidden file input for iPhone's built-in camera -->
+<input type="file" id="fileInput" accept="image/*;capture=camera" style="display:none;">
+
+<!-- Button to trigger the fallback image capture -->
+<button id="fallbackCaptureButton" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: black; color: white; border: none; border-radius: 50px; padding: 15px 30px; font-size: 16px; cursor: pointer; z-index: 10;">Take Photo</button>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@latest"></script>
     <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
