@@ -95,17 +95,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error requesting camera and microphone permissions:', error);
-            showFallbackCaptureButton();
+            showFallbackCaptureButton(); // Show fallback button if permissions request fails
         }
     };
+    
 
     const setupMediaStream = async () => {
         if (stream) {
             video.srcObject = stream;
             video.play();
+            fallbackCaptureButton.style.display = 'none'; // Hide fallback button when video feed is working
             return;
         }
-
+    
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
@@ -113,15 +115,16 @@ document.addEventListener('DOMContentLoaded', () => {
             stream = mediaStream;
             video.srcObject = stream;
             video.play();
+            fallbackCaptureButton.style.display = 'none'; // Hide fallback button when video feed is working
             imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
             if (isVoiceMode) {
                 startAudioProcessing();
             }
         } catch (error) {
             console.error('Error accessing camera: ', error);
-            showFallbackCaptureButton();
+            showFallbackCaptureButton(); // Show fallback button if video feed fails
         }
-    };
+    };    
 
     const stopMediaStream = () => {
         if (stream) {
@@ -189,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         reader.readAsDataURL(file);
     };
+    
 
     const sendImageToServer = (imageData, spokenText) => {
         console.log('Sending image and spoken text to server:', spokenText);
@@ -357,6 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showFallbackCaptureButton = () => {
         fallbackCaptureButton.style.display = 'block';
     };
+    
 
     const setupEventListeners = () => {
         toggleSwitch.addEventListener('change', toggleMode);
@@ -391,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         video.addEventListener('click', (event) => {
-            if (event.target === fallbackCaptureButton || fallbackCaptureButton.contains(event.target)) {
+            if (event.target.closest('#fallbackCaptureButton')) {
                 return; // Do nothing if the click was on the fallbackCaptureButton
             }
             
