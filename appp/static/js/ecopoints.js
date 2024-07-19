@@ -74,7 +74,7 @@ function updateUI() {
     document.getElementById('nextLevel').textContent = nextLevel;
     document.getElementById('nextTreeImage').src = `static/images/trees/level${nextLevel}.png`;
 
-    const progressPercentage = ((ecoPoints|| 0)) / (goals[level] - (goals[level - 1] || 0)) * 100;
+    const progressPercentage = ((ecoPoints|| 0)) / (goals[level]  || 0) * 100;
     document.getElementById('progressBar').style.width = `${Math.min(progressPercentage, 100)}%`;
 
     const currentRewardsList = document.getElementById('currentRewards');
