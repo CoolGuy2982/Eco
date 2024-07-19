@@ -15,7 +15,7 @@ const rewards = [
             name: "Exclusive Eco Wallpaper", 
             cardImage: "https://lh3.googleusercontent.com/pw/AP1GczO6Sem5UzEvBOtQhjpetfwM4PzuQK0PFpp-NpyWco9PHzXGeWfp1GnKHO6A7gm3jy2Ek1cNE3CNMsKoivnd4EQ9ZFN4Q2cC04o4Lq2cfXQAMcJCOIsxZ6kQxus2LbU5hi1d7MRNFmnJsEmwECPBU6aB=w1598-h913-s-no-gm?authuser=0", 
             popupImage: "https://lh3.googleusercontent.com/pw/AP1GczO6Sem5UzEvBOtQhjpetfwM4PzuQK0PFpp-NpyWco9PHzXGeWfp1GnKHO6A7gm3jy2Ek1cNE3CNMsKoivnd4EQ9ZFN4Q2cC04o4Lq2cfXQAMcJCOIsxZ6kQxus2LbU5hi1d7MRNFmnJsEmwECPBU6aB=w1598-h913-s-no-gm?authuser=0", 
-            code: "Enjoy :)", 
+            code: "Enjoy :) [tap the picture ^^]", 
             link: "https://photos.google.com/share/AF1QipOt6VJARXqi0qUa65Cv6PAQIKj78CwSvOd5uYSGqYfpLzGQBbwigfp6nl5zbIZsJQ/photo/AF1QipPHy7iYaeS2PEEk_9A_Dmw3FzYXYqkalRt36s-c?key=TDdDZjQ5Umd3ekxqOWF6V3NxOV9BMGU4aGZKLVJn" 
         },
     ],
@@ -24,7 +24,7 @@ const rewards = [
             name: "50% Off Terra Thread Apparel", 
             cardImage: "https://cdn.pushowl.com/images/tr:cm-pad_resize,w-192,h-192,bg-FFFFFF00/terra-thread/default-c2c03e44-0acc-47da-8ad5-6f63e87cb764-TerraThreadLogo.png?ik-sdk-version=python-2.2.4&ik-t=9999999999&ik-s=ba9432aaf4a4be2f0c75ae7b27d60b15338fd470", 
             popupImage: "https://d13wriz42ny3t5.cloudfront.net/production/2020/11/06111407/TerraThread_Banner2.jpg?width=1000", 
-            code: "", 
+            code: "Tap the picture above ^", 
             link: "https://terrathread.com/" 
         },
         { 
@@ -32,7 +32,7 @@ const rewards = [
             cardImage: "static/images/rewards/ethan_cover.png", 
             popupImage: "static/images/rewards/ethan_cover.png", 
             code: "Tap the image", 
-            link: "https://sites.google.com/view/sparkfirley/authors/f_john-baker/books/ethan-john-baker?authuser=0" 
+            link: "https://drive.google.com/file/d/1xk0DpMogSUhTWiNRxBYT7f4Y9xJBUzZP/view?usp=sharing" 
         },
     ],
     [
@@ -45,10 +45,10 @@ const rewards = [
         },
         { 
             name: "Exclusive Env Book Club [Secret]", 
-            cardImage: "https://lh6.googleusercontent.com/bSRk3VgAikoon7J_dRNUq9QE-Grm9vd50jCXcy1ju-HDOg29x2oZTLUteJvK02PRztQ6GRfWkz5GzCfTB5y0wvLXIcZzdoC9E2exxOibkphgNLCN", 
-            popupImage: "https://lh6.googleusercontent.com/bSRk3VgAikoon7J_dRNUq9QE-Grm9vd50jCXcy1ju-HDOg29x2oZTLUteJvK02PRztQ6GRfWkz5GzCfTB5y0wvLXIcZzdoC9E2exxOibkphgNLCN", 
+            cardImage: "static/images/rewards/spark_logo.png", 
+            popupImage: "static/images/rewards/spark_logo.png", 
             code: "Tap the pic ^", 
-            link: "https://sites.google.com/view/sparkfirley/spark?authuser=0" 
+            link: "https://sites.google.com/view/sparkfirley/spark" 
         },
     ],
     // Levels 4-10 gift cards with "Coming Soon"
