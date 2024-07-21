@@ -496,6 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(function (mediaStream) {
             stream = mediaStream;
             video.srcObject = stream;
+            video.controls = false; // Disable controls when using camera
             video.play();
         })
         .catch(function (error) {
@@ -552,10 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         recordedChunks = [];
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
     
         mediaRecorder.ondataavailable = event => {
-            recordedChunks.push(event.data);
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
             checkRecordingSize();
         };
     
@@ -612,19 +615,19 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingAnimation.style.display = 'none';
         });
     }
-});
+    
+    document.getElementById('videoModeToggle').addEventListener('click', function() {
+        var recordButton = document.getElementById('recordVideoButton');
+        recordButton.classList.toggle('hidden'); // Toggle visibility when changing modes
+    });
 
-document.getElementById('videoModeToggle').addEventListener('click', function() {
-    var recordButton = document.getElementById('recordVideoButton');
-    recordButton.classList.toggle('hidden'); // Toggle visibility when changing modes
-});
-
-document.getElementById('recordVideoButton').addEventListener('click', function() {
-    this.classList.toggle('active'); // Toggle the active class to change appearance
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-        mediaRecorder.stop();
-    } else {
-        // Start recording logic here
-        console.log('Recording started');
-    }
+    document.getElementById('recordVideoButton').addEventListener('click', function() {
+        this.classList.toggle('active'); // Toggle the active class to change appearance
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        } else {
+            // Start recording logic here
+            console.log('Recording started');
+        }
+    });
 });
