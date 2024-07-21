@@ -565,13 +565,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder.start();
         console.log('Recording started');
     
-        setTimeout(() => {
-            if (mediaRecorder.state === "recording") {
-                mediaRecorder.stop();
-                console.log('Recording stopped automatically after 30 seconds');
-            }
-        }, 30000);
-    
         mediaRecorder.onstop = () => {
             console.log('Recording stopped');
             const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
@@ -584,8 +577,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkRecordingSize() {
         const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
         if (videoBlob.size >= 30000000) { // Check if size is greater than 30 MB
-            mediaRecorder.stop();
-            console.log('Recording stopped due to size limit');
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                console.log('Recording stopped due to size limit');
+            }
         }
     }
     
@@ -601,14 +596,20 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => response.text()) // Changed to text() to handle non-JSON responses
         .then(data => {
-            if (data.error) {
-                throw new Error(data.error);
+            try {
+                const jsonData = JSON.parse(data);
+                if (jsonData.error) {
+                    throw new Error(jsonData.error);
+                }
+                console.log('Video processing complete:', jsonData);
+                sessionStorage.setItem('AIResponse', JSON.stringify(jsonData));
+                window.location.href = '/analysis';
+            } catch (err) {
+                console.error('Error parsing response as JSON:', err);
+                throw new Error('Invalid server response');
             }
-            console.log('Video processing complete:', data);
-            sessionStorage.setItem('AIResponse', JSON.stringify(data));
-            window.location.href = '/analysis';
         })
         .catch(err => {
             console.error('Error sending video:', err);
