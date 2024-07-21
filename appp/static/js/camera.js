@@ -189,6 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendImageToServer = (imageData, spokenText) => {
         console.log('Sending image and spoken text to server:', spokenText);
         loadingAnimation.style.display = 'flex';
+        videoModeToggle.style.display = 'none';
+        recordVideoButton.style.display = 'none';
 
         let photoID = null;
 
@@ -472,4 +474,157 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     initialize();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('video');
+    const videoModeToggle = document.getElementById('videoModeToggle');
+    const takePhotoButton = document.getElementById('takePhotoButton');
+    const recordVideoButton = document.getElementById('recordVideoButton');
+    const loadingAnimation = document.getElementById('loadingAnimation');
+    const textPromptInput = document.getElementById('textPrompt');
+    let isVideoMode = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let stream;
+
+    // Initialize video button as hidden on load
+    recordVideoButton.style.display = 'none';
+
+    function getMediaStream() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (mediaStream) {
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function (error) {
+            console.error("Error accessing media devices.", error);
+        });
+    }
+
+    function stopMediaStream() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+    }
+
+    function switchToVideoMode() {
+        getMediaStream();
+        videoModeToggle.innerHTML = '<i class="fas fa-video text-gray-800 text-2xl"></i>';
+        takePhotoButton.style.display = 'none';
+        recordVideoButton.style.display = 'block';
+        isVideoMode = true;
+    }
+
+    function switchToCameraMode() {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        }
+        stopMediaStream();
+        videoModeToggle.innerHTML = '<i class="fas fa-camera text-gray-800 text-2xl"></i>';
+        takePhotoButton.style.display = 'block';
+        recordVideoButton.style.display = 'none';
+        isVideoMode = false;
+    }
+
+    videoModeToggle.addEventListener('click', () => {
+        if (isVideoMode) {
+            switchToCameraMode();
+        } else {
+            switchToVideoMode();
+        }
+    });
+
+    recordVideoButton.addEventListener('click', () => {
+        if (!mediaRecorder || mediaRecorder.state === "inactive") {
+            startRecording();
+        } else {
+            mediaRecorder.stop();
+        }
+    });
+
+    function startRecording() {
+        if (!stream) {
+            console.error('No video source available');
+            return;
+        }
+    
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    
+        mediaRecorder.ondataavailable = event => {
+            recordedChunks.push(event.data);
+            checkRecordingSize();
+        };
+    
+        mediaRecorder.start();
+        console.log('Recording started');
+    
+        setTimeout(() => {
+            if (mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                console.log('Recording stopped automatically after 30 seconds');
+            }
+        }, 30000);
+    
+        mediaRecorder.onstop = () => {
+            console.log('Recording stopped');
+            const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+            const currentDateTime = new Date().toISOString().replace(/[:.]/g, '-');
+            const filename = `recorded_video_${currentDateTime}.webm`;
+            sendVideoToServer(videoBlob, textPromptInput.value, filename);
+        };
+    }
+    
+    function checkRecordingSize() {
+        const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
+        if (videoBlob.size >= 30000000) { // Check if size is greater than 30 MB
+            mediaRecorder.stop();
+            console.log('Recording stopped due to size limit');
+        }
+    }
+    
+    function sendVideoToServer(videoBlob, spokenText, filename) {
+        console.log('Sending video and spoken text to server:', spokenText);
+        loadingAnimation.style.display = 'flex';
+    
+        let formData = new FormData();
+        formData.append('video', videoBlob, filename);
+        formData.append('text', spokenText);
+    
+        fetch('/video', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            console.log('Video processing complete:', data);
+            sessionStorage.setItem('AIResponse', JSON.stringify(data));
+            window.location.href = '/analysis';
+        })
+        .catch(err => {
+            console.error('Error sending video:', err);
+            loadingAnimation.style.display = 'none';
+        });
+    }
+});
+
+document.getElementById('videoModeToggle').addEventListener('click', function() {
+    var recordButton = document.getElementById('recordVideoButton');
+    recordButton.classList.toggle('hidden'); // Toggle visibility when changing modes
+});
+
+document.getElementById('recordVideoButton').addEventListener('click', function() {
+    this.classList.toggle('active'); // Toggle the active class to change appearance
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+    } else {
+        // Start recording logic here
+        console.log('Recording started');
+    }
 });
