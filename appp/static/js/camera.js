@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveTextPrompt = document.getElementById('saveTextPrompt');
     const browserWarningModal = document.getElementById('browserWarningModal');
     const browserWarningOkButton = document.getElementById('browserWarningOkButton');
+    const videoModeToggle = document.getElementById('videoModeToggle');
+    const recordVideoButton = document.getElementById('recordVideoButton');
+    
     let stream = null;
     let imageCapture = null;
     let recognition;
@@ -35,6 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let zoomSliderTimeout;
     let debounceTimeout;
     let isFocusBoxUsed = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let isVideoMode = false;
 
     const initialize = () => {
         if (!isMobileDevice()) {
@@ -53,6 +59,28 @@ document.addEventListener('DOMContentLoaded', () => {
         checkPermissions();
     };
 
+    function switchToVideoMode() {
+        getMediaStream();
+        videoModeToggle.innerHTML = '<i class="fas fa-video text-gray-800 text-2xl"></i>';
+        takePhotoButton.style.display = 'none';
+        recordVideoButton.style.display = 'block';
+        isVideoMode = true;
+    }
+    
+    async function getMediaStream() {
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { exact: "environment" } } // Use the back camera
+            });
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.controls = false; // Disable controls when using camera
+            video.play();
+        } catch (error) {
+            console.error("Error accessing media devices.", error);
+        }
+    }
+    
     const isMobileDevice = () => {
         return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
     };
@@ -412,6 +440,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        // Video mode and recording event listeners
+        videoModeToggle.addEventListener('click', () => {
+            if (isVideoMode) {
+                switchToCameraMode();
+            } else {
+                switchToVideoMode();
+            }
+        });
+
     };
 
     const resetFocusBoxTimeout = () => {
@@ -473,79 +511,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('buttonContainerCamera').style.display = 'none';
     };
 
-    initialize();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const video = document.getElementById('video');
-    const videoModeToggle = document.getElementById('videoModeToggle');
-    const takePhotoButton = document.getElementById('takePhotoButton');
-    const recordVideoButton = document.getElementById('recordVideoButton');
-    const loadingAnimation = document.getElementById('loadingAnimation');
-    const textPromptInput = document.getElementById('textPrompt');
-    let isVideoMode = false;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let stream;
-
-    // Initialize video button as hidden on load
-    recordVideoButton.style.display = 'none';
-
-    function getMediaStream() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function (mediaStream) {
-            stream = mediaStream;
-            video.srcObject = stream;
-            video.controls = false; // Disable controls when using camera
-            video.play();
-        })
-        .catch(function (error) {
-            console.error("Error accessing media devices.", error);
-        });
-    }
-
-    function stopMediaStream() {
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            stream = null;
-        }
-    }
-
-    function switchToVideoMode() {
-        getMediaStream();
-        videoModeToggle.innerHTML = '<i class="fas fa-video text-gray-800 text-2xl"></i>';
-        takePhotoButton.style.display = 'none';
-        recordVideoButton.style.display = 'block';
-        isVideoMode = true;
-    }
-
-    function switchToCameraMode() {
-        if (mediaRecorder && mediaRecorder.state === "recording") {
-            mediaRecorder.stop();
-        }
-        stopMediaStream();
-        videoModeToggle.innerHTML = '<i class="fas fa-camera text-gray-800 text-2xl"></i>';
-        takePhotoButton.style.display = 'block';
-        recordVideoButton.style.display = 'none';
-        isVideoMode = false;
-    }
-
-    videoModeToggle.addEventListener('click', () => {
-        if (isVideoMode) {
-            switchToCameraMode();
-        } else {
-            switchToVideoMode();
-        }
-    });
-
     recordVideoButton.addEventListener('click', () => {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
             startRecording();
+            // Add the active class to change to a square icon
+            recordVideoButton.classList.add('active');
         } else {
             mediaRecorder.stop();
+            // Remove the active class to change back to a circle icon
+            recordVideoButton.classList.remove('active');
         }
     });
-
+    
     function startRecording() {
         if (!stream) {
             console.error('No video source available');
@@ -571,6 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentDateTime = new Date().toISOString().replace(/[:.]/g, '-');
             const filename = `recorded_video_${currentDateTime}.webm`;
             sendVideoToServer(videoBlob, textPromptInput.value, filename);
+    
+            // Remove the active class when recording stops
+            recordVideoButton.classList.remove('active');
         };
     }
     
@@ -584,14 +564,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    function sendVideoToServer(videoBlob, spokenText, filename) {
+
+
+    const sendVideoToServer = (videoBlob, spokenText, filename) => {
         console.log('Sending video and spoken text to server:', spokenText);
         loadingAnimation.style.display = 'flex';
-    
+
         let formData = new FormData();
         formData.append('video', videoBlob, filename);
         formData.append('text', spokenText);
-    
+
         fetch('/video', {
             method: 'POST',
             body: formData
@@ -615,20 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error sending video:', err);
             loadingAnimation.style.display = 'none';
         });
-    }
-    
-    document.getElementById('videoModeToggle').addEventListener('click', function() {
-        var recordButton = document.getElementById('recordVideoButton');
-        recordButton.classList.toggle('hidden'); // Toggle visibility when changing modes
-    });
+    };
 
-    document.getElementById('recordVideoButton').addEventListener('click', function() {
-        this.classList.toggle('active'); // Toggle the active class to change appearance
-        if (mediaRecorder && mediaRecorder.state === "recording") {
-            mediaRecorder.stop();
-        } else {
-            // Start recording logic here
-            console.log('Recording started');
-        }
-    });
+    initialize();
 });
