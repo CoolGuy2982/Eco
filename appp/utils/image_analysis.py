@@ -201,7 +201,7 @@ Take a deep breath and work on this problem step-by-step.
         elif text_tool == "I":
             result = generate_microscope_response(response_text, spoken_text,image_parts[0])
         elif text_tool == "J":
-            result = generate_barcode_response(response_text, spoken_text,image_parts[0])
+            result = generate_barcode_response(response_text, spoken_text,image_parts[0], img_data)
         elif text_tool == "K":
             result = generate_eco_response(response_text, spoken_text,image_parts[0])
         else:
