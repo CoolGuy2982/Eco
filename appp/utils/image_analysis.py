@@ -56,9 +56,10 @@ Analyze the image in detail and provide a comprehensive description without ment
 
 Hints: Generally, the item in question, if there is one, will be in the center of the frame.
 
-ANY PICTURE WITH AN ITEM (not food, compost, or nature things) WILL ALWAYS GO TO TOOLS B or C. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
+ANY PICTURE WITH AN ITEM (not food, recipe, compost, nature, microscopic, plant or those things) WILL ALWAYS GO TO TOOLS B, C, or J. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
+IF THE ITEM HAS A BARCODE PROMINENTLY IN THE IMAGE, IT WILL ALWAYS GO TO BARCODE (TOOL J)
 IF IT IS AN ITEM IN QUESTION IN A HOME OR A SPECIFIC PRODUCT IN FOCUS OUTDOORS ENVIRONMENT, IT WILL ALWAYS GO TO RECYCLING (Tool B)
-IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE, IT WILL ALWAYS GO TO GREENWASHING (Tool C) 
+IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WILL ALWAYS GO TO GREENWASHING (Tool C) 
 
 2. Detailed Description: Based on the selected tool, provide a detailed description focusing on the following aspects:
    - Nature (Tool A):
