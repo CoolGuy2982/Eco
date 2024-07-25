@@ -63,7 +63,7 @@ def generate_barcode_response(spoken_text, base64_image):
     
     print("Ok now we can generate")
 
-    text_prompt = f"Analyze the product in the image. User Query: {spoken_text}. Also give environmental and health analysis based on the image."
+    text_prompt = f"Analyze the product in the image. User Query: {spoken_text}. Also give environmental and health analysis based on the image. Keep response to 80 words max, make it sound natural and fun to read, not robotic and bullet points."
 
     # Prepare image data for model
     if base64_image_data:
