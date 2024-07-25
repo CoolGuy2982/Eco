@@ -21,9 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveTextPrompt = document.getElementById('saveTextPrompt');
     const browserWarningModal = document.getElementById('browserWarningModal');
     const browserWarningOkButton = document.getElementById('browserWarningOkButton');
-    const videoModeToggle = document.getElementById('videoModeToggle');
-    const recordVideoButton = document.getElementById('recordVideoButton');
-    
     let stream = null;
     let imageCapture = null;
     let recognition;
@@ -38,9 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let zoomSliderTimeout;
     let debounceTimeout;
     let isFocusBoxUsed = false;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let isVideoMode = false;
 
     const initialize = () => {
         if (!isMobileDevice()) {
@@ -59,28 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkPermissions();
     };
 
-    function switchToVideoMode() {
-        getMediaStream();
-        videoModeToggle.innerHTML = '<i class="fas fa-video text-gray-800 text-2xl"></i>';
-        takePhotoButton.style.display = 'none';
-        recordVideoButton.style.display = 'block';
-        isVideoMode = true;
-    }
-    
-    async function getMediaStream() {
-        try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { exact: "environment" } } // Use the back camera
-            });
-            stream = mediaStream;
-            video.srcObject = stream;
-            video.controls = false; // Disable controls when using camera
-            video.play();
-        } catch (error) {
-            console.error("Error accessing media devices.", error);
-        }
-    }
-    
     const isMobileDevice = () => {
         return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
     };
@@ -217,8 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendImageToServer = (imageData, spokenText) => {
         console.log('Sending image and spoken text to server:', spokenText);
         loadingAnimation.style.display = 'flex';
-        videoModeToggle.style.display = 'none';
-        recordVideoButton.style.display = 'none';
 
         let photoID = null;
 
@@ -440,16 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
-
-        // Video mode and recording event listeners
-        videoModeToggle.addEventListener('click', () => {
-            if (isVideoMode) {
-                switchToCameraMode();
-            } else {
-                switchToVideoMode();
-            }
-        });
-
     };
 
     const resetFocusBoxTimeout = () => {
@@ -509,94 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
         capturedImageContainer.style.display = 'flex';
         loadingAnimation.style.display = 'none';
         document.getElementById('buttonContainerCamera').style.display = 'none';
-    };
-
-    recordVideoButton.addEventListener('click', () => {
-        if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            startRecording();
-            // Add the active class to change to a square icon
-            recordVideoButton.classList.add('active');
-        } else {
-            mediaRecorder.stop();
-            // Remove the active class to change back to a circle icon
-            recordVideoButton.classList.remove('active');
-        }
-    });
-    
-    function startRecording() {
-        if (!stream) {
-            console.error('No video source available');
-            return;
-        }
-    
-        recordedChunks = [];
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
-    
-        mediaRecorder.ondataavailable = event => {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-            }
-            checkRecordingSize();
-        };
-    
-        mediaRecorder.start();
-        console.log('Recording started');
-    
-        mediaRecorder.onstop = () => {
-            console.log('Recording stopped');
-            const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
-            const currentDateTime = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `recorded_video_${currentDateTime}.webm`;
-            sendVideoToServer(videoBlob, textPromptInput.value, filename);
-    
-            // Remove the active class when recording stops
-            recordVideoButton.classList.remove('active');
-        };
-    }
-    
-    function checkRecordingSize() {
-        const videoBlob = new Blob(recordedChunks, { type: 'video/webm' });
-        if (videoBlob.size >= 30000000) { // Check if size is greater than 30 MB
-            if (mediaRecorder && mediaRecorder.state === "recording") {
-                mediaRecorder.stop();
-                console.log('Recording stopped due to size limit');
-            }
-        }
-    }
-    
-
-
-    const sendVideoToServer = (videoBlob, spokenText, filename) => {
-        console.log('Sending video and spoken text to server:', spokenText);
-        loadingAnimation.style.display = 'flex';
-
-        let formData = new FormData();
-        formData.append('video', videoBlob, filename);
-        formData.append('text', spokenText);
-
-        fetch('/video', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.text()) // Changed to text() to handle non-JSON responses
-        .then(data => {
-            try {
-                const jsonData = JSON.parse(data);
-                if (jsonData.error) {
-                    throw new Error(jsonData.error);
-                }
-                console.log('Video processing complete:', jsonData);
-                sessionStorage.setItem('AIResponse', JSON.stringify(jsonData));
-                window.location.href = '/analysis';
-            } catch (err) {
-                console.error('Error parsing response as JSON:', err);
-                throw new Error('Invalid server response');
-            }
-        })
-        .catch(err => {
-            console.error('Error sending video:', err);
-            loadingAnimation.style.display = 'none';
-        });
     };
 
     initialize();
