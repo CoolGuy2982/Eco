@@ -3,23 +3,46 @@ import os
 import base64
 from PIL import Image
 from io import BytesIO
-from pyzbar.pyzbar import decode
+from google.cloud import vision
+from google.oauth2 import service_account
 import requests
+from google.auth import default
 
-# Configure Google generative AI API
+# Set up Google Cloud Vision API
+def get_credentials():
+    # Use default credentials when deployed
+    try:
+        creds, project = default()
+        return creds
+    except Exception as e:
+        # Fallback to service account key file locally
+        SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
+        creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+        return creds
+    
+vision_client = vision.ImageAnnotatorClient(credentials= get_credentials())
+
+# Configure Google Generative AI API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 
-# Function to decode barcode from base64 image
 def decode_barcode(base64_image):
     image_data = base64.b64decode(base64_image)
-    image = Image.open(BytesIO(image_data))
-    decoded_objects = decode(image)
-    if decoded_objects:
-        return decoded_objects[0].data.decode('utf-8')
+    image = vision.Image(content=image_data)
+
+    # Perform text detection
+    response = vision_client.text_detection(image=image)
+    texts = response.text_annotations
+
+    if response.error.message:
+        raise Exception(f'Error during text detection: {response.error.message}')
+
+    # Extract barcode data
+    for text in texts:
+        if text.description.isdigit():  # Basic check, refine as needed
+            return text.description
     return None
 
-# Function to get product info from UPC Database API using your API key
 def get_product_info(barcode):
     API_URL = "https://api.upcdatabase.org/product/"
     API_KEY = "351AA03390FEA86FBCD939F3E03CBC3"  # Your UPC Database API key
@@ -32,7 +55,6 @@ def get_product_info(barcode):
         return response.json()
     return None
 
-# Function to generate response with generative AI
 def generate_barcode_response(response_text, spoken_text, base64_image):
     barcode = decode_barcode(base64_image)
     product_info = get_product_info(barcode) if barcode else {}
@@ -41,7 +63,7 @@ def generate_barcode_response(response_text, spoken_text, base64_image):
     product_details = f"Product Name: {product_info.get('title', 'Unknown')}, Brand: {product_info.get('brand', 'Unknown')}" if product_info else "Barcode could not be decoded or product not found."
 
     text_prompt = f"""
-    Echo back and analyze based on the following information from a barcode (environemntal, health, anything helpful):
+    Echo back and analyze based on the following information from a barcode (environmental, health, anything helpful):
     Spoken text: {spoken_text}
     Image text description: {response_text}
     Product details from barcode: {product_details}
@@ -64,3 +86,12 @@ def generate_barcode_response(response_text, spoken_text, base64_image):
     return {
         'result': text_analysis_result
     }
+
+# Example usage:
+if __name__ == "__main__":
+    response_text = "Example response text"
+    spoken_text = "Example spoken text"
+    base64_image = "your_base64_encoded_image_here"  # Replace with your base64 image string
+
+    result = generate_barcode_response(response_text, spoken_text, base64_image)
+    print(result)

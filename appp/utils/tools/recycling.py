@@ -16,16 +16,28 @@ SCOPES = [
     'https://www.googleapis.com/auth/youtube.force-ssl'
 ]
 
-creds, project = google.auth.default(scopes=SCOPES)
+#creds, project = google.auth.default(scopes=SCOPES)
 
 #SERVICE_ACCOUNT_FILE = 'service_account_key.json'
 #creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-retriever_service_client = glm.RetrieverServiceClient(credentials=creds)
-generative_service_client = glm.GenerativeServiceClient(credentials=creds)
+
+def get_credentials():
+    # Use default credentials when deployed
+    try:
+        creds, project = default(scopes=SCOPES)
+        return creds
+    except Exception as e:
+        # Fallback to service account key file locally
+        SERVICE_ACCOUNT_FILE = 'service_account_key.json'
+        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        return creds
+    
+retriever_service_client = glm.RetrieverServiceClient(credentials=get_credentials())
+generative_service_client = glm.GenerativeServiceClient(credentials=get_credentials())
 
 def create_youtube_service():
-    youtube = build('youtube', 'v3', credentials=creds)
+    youtube = build('youtube', 'v3', credentials= get_credentials())
     return youtube
 
 def search_youtube_video(query):

@@ -40,7 +40,7 @@ def analyze_image(base64_image, spoken_text):
             f"""
 Analyze the image in detail and provide a comprehensive description without mentioning people or humans. If there is a red box in the image, the user emphasizes what's in that red box. Follow these steps:
 
-1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: "{spoken_text}". Use these observations to select the most fitting tool:
+1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: {spoken_text}. Use these observations to select the most fitting tool:
     
     - Nature (Tool A): Choose this if the image prominently features nature and natural environments such as forests, rivers, mountains, wildlife, or nature in general. Look for elements that emphasize ecological dynamics.
     - Recycling (Tool B): Choose this if the image features any item/product in a home or outdoor setting or generally looks like trash. This could be any type of item/product.
@@ -156,12 +156,12 @@ MAKE SURE TO PROVIDE REASONING, THOUGHT PROCESS, CHAIN OF THOUGHT FOR WHY YOU CH
 Take a deep breath and work on this problem step-by-step.
 
 3. JSON Response: Format the response as follows (example):
-{
+{{
     "Response": "<detailed description>",
     "Text_Tool": "A",
     "Material": "if you selected tool B <add the material of the general item if applicable (e.g., Plastic)>"
     "COT": "<State your reasoning HERE>"
-}
+}}
             """,
         ]
 

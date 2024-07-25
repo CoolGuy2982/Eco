@@ -7,10 +7,6 @@ ENV APP_HOME /back-end
 WORKDIR $APP_HOME
 COPY . ./
 
-RUN apt-get update && apt-get install -y \
-    libzbar0 \
-    && rm -rf /var/lib/apt/lists/*
-    
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
