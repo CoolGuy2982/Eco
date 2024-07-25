@@ -70,28 +70,39 @@ def generate_barcode_response(spoken_text, base64_image):
         image_data = base64.b64decode(base64_image_data)
         image_parts = [{"mime_type": "image/jpeg", "data": image_data}]
 
-        # Sending image data with MIME type and text prompt to the model
-        text_model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
-            generation_config={
-                "temperature": 0.8,
-                "top_p": 1,
-                "top_k": 40,
-                "max_output_tokens": 400,
-            },
-            safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
-        )
+        try:
+            # Sending image data with MIME type and text prompt to the model
+            text_model = genai.GenerativeModel(
+                model_name="gemini-1.5-flash",
+                generation_config={
+                    "temperature": 0.8,
+                    "top_p": 1,
+                    "top_k": 40,
+                    "max_output_tokens": 400,
+                },
+                safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
+            )
 
-        image_response = text_model.generate_content([image_parts[0], text_prompt])
-        text_analysis_result = image_response.text
+            image_response = text_model.generate_content([image_parts[0], text_prompt])
+            text_analysis_result = image_response.text
 
-        return {
-            'result': text_analysis_result,
-            'barcode_image_url': image_url  # Return the image URL in the response
-        }
+            return {
+                'result': text_analysis_result,
+                'barcode_image_url': image_url  # Return the image URL in the response
+            }
+        except Exception as e:
+            # Handle any exceptions during content generation
+            error_message = f"Hi there! The barcode stuff only works for food right now, so thank you for your patience and for using ecolens! <3"
+            return {
+                'result': error_message,
+                'barcode_image_url': image_url  # Return the image URL in the response
+            }
     else:
         print("Image data not available.")
-        return None
+        return {
+            'result': "Image data not available. Unable to generate content.",
+            'barcode_image_url': image_url  # Return the image URL in the response
+        }
 
 # Example usage:
 # spoken_text = "Describe the nutritional content."
