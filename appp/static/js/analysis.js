@@ -60,59 +60,6 @@ function displayEcoPoint() {
   }, 3000); // Hide after 3 seconds
 }
 
-window.onload = function() {
-  displayEcoPoint();
-  //displayPastResponses(); // Display past responses on load for testing
-  const data = JSON.parse(sessionStorage.getItem('AIResponse'));
-  if (!data) {
-    console.error('No AI response data found in session storage.');
-    displayError('No AI response data found in session storage.');
-    return;
-  }
-
-  const analysisResult = document.getElementById('analysis-result');
-  const mapContainer = document.getElementById('map-container');
-  const videoContainer = document.getElementById('video-container');
-
-  if (data.result) {
-    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
-    incrementEcoPoint(); // Increment EcoPoint on valid AI response
-  } else {
-    analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
-  }
-
-  // Save initial response data
-  const initialData = {
-    result: data.result || null,
-    video_suggestion: data.video_suggestion || null,
-    date: new Date().toISOString()
-  };
-  saveResponseLocally(initialData);
-
-  // Check for recycling option and keyword before fetching address
-  if (data.text_tool === 'B' && data.keyword) {
-    fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
-  } else {
-    mapContainer.style.display = 'none'; // Hide the map container if not "Recycling"
-  }
-
-  if (data.keyword) {
-    fetchAndDisplayProducts(data.keyword, data); // Fetch and display products based on the keyword
-  }
-
-  if (data.video_suggestion) {
-    displayYouTubeVideos([data.video_suggestion]);
-    videoContainer.style.display = 'block';
-  } else {
-    videoContainer.style.display = 'none';
-  }
-
-  sessionStorage.removeItem('AIResponse'); // Clean up after displaying
-
-  // Request geolocation permission on page load
-  requestGeolocationPermission();
-};
-
 function fetchAddressAndDisplay(keyword, data) {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -289,3 +236,72 @@ function fetchAndDisplayProducts(keyword, data) {
       document.getElementById('product-container').style.display = 'none';
     });
 }
+
+window.onload = function() {
+  // displayPastResponses(); // Display past responses on load for testing
+  const data = JSON.parse(sessionStorage.getItem('AIResponse'));
+  if (!data) {
+    console.error('No AI response data found in session storage.');
+    displayError('No AI response data found in session storage.');
+    return;
+  }
+  displayEcoPoint();
+  const analysisResult = document.getElementById('analysis-result');
+  const mapContainer = document.getElementById('map-container');
+  const videoContainer = document.getElementById('video-container');
+
+  if (data.result) {
+    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
+    incrementEcoPoint(); // Increment EcoPoint on valid AI response
+  } else {
+    analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
+  }
+
+  // Display barcode image if the text_tool is 'J' and barcode_image_url is present
+  if (data.text_tool === 'J' && data.barcode_image_url) {
+    const barcodeImage = document.createElement('img');
+    barcodeImage.src = data.barcode_image_url;
+    barcodeImage.alt = 'Barcode Image';
+    barcodeImage.style.borderRadius = '12px';
+    barcodeImage.style.display = 'block';
+    barcodeImage.style.marginTop = '20px';
+    barcodeImage.style.width = '100%';
+    barcodeImage.style.maxWidth = '400px'; // Limit the width for better display
+    barcodeImage.style.marginLeft = 'auto';
+    barcodeImage.style.marginRight = 'auto';
+
+    analysisResult.appendChild(barcodeImage);
+  }
+
+  // Save initial response data
+  const initialData = {
+    result: data.result || null,
+    video_suggestion: data.video_suggestion || null,
+    date: new Date().toISOString(),
+    barcode_image_url: data.barcode_image_url || null
+  };
+  saveResponseLocally(initialData);
+
+  // Check for recycling option and keyword before fetching address
+  if (data.text_tool === 'B' && data.keyword) {
+    fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
+  } else {
+    mapContainer.style.display = 'none'; // Hide the map container if not "Recycling"
+  }
+
+  if (data.keyword) {
+    fetchAndDisplayProducts(data.keyword, data); // Fetch and display products based on the keyword
+  }
+
+  if (data.video_suggestion) {
+    displayYouTubeVideos([data.video_suggestion]);
+    videoContainer.style.display = 'block';
+  } else {
+    videoContainer.style.display = 'none';
+  }
+
+  sessionStorage.removeItem('AIResponse'); // Clean up after displaying
+
+  // Request geolocation permission on page load
+  requestGeolocationPermission();
+};
