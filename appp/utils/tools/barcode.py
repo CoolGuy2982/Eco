@@ -40,7 +40,9 @@ def get_product_info(barcode):
 
 def generate_barcode_response(response_text, spoken_text, base64decoded_image, img_data):
     barcode = decode_barcode(img_data)
+    print(barcode)
     product_info = get_product_info(barcode) if barcode else {}
+    print(product_info)
 
     # Prepare the prompt with product info if available
     product_details = f"Product Name: {product_info.get('title', 'Unknown')}, Brand: {product_info.get('brand', 'Unknown')}" if product_info else "Barcode could not be decoded or product not found."
@@ -63,7 +65,7 @@ def generate_barcode_response(response_text, spoken_text, base64decoded_image, i
         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
     )
 
-    text_response = text_model.generate_content([base64decoded_image, text_prompt])
+    text_response = text_model.generate_content([text_prompt])
     text_analysis_result = text_response.text
 
     return {
