@@ -162,7 +162,8 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
         try:
             # Attempt to parse the response
-            text_analysis_result = json.loads(rag_response)
+            cleaned_rag_response = rag_response.strip()
+            text_analysis_result = json.loads(cleaned_rag_response)
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
