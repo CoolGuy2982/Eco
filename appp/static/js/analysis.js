@@ -165,10 +165,18 @@ function displayMap(addresses, sectionTitle) {
 }
 
 function formatBoldAndNewLine(text) {
+  // Convert **bold**: to <strong>bold</strong>:<br>
   text = text.replace(/\*\*(.*?)\*\*:/g, '<strong>$1</strong>:<br>');
+  
+  // Convert **bold** to <strong>bold</strong>
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  text = text.replace(/ -([^\n]*)/g, '<br> -$1');
-  text = text.replace(/\*([^\n]*)/g, '<br>*$1');
+  
+  // Convert lines starting with * to <br>* for bullet points
+  text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
+  
+  // Ensure that bullet points are separated properly
+  text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
+  
   return text;
 }
 
