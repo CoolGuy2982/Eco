@@ -38,8 +38,8 @@ def get_product_info(barcode):
         return response.json()
     return None
 
-def generate_barcode_response(response_text, spoken_text, base64_image):
-    barcode = decode_barcode(base64_image)
+def generate_barcode_response(response_text, spoken_text, base64decoded_image, img_data):
+    barcode = decode_barcode(img_data)
     product_info = get_product_info(barcode) if barcode else {}
 
     # Prepare the prompt with product info if available
@@ -63,7 +63,7 @@ def generate_barcode_response(response_text, spoken_text, base64_image):
         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
     )
 
-    text_response = text_model.generate_content([base64_image, text_prompt])
+    text_response = text_model.generate_content([base64decoded_image, text_prompt])
     text_analysis_result = text_response.text
 
     return {
