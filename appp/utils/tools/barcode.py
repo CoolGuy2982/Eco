@@ -3,45 +3,28 @@ import os
 import base64
 from PIL import Image
 from io import BytesIO
-from google.cloud import vision
-from google.oauth2 import service_account
+from pyzbar.pyzbar import decode
 import requests
-from google.auth import default
-
-# Set up Google Cloud Vision API
-def get_credentials():
-    # Use default credentials when deployed
-    try:
-        creds, project = default()
-        return creds
-    except Exception as e:
-        # Fallback to service account key file locally
-        SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
-        creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
-        return creds
-    
-vision_client = vision.ImageAnnotatorClient(credentials= get_credentials())
 
 # Configure Google Generative AI API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 
 def decode_barcode(base64_image):
+    # Decode the base64 image to raw bytes
     image_data = base64.b64decode(base64_image)
-    image = vision.Image(content=image_data)
+    # Open the image using PIL
+    image = Image.open(BytesIO(image_data))
 
-    # Perform text detection
-    response = vision_client.text_detection(image=image)
-    texts = response.text_annotations
+    # Decode the barcode(s) in the image
+    decoded_objects = decode(image)
 
-    if response.error.message:
-        raise Exception(f'Error during text detection: {response.error.message}')
-
-    # Extract barcode data
-    for text in texts:
-        if text.description.isdigit():  # Basic check, refine as needed
-            return text.description
-    return None
+    # Extract the data from the first barcode found
+    if decoded_objects:
+        barcode_data = decoded_objects[0].data.decode('utf-8')
+        return barcode_data
+    else:
+        return None
 
 def get_product_info(barcode):
     API_URL = "https://api.upcdatabase.org/product/"
@@ -55,8 +38,8 @@ def get_product_info(barcode):
         return response.json()
     return None
 
-def generate_barcode_response(response_text, spoken_text, base64decoded_image, img_data):
-    barcode = decode_barcode(img_data)
+def generate_barcode_response(response_text, spoken_text, base64_image):
+    barcode = decode_barcode(base64_image)
     product_info = get_product_info(barcode) if barcode else {}
 
     # Prepare the prompt with product info if available
@@ -80,7 +63,7 @@ def generate_barcode_response(response_text, spoken_text, base64decoded_image, i
         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
     )
 
-    text_response = text_model.generate_content([base64decoded_image, text_prompt])
+    text_response = text_model.generate_content([base64_image, text_prompt])
     text_analysis_result = text_response.text
 
     return {
