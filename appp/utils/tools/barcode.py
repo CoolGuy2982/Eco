@@ -1,4 +1,3 @@
-import google.generativeai as genai
 import os
 import base64
 from PIL import Image
@@ -6,6 +5,7 @@ from io import BytesIO
 from pyzbar.pyzbar import decode
 import requests
 import threading
+import google.generativeai as genai
 
 # Configure Google Generative AI API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -17,7 +17,7 @@ def decode_barcode(base64_image):
 
     # Decode the barcode(s) in the image
     decoded_objects = decode(image)
-
+    
     if decoded_objects:
         barcode_data = decoded_objects[0].data.decode('utf-8')
         return barcode_data
@@ -25,10 +25,10 @@ def decode_barcode(base64_image):
         return None
 
 def get_image_data_from_url(image_url):
-    # Fetches the image from the URL and converts it to raw binary data
+    # Fetches the image from the URL and converts it to a base64 encoded string
     response = requests.get(image_url)
     if response.status_code == 200:
-        return response.content  # Directly return raw image data
+        return base64.b64encode(response.content).decode('utf-8')  # Return base64 string
     else:
         return None
 
@@ -40,9 +40,9 @@ def get_image_from_open_food_facts(barcode, results):
         data = response.json()
         image_url = data.get('product', {}).get('image_front_url', None)
         if image_url:
-            raw_image_data = get_image_data_from_url(image_url)
+            base64_image_data = get_image_data_from_url(image_url)
             results['open_food_facts'] = {
-                'raw_image_data': raw_image_data,
+                'base64_image_data': base64_image_data,
                 'image_url': image_url  # Store the URL in the results
             }
     else:
@@ -58,30 +58,43 @@ def generate_barcode_response(spoken_text, base64_image):
     thread.join()
 
     image_info = results.get('open_food_facts')
-    raw_image_data = image_info.get('raw_image_data', None)
+    base64_image_data = image_info.get('base64_image_data', None)
     image_url = image_info.get('image_url', 'URL not available if not found.')
+    
+    print("Ok now we can generate")
 
-    text_prompt = f"""
-    Analyze the product in the image (environmental, health, anything helpful).
-    User Query: {spoken_text}
-    """
+    text_prompt = f"Analyze the product in the image. User Query: {spoken_text}. Also give environmental and health analysis based on the image."
 
-    # Sending raw image data and text prompt to the model
-    text_model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
-        generation_config={
-            "temperature": 0.8,
-            "top_p": 1,
-            "top_k": 40,
-            "max_output_tokens": 400,
-        },
-        safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
-    )
+    # Prepare image data for model
+    if base64_image_data:
+        image_data = base64.b64decode(base64_image_data)
+        image_parts = [{"mime_type": "image/jpeg", "data": image_data}]
 
-    text_response = text_model.generate_content([raw_image_data, text_prompt])
-    text_analysis_result = text_response.text
+        # Sending image data with MIME type and text prompt to the model
+        text_model = genai.GenerativeModel(
+            model_name="gemini-1.5-flash",
+            generation_config={
+                "temperature": 0.8,
+                "top_p": 1,
+                "top_k": 40,
+                "max_output_tokens": 400,
+            },
+            safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}]
+        )
 
-    return {
-        'result': text_analysis_result,
-        'image_url': image_url  # Return the image URL in the response
-    }
+        image_response = text_model.generate_content([image_parts[0], text_prompt])
+        text_analysis_result = image_response.text
+
+        return {
+            'result': text_analysis_result,
+            'barcode_image_url': image_url  # Return the image URL in the response
+        }
+    else:
+        print("Image data not available.")
+        return None
+
+# Example usage:
+# spoken_text = "Describe the nutritional content."
+# base64_image = "your_base64_encoded_image_string_here"
+# result = generate_barcode_response(spoken_text, base64_image)
+# print(result)
