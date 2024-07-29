@@ -23,7 +23,7 @@ def analyze_image(base64_image, spoken_text):
 
     try:
         image_model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="gemini-1.5-pro",
             generation_config={
                 "temperature": 0.4,
                 "top_p": 1,
@@ -68,7 +68,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe key characteristics of the species, including size, color, and distinctive features.
        - Contextual Clues: Consider surrounding elements that provide ecological context, such as other species or environmental conditions.
        - Special Characteristics: Highlight unique features relevant to biodiversity insights, like habitat details or ecological interactions.
-       - Conversational Directive: "Nature Specialist, please review this scene. We're focusing on the variety of plants and possible wildlife interactions."
 
    - Recycling (Tool B):
        - Identification: Identify the primary item, including specific types like type 3 plastic or aluminum Coca-Cola can.
@@ -77,7 +76,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe materials or components of the item, including recyclability information.
        - Contextual Clues: Consider surrounding items that provide context, such as packaging or location.
        - Special Characteristics: Highlight any greenwashing aspects or other sustainability insights, including label information.
-       - Conversational Directive: "Recycling Specialist, there's a potential recyclable item here. Could you verify its material and recyclability?"
 
    - Greenwashing (Tool C):
        - Identification: Identify the primary item, including specific types like type 3 plastic or aluminum Coca-Cola can.
@@ -86,7 +84,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Contextual Clues: Consider surrounding items that provide context, such as packaging or location.
        - Special Characteristics: Highlight any greenwashing aspects or other sustainability insights, including label information.
        - Text Details: Transcribe all visible text on the packaging/product.
-       - Conversational Directive: "Greenwashing Specialist, can you check these 'eco-friendly' claims on this product? We need your expert assessment."
 
    - Composting (Tool D):
        - Identification: Identify the primary compostable item, such as vegetable scraps or garden waste.
@@ -94,7 +91,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the organic material and its compostability.
        - Contextual Clues: Consider surrounding elements that provide context, such as other compostable items or compost bins.
        - Special Characteristics: Highlight any signs of successful or unsuccessful composting.
-       - Conversational Directive: "Composting Specialist, please evaluate this organic waste for composting suitability."
 
    - Food (Tool E):
        - Identification: Identify the ingredients shown in a fridge, pantry, or the frame.
@@ -102,7 +98,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Quantity: List the general quantities of the ingredients.
        - Composition: List all the ingredients and their quantities if visible.
        - Contextual Clues: Consider surrounding items that provide culinary context, such as other ingredients or kitchen tools.
-       - Conversational Directive: "Food Specialist, could you assess the condition and potential use of these ingredients?"
 
    - Recipe (Tool F):
        - Identification: Identify the primary ingredients visible in the setting.
@@ -110,7 +105,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the potential combinations of ingredients for a dish.
        - Contextual Clues: Include any visible recipe books or cooking tools that suggest specific dishes.
        - Special Characteristics: Highlight any unique or specialty ingredients.
-       - Conversational Directive: "Recipe Specialist, we have a variety of ingredients here. What dish could these be used for?"
 
    - Plant (Tool G):
        - Identification: Identify the plant species or type shown in the image.
@@ -118,7 +112,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the plant's size, leaf shape, color, and any flowers or fruits.
        - Contextual Clues: Consider the surrounding environment, such as garden elements or indoor settings.
        - Special Characteristics: Highlight unique features, such as rare species or specific cultivation details.
-       - Conversational Directive: "Plant Specialist, can you identify and describe the plant shown in the image?"
 
    - Biodiversity (Tool H):
        - Identification: Identify the range of species present in the image.
@@ -126,7 +119,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the biodiversity, including species variety and interactions.
        - Contextual Clues: Consider the habitat and ecological context, like water sources or vegetation.
        - Special Characteristics: Highlight any notable ecological interactions or rare species.
-       - Conversational Directive: "Biodiversity Specialist, please analyze the diversity of species in this scene."
 
    - Microscope (Tool I):
        - Identification: Identify the microscopic elements or organisms visible.
@@ -134,7 +126,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the microscopic details, such as cell structure or microorganism characteristics.
        - Contextual Clues: Include any related equipment or context that might provide additional insights.
        - Special Characteristics: Highlight any unique findings or anomalies observed.
-       - Conversational Directive: "Microscope Specialist, can you detail the microscopic features visible here?"
 
    - Barcode (Tool J):
        - Identification: Identify the barcodes present in the image.
@@ -142,7 +133,6 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the context in which the barcode is found, such as on packaging or labels.
        - Contextual Clues: Consider any associated products or information linked to the barcode.
        - Special Characteristics: Highlight any unique identifiers or codes.
-       - Conversational Directive: "Barcode Specialist, can you provide information on the barcodes present in this image?"
 
    - Eco Response (Tool K):
        - Identification: Identify the specific environmental issue or element in question.
@@ -150,9 +140,8 @@ IF IT IS AN ITEM IN A STORE OR COMMERCIAL PLACE without barcode emphasis, IT WIL
        - Composition: Describe the components or materials involved.
        - Contextual Clues: Consider surrounding elements that provide additional context.
        - Special Characteristics: Highlight any critical insights or notable aspects related to the environmental issue.
-       - Conversational Directive: "Eco Response Specialist, what environmental issues can you identify in this image?"
 
-Note: add anything worth mentioning in the conversational directive (who is making a response for the user) to make the response as useful, enjoyable, and beneficial for the user as possible.
+Provide as much helpful detail as possible.
 MAKE SURE TO PROVIDE REASONING, THOUGHT PROCESS, CHAIN OF THOUGHT FOR WHY YOU CHOSE THE TOOL YOU CHOOSE. WHAT IN THE IMAGE/WHAT REASONING MADE YOU CHOOSE IT. Be very descriptive and cite evidence from the image. Think step by step and logically. Take a deep breath.
 Take a deep breath and work on this problem step-by-step.
 
