@@ -35,37 +35,37 @@
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="response-container">
+    <nav class="wrapper">
+        <header class="response-container">
             <div class="response-title">
-                <a href="/camera" class="chevron-button">
+                <a href="/camera" class="chevron-button" aria-label="Back to Camera">
                     <i class="fas fa-chevron-left"></i>
                 </a>
-                <span class="title-text" onclick="location.href='/camera'">EcoLens</span>
+                <h1 class="title-text" onclick="location.href='/camera'" role="button" aria-label="EcoLens Analysis Page">EcoLens</h1>
             </div>
-            <div id="analysis-result" class="response-text"></div>
+            <section id="analysis-result" class="response-text"></section>
             <div id="eco-point" class="eco-point">+0 EcoPoint</div>
-        </div>
-        <div id="map-container" class="map-container">
-            <div class="section-title">Recycling Locations</div>
-        </div>
-        <div id="product-container" class="product-container" style="display: none;">
-            <div class="section-title">Recommended Products</div>
+        </header>
+        <main id="map-container" class="map-container">
+            <h2 class="section-title">Recycling Locations</h2>
+        </main>
+        <section id="product-container" class="product-container" style="display: none;">
+            <h2 class="section-title">Recommended Products</h2>
             <div class="product-card">
-                <button class="carousel-nav prev" onclick="showPreviousProduct()">&#8249;</button>
+                <button class="carousel-nav prev" onclick="showPreviousProduct()" aria-label="Previous Product">&#8249;</button>
                 <div class="product">
                     <a href="#" target="_blank">
-                        <img src="https://placehold.co/300x400" alt="Product Image">
+                        <img src="https://placehold.co/300x400" alt="Product Image" role="img">
                         <h3>Product Title</h3>
                         <p>$0.00</p>
                     </a>
                 </div>
-                <button class="carousel-nav next" onclick="showNextProduct()">&#8250;</button>
+                <button class="carousel-nav next" onclick="showNextProduct()" aria-label="Next Product">&#8250;</button>
             </div>
-        </div>
-        <div id="video-container" class="video-container"></div>
-        <div id="responses-container" class="responses-container"></div> <!-- Container for displaying JSON data -->
-    </div>
+        </section>
+        <section id="video-container" class="video-container" aria-label="Video Content"></section>
+        <aside id="responses-container" class="responses-container" aria-label="JSON Data Display"></aside>
+    </nav>
     <!-- Include Google Maps API Key -->
     <script type="text/javascript">
         var googleMapsApiKey = "{{ google_maps_api_key }}";
