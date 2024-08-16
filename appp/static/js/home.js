@@ -79,7 +79,7 @@ const isMobileDevice = () => {
 
 const initialize = () => {
     if (!isMobileDevice()) {
-        window.location.href = 'https://www.firley.org/products/ecolens-redirect';
+        window.location.href = 'https://www.firley.net/products/ecolens-redirect';
     }
 };
 
