@@ -10,135 +10,33 @@
     <link href="{{ url_for('static', filename='css/splash.css') }}" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="manifest" href="/static/manifest.json">
-    <!-- Load the new Google Identity Services library -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        .fade-in {
-            animation: fadeIn 1s forwards;
-        }
-        .fade-out {
-            animation: fadeOut 1s forwards;
-        }
-        .quick-fade-in {
-            animation: fadeIn 0.5s forwards;
-        }
-        .quick-fade-out {
-            animation: fadeOut 0.5s forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        .ellipsis::after {
-            content: '...';
-            animation: ellipsis 1s infinite;
-        }
-        @keyframes ellipsis {
-            0% { content: ''; }
-            33% { content: '.'; }
-            66% { content: '..'; }
-            100% { content: '...'; }
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Roboto', sans-serif;
-            transition: background-color 1s;
-            background-color: #22c45d;
-        }
-        .container {
-            text-align: center;
-            width: 90%;
-            max-width: 600px;
-            padding: 20px;
-        }
-        .main-text {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 48px; 
-            color: #000;
-            margin: 10px 0;
-        }
-        .sub-text {
-            font-size: 24px; 
-            color: #000;
-            margin: 10px 0;
-        }
-        .highlight {
-            color: #22c45d;
-        }
-        .step-img {
-            display: block;
-            margin: 10px auto;
-            width: 80px;
-            height: 80px;
-        }
-        .left-align {
-            text-align: left;
-        }
-        .hidden {
-            display: none;
-        }
-        .button {
-            background-color: #000;
-            color: #fff;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 5px;
-            font-size: 20px;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .checkbox-label input {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-        }
-        .subscribe-container {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: left;
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-        }
-        .subscribe-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .subscribe-list li {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .subscribe-list img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-        .auto-renew {
-            font-size: 14px;
-            color: #888;
-            text-align: center;
-        }
+        .fade-in { animation: fadeIn 1s forwards; }
+        .fade-out { animation: fadeOut 1s forwards; }
+        .quick-fade-in { animation: fadeIn 0.5s forwards; }
+        .quick-fade-out { animation: fadeOut 0.5s forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .ellipsis::after { content: '...'; animation: ellipsis 1s infinite; }
+        @keyframes ellipsis { 0% { content: ''; } 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; transition: background-color 1s; background-color: #22c45d; }
+        .container { text-align: center; width: 90%; max-width: 600px; padding: 20px; }
+        .main-text { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 48px; color: #000; margin: 10px 0; }
+        .sub-text { font-size: 24px; color: #000; margin: 10px 0; }
+        .highlight { color: #22c45d; }
+        .step-img { display: block; margin: 10px auto; width: 80px; height: 80px; }
+        .left-align { text-align: left; }
+        .hidden { display: none; }
+        .button { background-color: #000; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; font-size: 20px; cursor: pointer; margin: 20px 0; }
+        .checkbox-label { display: flex; align-items: center; font-size: 18px; margin: 10px 0; }
+        .checkbox-label input { margin-right: 10px; width: 20px; height: 20px; }
+        .subscribe-container { background-color: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 20px; text-align: left; width: 100%; max-width: 600px; margin: auto; }
+        .subscribe-list { list-style: none; padding: 0; margin: 20px 0; }
+        .subscribe-list li { display: flex; align-items: center; margin-bottom: 10px; }
+        .subscribe-list img { width: 24px; height: 24px; margin-right: 10px; }
+        .auto-renew { font-size: 14px; color: #888; text-align: center; }
+        .install-button { background-color: #22c45d; color: #fff; padding: 15px 30px; border-radius: 10px; font-size: 20px; cursor: pointer; display: block; margin: 20px auto; width: 90%; max-width: 300px; }
     </style>
 </head>
 <body>
@@ -146,19 +44,8 @@
         <div id="splashContent" class="main-text">EcoLens</div>
         <div id="subContent" class="sub-text">by Firley</div>
         <div id="signInButtonContainer" class="hidden mt-4 flex justify-center items-center w-full">
-            <div id="g_id_onload"
-                 data-client_id="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com"
-                 data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin"
-                 data-type="standard"
-                 data-size="large"
-                 data-theme="outline"
-                 data-text="sign_in_with"
-                 data-shape="rectangular"
-                 data-logo_alignment="left"
-                 data-width="250">
-            </div>
+            <div id="g_id_onload" data-client_id="569729035262-k7aqi97afdolj7o3bo2ii1603ivs5nra.apps.googleusercontent.com" data-auto_prompt="false"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left" data-width="250"></div>
         </div>
         <!-- New standalone setup -->
         <div id="subscribePage" class="hidden subscribe-container">
@@ -174,8 +61,7 @@
         </div>
         <div id="freeForNowPage" class="hidden">
             <div style="display: flex; justify-content: center;">
-                <img src="/static/images/shhh.jpg" alt="Shhh Emoji" style="width: 80px; height: 80px;">
-            </div>
+                <img src="/static/images/shhh.jpg" alt="Shhh Emoji" style="width: 80px; height: 80px;"></div>
             <div class="main-text">EcoLens is free for now!!</div>
             <div class="sub-text">We just want to see if you'd be willing to pay when we eventually charge.</div>
             <div class="checkbox-label">
@@ -186,21 +72,10 @@
                 <input type="checkbox" id="privacyCheckbox">
                 <label for="privacyCheckbox">I agree to <a href="https://www.firley.net/privacy-policy" target="_blank">Privacy Policy</a></label>
             </div>
-        </div>        
+        </div>
         <div id="videoPage" class="hidden" style="position: fixed; top: 0; left: 0; height: 100vh; width: 100vw; margin: 0; padding: 0;">
-            <iframe 
-                id="youtubeVideo" 
-                width="100%" 
-                height="100%"  
-                style="border: none; margin: 0; padding: 0;" 
-                src="https://www.youtube.com/embed/LgzrCXc49To?si=juxkWDEUhFrLFzof&enablejsapi=1&autoplay=1&mute=1" 
-                title="YouTube video player" 
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowfullscreen>
-            </iframe>
-        </div>            
+            <iframe id="youtubeVideo" width="100%" height="100%" style="border: none; margin: 0; padding: 0;" src="https://www.youtube.com/embed/LgzrCXc49To?si=juxkWDEUhFrLFzof&enablejsapi=1&autoplay=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
         <div id="allSetPage" class="hidden">
             <div class="main-text">Ok you're all set!</div>
             <div class="sub-text">Sorry about the wait.</div>
@@ -208,67 +83,67 @@
     </div>
     <script>
         const isMobileDevice = () => {
-        return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+            return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
         };
 
         const initialize = () => {
-        if (!isMobileDevice()) {
-            window.location.href = 'https://www.firley.net/products/ecolens-redirect';
-        }    
+            if (!isMobileDevice()) {
+                window.location.href = 'https://www.firley.net/products/ecolens-redirect';
+            }
         };
 
         initialize();
 
         document.addEventListener("DOMContentLoaded", function(event) {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const setupCompleted = localStorage.getItem('setupCompleted');
-    
-    if (window.location.href === 'http://127.0.0.1:5000/') {
-        localStorage.setItem('email', 'dummy@example.com');
-    }
-    const email = localStorage.getItem('email');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const setupCompleted = localStorage.getItem('setupCompleted');
 
-    if (isStandalone) {
-        if (!email) {
-            document.getElementById('signInButtonContainer').classList.remove('hidden');
-        } else if (!setupCompleted) {
-            runStandaloneSetup();
-        } else {
-            setTimeout(() => {
-                window.location.href = '/home';
-            }, 4000);
-        }
-    } else {
-        if (!email) {
-            runSetupProcess();
-        } else {
-            runSetupProcess();
-        }
-    }
-});
-
-function handleCredentialResponse(response) {
-    const idToken = response.credential;
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ idToken: idToken })
-    }).then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            const email = data.email;
-            localStorage.setItem('email', email);
-            localStorage.setItem('profilePic', data.profilePic);
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                runStandaloneSetup();
+            if (window.location.href === 'http://127.0.0.1:5000/') {
+                localStorage.setItem('email', 'dummy@example.com');
             }
-        } else {
-            console.error('Login failed');
+            const email = localStorage.getItem('email');
+
+            if (isStandalone) {
+                if (!email) {
+                    document.getElementById('signInButtonContainer').classList.remove('hidden');
+                } else if (!setupCompleted) {
+                    runStandaloneSetup();
+                } else {
+                    setTimeout(() => {
+                        window.location.href = '/home';
+                    }, 4000);
+                }
+            } else {
+                if (!email) {
+                    runSetupProcess();
+                } else {
+                    runSetupProcess();
+                }
+            }
+        });
+
+        function handleCredentialResponse(response) {
+            const idToken = response.credential;
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const email = data.email;
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('profilePic', data.profilePic);
+                    if (window.matchMedia('(display-mode: standalone)').matches) {
+                        runStandaloneSetup();
+                    }
+                } else {
+                    console.error('Login failed');
+                }
+            });
         }
-    });
-}
 
         function runSetupProcess() {
             const splashContent = document.getElementById('splashContent');
@@ -296,28 +171,19 @@ function handleCredentialResponse(response) {
                         splashContent.classList.remove('quick-fade-in');
                         splashContent.classList.add('quick-fade-out')
                         setTimeout(() => {
-                            splashContent.innerHTML = 'Welcome to <span class="highlight">EcoLens</span>';
+                            splashContent.innerHTML = `
+                                <div class="main-text">Install <span class="highlight">EcoLens</span></div>
+                                <div class="sub-text">😊</div>
+                                <div class="sub-text left-align">1 - Tap the Share Button</div>
+                                <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
+                                <div class="sub-text left-align">2 - Scroll down a bit</div>
+                                <div class="sub-text left-align">3 - Tap Add to Home</div>
+                                <div><img class="step-img" src="/static/images/add2hs.jpg" alt="Step 3"></div>
+                            `;
                             splashContent.classList.remove('quick-fade-out');
                             splashContent.classList.add('fade-in');
-                            setTimeout(() => {
-                                splashContent.classList.remove('fade-in');
-                                splashContent.classList.add('fade-out');
-                                setTimeout(() => {
-                                    splashContent.innerHTML = `
-                                        <div class="main-text">Install <span class="highlight">EcoLens</span></div>
-                                        <div class="sub-text">😊</div>
-                                        <div class="sub-text left-align">1 - Tap the Share Button</div>
-                                        <div><img class="step-img" src="/static/images/share-ios.png" alt="Step 1"></div>
-                                        <div class="sub-text left-align">2 - Scroll down a bit</div>
-                                        <div class="sub-text left-align">3 - Tap Add to Home</div>
-                                        <div><img class="step-img" src="/static/images/add2hs.jpg" alt="Step 3"></div>
-                                    `;
-                                    splashContent.classList.remove('fade-out');
-                                    splashContent.classList.add('fade-in');
-                                }, 3000);
-                            }, 3000);
                         }, 3000);
-                    }, 2000);
+                    }, 3000);
                 }, 2000);
             }, 2000);
         }
