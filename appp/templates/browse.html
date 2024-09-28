@@ -191,24 +191,22 @@
     }
 </script>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
-        <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
-            <nav class="flex justify-around items-center text-gray-700">
-                <a href="/home" class="text-center">
-                    <i class="fas fa-home fa-lg"></i>
-                    <p>Home</p>
-                </a>
-                <a href="/camera" class="text-center">
-                    <i class="fas fa-camera fa-lg"></i>
-                    <p>Scan</p>
-                </a>
-                <a href="#" class="text-center">
-                    <i class="fas fa-th-large fa-lg text-green-600"></i>
-                    <p>Apps</p>
-                </a>
-            </nav>
-        </div>
-    </nav>
+<nav class="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 shadow-lg z-20">
+    <div class="flex justify-around items-center py-2">
+        <a href="/home" class="text-center">
+            <i class="fas fa-home fa-lg text-gray-700"></i>
+            <p class="text-xs text-gray-700 mt-1">Home</p>
+        </a>
+        <a href="/camera" class="text-center">
+            <i class="fas fa-camera fa-lg text-gray-700"></i>
+            <p class="text-xs text-gray-700 mt-1">Scan</p>
+        </a>
+        <a href="/browse" class="text-center">
+            <i class="fas fa-th-large fa-lg text-green-600"></i>
+            <p class="text-xs text-gray-700 mt-1">Apps</p>
+        </a>
+    </div>
+</nav>
 
     <script>
         const searchInput = document.getElementById('search-input');

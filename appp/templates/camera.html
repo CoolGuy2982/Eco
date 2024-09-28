@@ -9,6 +9,24 @@
     <link href="{{ url_for('static', filename='css/camera.css') }}" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="manifest" href="/static/manifest.json">
+    <style>
+        .button-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        #enterTextPrompt {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 10;
+        }
+        .navigation-bar {
+            height: 60px;
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
     <div class="top-bar fixed top-0 left-0 right-0 bg-white bg-opacity-65 backdrop-blur-md p-2 z-15 shadow-md flex justify-center items-center">
@@ -46,19 +64,21 @@
 
         <div id="menuBar" class="menu-bar">
             <label for="uploadButton" class="bg-white rounded-full p-4">
-                <i class="fas fa-images text-gray-800 text-2xl"></i> <!-- Updated icon for selecting an image from the gallery -->
+                <i class="fas fa-images text-gray-800 text-2xl"></i>
                 <input type="file" id="uploadButton" class="hidden">
             </label>
             <button id="switchCameraButton" class="bg-white rounded-full p-4">
-                <i class="fas fa-sync-alt text-gray-800 text-2xl"></i> <!-- Updated icon for changing the camera -->
+                <i class="fas fa-sync-alt text-gray-800 text-2xl"></i>
             </button>
         </div>
 
         <div id="buttonContainerCamera" class="button-container">
-            <button id="takePhotoButton"></button>
+            <button id="takePhotoButton" class="bg-white rounded-full p-4">
+                <i class="fas fa-camera text-gray-800 text-2xl"></i>
+            </button>
         </div>
 
-        <div id="enterTextPrompt" class="bg-white rounded-full p-4 fixed bottom-10 right-10"> <!-- Keyboard button moved -->
+        <div id="enterTextPrompt" class="bg-white rounded-full p-4">
             <i class="fas fa-keyboard text-gray-800 text-2xl"></i>
         </div>        
 
@@ -82,22 +102,23 @@
             </div>
         </div>
     </div>
+
     <!-- Navigation Bar -->
-    <div class="fixed inset-x-0 bottom-0 bg-white bg-opacity-65 backdrop-blur-md py-3">
-      <nav class="flex justify-around items-center text-gray-600">
-        <a href="/home" class="text-center">
-          <i class="fas fa-home fa-lg"></i>
-          <p>Home</p>
-        </a>
-        <a href="/camera" class="text-center">
-            <i class="fas fa-camera fa-lg" style="color: #4CAF50;"></i> <!-- Adjusted green color -->
-            <p>Scan</p>
-          </a>
-        <a href="/browse" class="text-center">
-          <i class="fas fa-th-large fa-lg"></i>
-          <p>Apps</p>
-        </a>
-      </nav>
+    <div class="fixed inset-x-0 bottom-0 bg-white bg-opacity-65 backdrop-blur-md py-2 navigation-bar">
+        <nav class="flex justify-around items-center text-gray-600 h-full">
+            <a href="/home" class="text-center">
+                <i class="fas fa-home fa-lg"></i>
+                <p class="text-xs mt-1">Home</p>
+            </a>
+            <a href="/camera" class="text-center">
+                <i class="fas fa-camera fa-lg" style="color: #008080;"></i>
+                <p class="text-xs mt-1">Scan</p>
+            </a>
+            <a href="/browse" class="text-center">
+                <i class="fas fa-th-large fa-lg"></i>
+                <p class="text-xs mt-1">Apps</p>
+            </a>
+        </nav>
     </div>
 
     <canvas id="canvas" class="hidden"></canvas>

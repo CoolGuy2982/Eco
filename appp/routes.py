@@ -120,6 +120,10 @@ def foodseasonal():
 def suggestions():
     return render_template('apps/suggestions.html')
 
+@main.route('/profile')
+def profile():
+    return render_template('profile.html')
+
 @main.route('/analysis')
 def analysis():
     google_maps_api_key = current_app.config.get('GOOGLE_MAPS_API_KEY')

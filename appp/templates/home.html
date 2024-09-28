@@ -39,18 +39,29 @@
                 </div>
                             
             </div>
-            <a href="/camera" class="block bg-green-500 text-white text-md font-semibold py-2 px-6 rounded-full mt-6 mx-auto">Scan Now</a>
             
             <div class="w-full flex justify-center mt-4">
                 <div class="flex w-full max-w-sm space-x-4">
+                    <!-- EcoPoints Button -->
                     <a href="/ecopoints" class="flex-1">
-                        <button id="ecoPointsButton" class="w-full bg-gray-200 text-gray-700 py-2 rounded-full text-sm font-bold">25 EcoPoints</button>
+                        <button id="ecoPointsButton" class="w-full bg-gray-600 text-white py-2 rounded-lg text-sm font-bold">
+                            0 EcoPoints
+                        </button>
                     </a>
+                    <!-- Browse All Apps Button -->
                     <a href="/browse" class="flex-1">
-                        <button class="w-full bg-black text-white py-2 rounded-full text-sm font-bold">Browse All Apps</button>
+                        <button class="w-full bg-black text-white py-2 rounded-lg text-sm font-bold">
+                            Browse All Apps
+                        </button>
                     </a>
                 </div>
-            </div>            
+            </div>
+            
+            <!-- Scan Now Button -->
+            <a href="/camera" class="block bg-green-600 text-white text-md font-semibold py-3 px-6 rounded-lg mt-6 mx-auto hover:bg-green-700">
+                Scan Now
+            </a>
+            
 
             <div class="horizontal-scroll mt-4">
                 <a href="/generaleco" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
@@ -95,45 +106,6 @@
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
-            </div>
-            
-            <h2 class="text-2xl font-bold mb-2 mt-8 w-full px-4 text-left">Eco Positivity</h2>
-            <div class="positivity-section px-4 flex">
-                <div class="positivity-card ml-0" onclick="location.href='https://environmentamerica.org/updates/a-small-important-win-for-bees-in-colorado/'">
-                    <h3>Colorado Bee Protection</h3>
-                    <p>Colorado has introduced new legislative measures aimed at protecting bees, recognizing their critical role as pollinators and their importance to ecosystems globally</p>
-                    <div class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="positivity-card ml-4" onclick="location.href='https://news.mongabay.com/list/happy-upbeat-environmental/'">
-                    <h3>Deforestation Alerts in the Amazon at a 5-Year Low</h3>
-                    <p>Brazil has reported a significant decrease in deforestation alerts, hitting a five-year low. This achievement is credited to improved monitoring and enforcement efforts</p>
-                    <div class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="positivity-card ml-4" onclick="location.href='https://www.euronews.com/my-europe/2024/06/17/nature-restoration-law-gets-green-light-after-austria-flips'">
-                    <h3>Nature Restoration Law gets green light after Austria flips</h3>
-                    <p>After months of setbacks and difficult negotiations between the EU Council and the European Parliament, environment ministers voted today in Luxembourg to pass the Nature Restoration Law.</p>
-                    <div class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="positivity-card ml-4" onclick="location.href='https://www.dailyclimate.org/paris-showcases-a-car-free-future-during-the-olympics-2668450498.html'">
-                    <h3>Paris showcases a car-free future during the Olympics</h3>
-                    <p>Paris is showcasing a dramatic reduction in car reliance, resulting in significantly improved air quality, as it prepares for the 2024 Olympics.</p>
-                    <div class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
-                <div class="positivity-card ml-4" onclick="location.href='https://www.dailyclimate.org/mexico-s-elects-its-first-woman-president-2668442585.html'">
-                    <h3>Mexico elects its first woman president - a former climate scientist</h3>
-                    <p>Mexico just elected Claudia Sheinbaum Pardo, former climate scientist and Mexico City mayor</p>
-                    <div class="icon">
-                        <i class="fas fa-chevron-right"></i>
-                    </div>
-                </div>
             </div>
             
 
@@ -212,37 +184,27 @@
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>
 
-<div id="subscriptionPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" style="display: none;">
-    <div class="bg-white rounded-lg p-6 shadow-lg w-11/12 max-w-md text-center">
-        <p id="popupMessage" class="text-lg mb-4">EcoLens requires a $1.00 subscription every month.</p>
-        <div id="popupActions">
-            <button id="subscribeButton" class="bg-purple-500 text-white py-2 px-4 rounded-lg mr-2">Subscribe</button>
-            <button id="cancelButton" class="bg-gray-300 text-black py-2 px-4 rounded-lg">Cancel</button>
-        </div>
-        <button id="closePopupButton" class="bg-green-500 text-white py-2 px-4 rounded-lg mt-4" style="display: none;">Close</button>
-    </div>
-</div>
-
 </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300">
-            <div class="fixed inset-x-0 bottom-0 bg-white py-3 shadow-md z-20">
-                <nav class="flex justify-around items-center text-gray-700">
-                    <a class="text-center">
-                        <i class="fas fa-home fa-lg text-green-600"></i>
-                        <p>Home</p>
-                    </a>
-                    <a href="/camera" class="text-center">
-                        <i class="fas fa-camera fa-lg"></i>
-                        <p>Scan</p>
-                    </a>
-                    <a href="/browse" class="text-center">
-                        <i class="fas fa-th-large fa-lg"></i>
-                        <p>Apps</p>
-                    </a>
-                </nav>
-            </div>
-        </nav>
+<nav class="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 shadow-lg z-20">
+    <div class="flex justify-around items-center py-2">
+        <a href="#" class="text-center">
+            <i class="fas fa-home fa-lg text-green-600"></i>
+            <p class="text-xs text-gray-700 mt-1">Home</p>
+        </a>
+        <a href="/camera" class="text-center">
+            <i class="fas fa-camera fa-lg text-gray-700"></i>
+            <p class="text-xs text-gray-700 mt-1">Scan</p>
+        </a>
+        <a href="/browse" class="text-center">
+            <i class="fas fa-th-large fa-lg text-gray-700"></i>
+            <p class="text-xs text-gray-700 mt-1">Apps</p>
+        </a>
+    </div>
+</nav>
+
+
+
         
 
     </div>
