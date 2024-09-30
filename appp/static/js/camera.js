@@ -145,11 +145,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const captureImageAndSend = () => {
+        // Hide the enter text prompt button
+        enterTextPrompt.style.display = 'none';
+    
+        // Show loading animation
+        loadingAnimation.style.display = 'flex';
+    
+        // Set canvas dimensions to match the video stream
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
     
+        // Draw the current video frame on the canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
+        // If the focus box was used, draw a red rectangle around it on the canvas
         if (isFocusBoxUsed) {
             const boxRect = focusBox.getBoundingClientRect();
             const videoRect = video.getBoundingClientRect();
@@ -166,13 +175,22 @@ document.addEventListener('DOMContentLoaded', () => {
             context.strokeRect(x, y, size, size);
         }
     
+        // Get the captured image data from the canvas
         const imageData = canvas.toDataURL('image/jpeg');
+    
+        // Store the captured image data in sessionStorage
         sessionStorage.setItem('capturedImage', imageData);
+    
+        // Display the captured image and ensure it's centered and fills the screen
         displayCapturedImage(imageData);
+    
+        // Send the captured image and optional text prompt to the server
         sendImageToServer(imageData, textPrompt);
+        // Reset text prompt and focus box usage
         textPrompt = null;
         isFocusBoxUsed = false;
     };
+    
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -465,11 +483,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayCapturedImage = (imageData) => {
+        // Set the image source to the captured image
         capturedImage.src = imageData;
+    
+        // Ensure the captured image fills the entire screen and is centered
         capturedImageContainer.style.display = 'flex';
+        capturedImage.style.width = '100%';
+        capturedImage.style.height = '100%';
+        capturedImage.style.objectFit = 'cover';
+    
+        // Hide the video feed and show the captured image
+        video.style.display = 'none';
+    
+        // Hide the loading animation
         loadingAnimation.style.display = 'none';
+    
+        // Hide the camera buttons to prevent interactions during the image display
         document.getElementById('buttonContainerCamera').style.display = 'none';
+    
+        // Prevent scrolling by setting the body overflow to hidden
+        document.body.style.overflow = 'hidden';
     };
+    
 
     initialize();
+});
+
+document.getElementById('takePhotoButton').addEventListener('click', function() {
+    document.getElementById('capturedImageContainer').style.display = 'flex';
 });

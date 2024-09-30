@@ -7,6 +7,7 @@ genai.configure(api_key=GOOGLE_API_KEY)
 def generate_microscope_response(response_text, spoken_text, base64_image):
     text_prompt = f"""
 Analyze whats in this picture of something from a microscope and give environmental and health insights about it. Make response casual, conversational, and easily understandable. No bullet points. 
+What the user says: {spoken_text}
 """
 
 

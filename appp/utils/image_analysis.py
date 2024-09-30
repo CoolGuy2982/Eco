@@ -38,7 +38,7 @@ def analyze_image(base64_image, spoken_text):
         image_prompt_parts = [
             image_parts[0],
             f"""
-Analyze the image in detail and provide a comprehensive description without mentioning people or humans. If there is a red box in the image, the user emphasizes what's in that red box. Follow these steps:
+Analyze the image in detail and provide a comprehensive description without mentioning people or humans at all. If there is a red box in the image, the user emphasizes what's in that red box. Follow these steps:
 
 1. Main Purpose Identification: Determine the main purpose of the image by analyzing its contents and considering the user query: {spoken_text}. Use these observations to select the most fitting tool:
     
@@ -55,7 +55,7 @@ Analyze the image in detail and provide a comprehensive description without ment
     - Eco Response (Tool K): Choose this if the image addresses a specific environmental issue or query.
 
 Hints: Generally, the item in question, if there is one, will be in the center of the frame.
-
+THE USER WILL NEVER ASK YOU TO RECYCLE ANYTHING ALIVE SUCH AS HUMANS OR ANIMALS.
 ANY PICTURE WITH AN ITEM (not food, recipe, compost, nature, microscopic, plant or those things) WILL ALWAYS GO TO TOOLS B, C, or J. NEVER ANYTHING ELSE. BE very deliberate with your tool choice. It needs to be perfect.
 IF THE ITEM HAS A BARCODE PROMINENTLY IN THE IMAGE, IT WILL ALWAYS GO TO BARCODE (TOOL J)
 IF IT IS AN ITEM IN QUESTION IN A HOME OR A SPECIFIC PRODUCT IN FOCUS OUTDOORS ENVIRONMENT, IT WILL ALWAYS GO TO RECYCLING (Tool B)

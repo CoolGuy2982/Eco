@@ -54,7 +54,7 @@ input:checked ~ .block {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
-  z-index: 9;
+  z-index: 10;
   justify-content: center;
   align-items: center;
 }
@@ -63,6 +63,7 @@ input:checked ~ .block {
   max-width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 10;
 }
 
 .safe-area {
@@ -199,6 +200,7 @@ input:checked ~ .block {
   align-items: center;
   width: 50px;
   height: 50px;
+  z-index: 5;
 }
 
 
@@ -332,4 +334,46 @@ input:checked ~ .block {
   border-radius: 15%; /* Adjust for square appearance */
   width: 40px; /* Smaller square size to stay within the white circle */
   height: 40px; /* Smaller square size to stay within the white circle */
+}
+
+.suggested-prompt {
+  border: 2px solid;
+  padding: 8px 16px;
+  border-radius: 12px; /* Changed to a more rectangular, rounded corner */
+  background-color: transparent;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  flex: 1 1 45%; /* Makes them responsive and sit next to each other */
+  text-align: center;
+  min-width: 120px; /* Ensures consistency in button size */
+}
+
+.suggested-prompt:hover {
+  background-color: currentColor;
+  color: white;
+}
+
+#saveTextPrompt {
+  background-color: black;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-prompt-button {
+  background-color: white;
+  border-radius: 50%;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 50%;
+  transform: translate(140px, -40px); /* Adjust based on your layout */
 }
