@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function(event) {
   setTimeout(function() {
-      window.location.href = "/home"; // Redirect to Flask endpoint after a delay
-  }, 750); // Delay of 3 seconds
+      window.location.href = "/home"; 
+  }, 750); 
 });
 
 
@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var email = profile.getEmail();
     var idToken = googleUser.getAuthResponse().id_token;
 
-    // Send the ID token to the backend for verification and to create a session
     fetch('/login', {
       method: 'POST',
       headers: {

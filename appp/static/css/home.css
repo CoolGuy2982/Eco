@@ -3,12 +3,12 @@
 
 html, body {
     overflow: auto;
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
 }
 
 html::-webkit-scrollbar, body::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
+    display: none; 
 }
 
 body {
@@ -169,14 +169,14 @@ body {
         box-sizing: border-box;
         cursor: pointer;
         text-align: left;
-        height: 300px; /* Fixed height for all cards */
-        width: 250px; /* Ensure consistent width */
-        flex-shrink: 0; /* Prevent shrinking */
-        margin-left: 0; /* Ensure no margin on the first card */
+        height: 300px;
+        width: 250px;
+        flex-shrink: 0; 
+        margin-left: 0; 
     }
 
     .positivity-card + .positivity-card {
-        margin-left: 1rem; /* Add margin to the left of all cards except the first one */
+        margin-left: 1rem; 
     }
 
     .positivity-card h3 {
@@ -192,7 +192,7 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         display: -webkit-box;
-        -webkit-line-clamp: 5; /* Limit the text to 5 lines */
+        -webkit-line-clamp: 5; 
         -webkit-box-orient: vertical;
     }
 
@@ -429,5 +429,5 @@ footer .icon.active span {
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+    border-top: 96px solid white;
 }

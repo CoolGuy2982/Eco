@@ -16,10 +16,10 @@
 <body class="bg-gray-100">
     <div class="container min-h-screen flex flex-col items-center">
         <header class="fixed-top w-full bg-green-500 py-3 flex justify-center items-center px-4">
-            <div class="flex items-center space-x-1"> <!-- Adjusted space between items -->
-                <span class="text-xl font-bold text-green-900">Ec</span> <!-- Darker green text -->
+            <div class="flex items-center space-x-1">
+                <span class="text-xl font-bold text-green-900">Ec</span>
                 <img src="{{ url_for('static', filename='images/header_pic.png') }}" alt="camera logo" class="h-6 text-green-900"> <!-- Darker green icon -->
-                <span class="text-xl font-bold text-green-900">lens</span> <!-- Darker green text -->
+                <span class="text-xl font-bold text-green-900">lens</span>
             </div>
         </header>
 
@@ -44,13 +44,13 @@
             
             <div class="w-full flex justify-center mt-4">
                 <div class="flex w-full max-w-sm space-x-4">
-                    <!-- EcoPoints Button -->
+                    <!-- ecoPoints Button -->
                     <a href="/ecopoints" class="flex-1">
                         <button id="ecoPointsButton" class="w-full bg-gray-600 text-white py-2 rounded-lg text-sm font-bold">
                             0 EcoPoints
                         </button>
                     </a>
-                    <!-- Browse All Apps Button -->
+                    <!-- Browse all apps button -->
                     <a href="/browse" class="flex-1">
                         <button class="w-full bg-black text-white py-2 rounded-lg text-sm font-bold">
                             Browse All Apps
@@ -59,7 +59,7 @@
                 </div>
             </div>
             
-            <!-- Scan Now Button -->
+            <!--scan now button -->
             <a href="/camera" class="block bg-green-600 text-white text-md font-semibold py-3 px-6 rounded-lg mt-6 mx-auto hover:bg-green-700">
                 Scan Now
             </a>
@@ -171,7 +171,7 @@
                     </svg>
                 </div>
             </div>
-<!-- Dark Overlay -->
+<!-- Dark overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
 
 <!-- Popup -->
@@ -181,7 +181,7 @@
     <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block" width="20" height="20"> and then <strong>Add to Home Screen</strong>.</p>
 </div>
 
-<!-- Long Triangle pointing down -->
+<!-- Long triangle pointing down -->
 <div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>

@@ -28,7 +28,7 @@ def get_credentials():
         creds, project = default(scopes=SCOPES)
         return creds
     except Exception as e:
-        # Fallback to service account key file locally
+        # fallback to service account key file locally
         SERVICE_ACCOUNT_FILE = 'service_account_key.json'
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         return creds
@@ -154,21 +154,21 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
     corpus_resource_name = "corpora/my-corpus-94qlvnd3wanj"
 
     try:
-        # Handle the user query with RAG
+        # handle the user query with RAG
         rag_response = handle_user_query(corpus_resource_name, text_prompt, base64_image)
 
         if rag_response is None:
             return {'error': "Query response structure is unexpected."}
 
         try:
-            # Attempt to parse the response
+            # attempt to parse the response
             cleaned_rag_response = rag_response.strip()
             text_analysis_result = json.loads(cleaned_rag_response)
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
         except json.JSONDecodeError:
-            # If JSON parsing fails, use Gemini 1.5 Flash model
+            #if JSON parsing fails, use Gemini 1.5 Flash model
             print("Houston we have a problem.")
             model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                            generation_config={
@@ -180,7 +180,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
                                             },
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
             alt_response = model.generate_content([base64_image, text_prompt])
-            # Parse the fallback model's JSON response
+            # parse the fallback model's JSON response
             print(alt_response)
 
             fallback_result = alt_response.text
@@ -192,7 +192,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
         result = {'result': response, 'keyword': keyword}
 
-        # Use YouTube API to get a video ID, regardless of the response source
+        # use youtube API to get video ID, regardless of the response source
         if video_suggestion:
             video_id = search_youtube_video(video_suggestion)
             if video_id:

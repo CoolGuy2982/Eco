@@ -7,7 +7,6 @@ from google.oauth2 import service_account
 from google.auth import default
 from flask import current_app
 
-# Get the default credentials for the Cloud Run service account
 #creds, project = default()
 
 #SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
@@ -19,11 +18,11 @@ def get_credentials():
         creds, project = default()
         return creds
     except Exception as e:
-        # Fallback to service account key file locally
+        # fallback to service account key file locally
         SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
         creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
         return creds
-# Build the drive service using the credentials
+
 drive_service = build('drive', 'v3', credentials= get_credentials())
 
 DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw'  # Drive folder ID from link

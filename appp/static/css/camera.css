@@ -21,14 +21,13 @@ input:checked ~ .toggle-dot {
   visibility: hidden;
 }
 
-/* Change the color of the toggle background when it's not checked */
 .toggle-container .block {
-  background-color: gray; /* Set your desired color here */
+  background-color: gray; 
   visibility: hidden;
 }
 
 input:checked ~ .block {
-  background-color: green; /* Set the color for when the toggle is checked */
+  background-color: green; 
   visibility: hidden;
 }
 
@@ -274,30 +273,29 @@ input:checked ~ .block {
   margin-top: 20px;
 }
 
-/* Ensuring the video element fills the entire viewport */
 #video {
-  position: fixed; /* Use fixed positioning to ensure it covers the full screen */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Full viewport width */
-  height: 100vh; /* Full viewport height */
-  object-fit: cover; /* Ensures the aspect ratio is maintained while covering the entire viewport */ /* Set to a lower z-index to ensure it stays behind other content */
+  width: 100vw;
+  height: 100vh; 
+  object-fit: cover; 
 }
 
 #videoModeToggle {
   position: fixed;
-  bottom: 18%; /* Increase this value to align vertically with the photo and keyboard buttons */
-  left: 5%; /* Adjust if necessary for horizontal positioning */
+  bottom: 18%;
+  left: 5%;
   background-color: white;
   border-radius: 50%;
   padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px; /* Adjust size if necessary */
-  height: 50px; /* Adjust size if necessary */
-  z-index: 5; /* Ensure it's above other content */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional shadow for better visibility */
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .hidden {
@@ -305,16 +303,16 @@ input:checked ~ .block {
 }
 
 #recordVideoButton {
-  border: 4px solid white; /* Thicker border as requested */
+  border: 4px solid white;
   border-radius: 50%;
   background-color: transparent;
-  height: 80px; /* Outer diameter */
-  width: 80px; /* Outer diameter */
+  height: 80px;
+  width: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 15%; /* Adjust based on your layout */
+  bottom: 15%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 6;
@@ -325,28 +323,28 @@ input:checked ~ .block {
 #recordVideoButton i {
   border-radius: 50%;
   background-color: red;
-  width: 60px; /* Inner circle diameter */
-  height: 60px; /* Inner circle diameter */
+  width: 60px;
+  height: 60px; 
   transition: all 0.3s ease;
 }
 
 #recordVideoButton.active i {
-  border-radius: 15%; /* Adjust for square appearance */
-  width: 40px; /* Smaller square size to stay within the white circle */
-  height: 40px; /* Smaller square size to stay within the white circle */
+  border-radius: 15%;
+  width: 40px;
+  height: 40px; 
 }
 
 .suggested-prompt {
   border: 2px solid;
   padding: 8px 16px;
-  border-radius: 12px; /* Changed to a more rectangular, rounded corner */
+  border-radius: 12px; /*changed to a more rectangular, rounded corner */
   background-color: transparent;
   font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
-  flex: 1 1 45%; /* Makes them responsive and sit next to each other */
+  flex: 1 1 45%;
   text-align: center;
-  min-width: 120px; /* Ensures consistency in button size */
+  min-width: 120px;
 }
 
 .suggested-prompt:hover {
@@ -375,5 +373,5 @@ input:checked ~ .block {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   position: absolute;
   right: 50%;
-  transform: translate(140px, -40px); /* Adjust based on your layout */
+  transform: translate(140px, -40px);
 }

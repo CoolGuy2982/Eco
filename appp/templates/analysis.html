@@ -13,23 +13,22 @@
     <meta name="apple-mobile-web-app-title" content="EcoLens Analysis">
     <link rel="manifest" href="/static/manifest.json">
     <style>
-        /* Additional CSS for JSON display */
         .response-json {
-            white-space: pre-wrap; /* Wrap JSON content */
-            word-wrap: break-word; /* Break long words */
-            background-color: #f4f4f4; /* Light grey background */
-            border: 1px solid #ddd; /* Light grey border */
-            border-radius: 5px; /* Rounded corners */
-            padding: 10px; /* Padding */
-            margin: 10px 0; /* Margin */
-            font-size: 14px; /* Smaller font size */
-            overflow-x: auto; /* Horizontal scroll for overflow */
+            white-space: pre-wrap;
+            word-wrap: break-word; 
+            background-color: #f4f4f4; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0; 
+            font-size: 14px;
+            overflow-x: auto; 
         }
 
         @media (max-width: 600px) {
             .response-json {
-                font-size: 12px; /* Even smaller font size for mobile */
-                padding: 8px; /* Less padding for mobile */
+                font-size: 12px;
+                padding: 8px; /*les padding for mobile */
             }
         }
     </style>
@@ -66,7 +65,7 @@
         <section id="video-container" class="video-container" aria-label="Video Content"></section>
         <aside id="responses-container" class="responses-container" aria-label="JSON Data Display"></aside>
     </nav>
-    <!-- Include Google Maps API Key -->
+    <!-- where we add gmaps API key -->
     <script type="text/javascript">
         var googleMapsApiKey = "{{ google_maps_api_key }}";
     </script>

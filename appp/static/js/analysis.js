@@ -1,11 +1,10 @@
 function saveResponseLocally(data) {
   try {
     let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-    console.log('Initial pastResponses:', pastResponses); // Debugging log
+    console.log('Initial pastResponses:', pastResponses);
     const existingIndex = pastResponses.findIndex(response => response.date === data.date);
 
     if (existingIndex > -1) {
-      // Merge the new data with the existing data
       pastResponses[existingIndex] = { ...pastResponses[existingIndex], ...data };
     } else {
       pastResponses.push(data);
@@ -14,13 +13,11 @@ function saveResponseLocally(data) {
     try {
       localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
       console.log('Past responses updated:', pastResponses);
-      //displayPastResponses(); // Display past responses for testing
     } catch (error) {
       if (error.code === 22) {
-        // QuotaExceededError
         console.warn('Quota exceeded, removing oldest entries');
         while (error.code === 22 && pastResponses.length > 0) {
-          pastResponses.shift(); // Remove the oldest entry
+          pastResponses.shift(); 
           try {
             localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
             error = null;
@@ -57,7 +54,7 @@ function displayEcoPoint() {
 
   setTimeout(() => {
     ecoPointElement.classList.remove('visible');
-  }, 3000); // Hide after 3 seconds
+  }, 3000); 
 }
 
 function fetchAddressAndDisplay(keyword, data) {
@@ -144,8 +141,8 @@ function displayError(errorMessage) {
 
 function displayMap(addresses, sectionTitle) {
   const mapContainer = document.getElementById('map-container');
-  mapContainer.innerHTML = ''; // Clear previous content
-  mapContainer.appendChild(sectionTitle); // Add the title
+  mapContainer.innerHTML = ''; 
+  mapContainer.appendChild(sectionTitle); 
 
   addresses.forEach(address => {
     const mapFrame = document.createElement('iframe');
@@ -160,21 +157,17 @@ function displayMap(addresses, sectionTitle) {
     mapFrame.src = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${encodeURIComponent(address)}&maptype=satellite`;
     mapWrapper.appendChild(mapFrame);
     mapContainer.appendChild(mapWrapper);
-    mapContainer.style.display = 'block'; // Ensure the map container is visible
+    mapContainer.style.display = 'block';
   });
 }
 
 function formatBoldAndNewLine(text) {
-  // Convert **bold**: to <strong>bold</strong>:<br>
   text = text.replace(/\*\*(.*?)\*\*:/g, '<strong>$1</strong>:<br>');
-  
-  // Convert **bold** to <strong>bold</strong>
+
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
-  // Convert lines starting with * to <br>* for bullet points
   text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
   
-  // Ensure that bullet points are separated properly
   text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
   
   return text;
@@ -246,7 +239,7 @@ function fetchAndDisplayProducts(keyword, data) {
 }
 
 window.onload = function() {
-  // displayPastResponses(); // Display past responses on load for testing
+  // displayPastResponses();
   const data = JSON.parse(sessionStorage.getItem('AIResponse'));
   if (!data) {
     console.error('No AI response data found in session storage.');
@@ -260,12 +253,11 @@ window.onload = function() {
 
   if (data.result) {
     analysisResult.innerHTML = formatBoldAndNewLine(data.result);
-    incrementEcoPoint(); // Increment EcoPoint on valid AI response
+    incrementEcoPoint();
   } else {
     analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
   }
 
-  // Display barcode image if the text_tool is 'J' and barcode_image_url is present
   if (data.text_tool === 'J' && data.barcode_image_url) {
     const barcodeImage = document.createElement('img');
     barcodeImage.src = data.barcode_image_url;
@@ -274,14 +266,13 @@ window.onload = function() {
     barcodeImage.style.display = 'block';
     barcodeImage.style.marginTop = '20px';
     barcodeImage.style.width = '100%';
-    barcodeImage.style.maxWidth = '400px'; // Limit the width for better display
+    barcodeImage.style.maxWidth = '400px'; 
     barcodeImage.style.marginLeft = 'auto';
     barcodeImage.style.marginRight = 'auto';
 
     analysisResult.appendChild(barcodeImage);
   }
 
-  // Save initial response data
   const initialData = {
     result: data.result || null,
     video_suggestion: data.video_suggestion || null,
@@ -290,15 +281,14 @@ window.onload = function() {
   };
   saveResponseLocally(initialData);
 
-  // Check for recycling option and keyword before fetching address
   if (data.text_tool === 'B' && data.keyword) {
-    fetchAddressAndDisplay(data.keyword, data); // Fetch and display addresses only if "Recycling"
+    fetchAddressAndDisplay(data.keyword, data);
   } else {
-    mapContainer.style.display = 'none'; // Hide the map container if not "Recycling"
+    mapContainer.style.display = 'none'; // hide the map container if its ot recycling mode
   }
 
   if (data.keyword) {
-    fetchAndDisplayProducts(data.keyword, data); // Fetch and display products based on the keyword
+    fetchAndDisplayProducts(data.keyword, data); //   get and display products based on the keyword
   }
 
   if (data.video_suggestion) {
@@ -308,8 +298,7 @@ window.onload = function() {
     videoContainer.style.display = 'none';
   }
 
-  sessionStorage.removeItem('AIResponse'); // Clean up after displaying
+  sessionStorage.removeItem('AIResponse'); //clean up after displaying
 
-  // Request geolocation permission on page load
   requestGeolocationPermission();
 };

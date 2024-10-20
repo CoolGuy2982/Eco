@@ -224,5 +224,5 @@ body {
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+  border-top: 96px solid white; /*   adjust this value to match the height of popup and the space to the bottom*/
 }

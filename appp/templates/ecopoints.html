@@ -36,13 +36,11 @@
         <div class="rewards">
             <h2>Rewards</h2>
             <ul id="currentRewards">
-                <!-- Rewards will be added here by JavaScript -->
             </ul>
         </div>
         <div class="upcoming-rewards" id="upcomingRewards">
             <h2>Upcoming Rewards</h2>
             <ul id="upcomingRewardsList">
-                <!-- Upcoming rewards will be added here by JavaScript -->
             </ul>
         </div>
     </div>
@@ -64,17 +62,14 @@
 
     <script src="{{ url_for('static', filename='js/ecopoints.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
-<!-- Dark Overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
 
-<!-- Popup -->
 <div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
     <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
     <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4" width="50" height="50">
     <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block" width="20" height="20"> and then <strong>Add to Home Screen</strong>.</p>
 </div>
 
-<!-- Long Triangle pointing down -->
 <div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>

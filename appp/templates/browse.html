@@ -13,12 +13,12 @@
     <style>
         html, body {
             overflow: auto;
-            -ms-overflow-style: none;  /* Internet Explorer 10+ */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none;  /* Safari and Chrome */
+            display: none;
         }
         .highlight {
             background-color: yellow;
@@ -38,7 +38,7 @@
             background-color: #f1f1f1;
         }
         .content-container {
-            margin-bottom: 80px; /* Adjust this value as needed */
+            margin-bottom: 80px;
         }
     </style>
 </head>
@@ -137,25 +137,22 @@
         </div>
     </div>
 
-    <!-- Dark Overlay -->
+    <!--dark overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
 
-<!-- Popup -->
+<!--popup -->
 <div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
     <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
     <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4" width="50" height="50">
     <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block" width="20" height="20"> and then <strong>Add to Home Screen</strong>.</p>
 </div>
 
-<!-- Long Triangle pointing down -->
 <div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>
 
-<!-- Tailwind CSS Script -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Custom Styles -->
 <style>
     #triangle-container {
         width: 0;
