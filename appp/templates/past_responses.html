@@ -85,9 +85,9 @@
             if (pastResponses.length === 0) {
                 container.innerHTML = '<p class="text-gray-600">No past responses found.</p>';
             } else {
-                // Merge responses within 30 seconds
+                // merge responses within 30 seconds
                 pastResponses = mergeResponses(pastResponses);
-                // Sort responses by most recent, placing invalid dates at the bottom
+                // sort responses by most recent, placing invalid dates at the bottom
                 pastResponses.sort((a, b) => {
                     const dateA = new Date(a.date);
                     const dateB = new Date(b.date);
@@ -111,9 +111,9 @@
 
                         if (response.b64_image) {
                             const imageDiv = document.createElement('img');
-                            imageDiv.src = response.b64_image; // Directly use the base64 string
-                            imageDiv.id = 'img-' + index; // Set ID directly on the image
-                            imageDiv.style.maxWidth = '100%'; // Adjust styling as needed
+                            imageDiv.src = response.b64_image; // use the base64 string
+                            imageDiv.id = 'img-' + index; 
+                            imageDiv.style.maxWidth = '100%';
                             responseDiv.appendChild(imageDiv);
                         }
 
@@ -165,7 +165,6 @@
                 });
             }
 
-            // Handle scrolling to the specific response if a URL hash is present
             if (window.location.hash) {
                 const responseId = window.location.hash.substring(1);
                 const responseElement = document.getElementById(responseId);
@@ -186,7 +185,7 @@
                 const lastResponse = mergedResponses[mergedResponses.length - 1];
 
                 if (lastResponse && (new Date(response.date) - new Date(lastResponse.date)) <= 30000) {
-                    // Merge if within 30 seconds
+                    // merge if within 30 seconds
                     lastResponse.result = lastResponse.result || response.result;
                     lastResponse.video_suggestion = lastResponse.video_suggestion || response.video_suggestion;
 
@@ -206,7 +205,6 @@
             return mergedResponses;
         }
 
-        // Debugging: Log stored responses
         console.log('Stored responses:', JSON.parse(localStorage.getItem('pastResponses')));
     </script>
 </body>

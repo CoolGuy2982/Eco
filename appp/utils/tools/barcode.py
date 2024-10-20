@@ -7,7 +7,6 @@ import requests
 import threading
 import google.generativeai as genai
 
-# Configure Google Generative AI API
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 
@@ -25,10 +24,9 @@ def decode_barcode(base64_image):
         return None
 
 def get_image_data_from_url(image_url):
-    # Fetches the image from the URL and converts it to a base64 encoded string
     response = requests.get(image_url)
     if response.status_code == 200:
-        return base64.b64encode(response.content).decode('utf-8')  # Return base64 string
+        return base64.b64encode(response.content).decode('utf-8')  # return base64 string
     else:
         return None
 
@@ -43,7 +41,7 @@ def get_image_from_open_food_facts(barcode, results):
             base64_image_data = get_image_data_from_url(image_url)
             results['open_food_facts'] = {
                 'base64_image_data': base64_image_data,
-                'image_url': image_url  # Store the URL in the results
+                'image_url': image_url
             }
     else:
         results['open_food_facts'] = None
@@ -65,13 +63,13 @@ def generate_barcode_response(spoken_text, base64_image):
 
     text_prompt = f"Analyze the product in the image. User Query: {spoken_text}. Also give environmental and health analysis based on the image. Keep response to 80 words max, make it sound natural and fun to read, not robotic and bullet points."
 
-    # Prepare image data for model
+    # prepare image data for model
     if base64_image_data:
         image_data = base64.b64decode(base64_image_data)
         image_parts = [{"mime_type": "image/jpeg", "data": image_data}]
 
         try:
-            # Sending image data with MIME type and text prompt to the model
+            # sending image data with mime type and text prompt to the model
             text_model = genai.GenerativeModel(
                 model_name="gemini-1.5-flash",
                 generation_config={
@@ -88,24 +86,18 @@ def generate_barcode_response(spoken_text, base64_image):
 
             return {
                 'result': text_analysis_result,
-                'barcode_image_url': image_url  # Return the image URL in the response
+                'barcode_image_url': image_url  # return the image URL in the response
             }
         except Exception as e:
-            # Handle any exceptions during content generation
+            # handle any exceptions during content generation
             error_message = f"Hi there! The barcode stuff only works for food right now, so thank you for your patience and for using ecolens! <3"
             return {
                 'result': error_message,
-                'barcode_image_url': image_url  # Return the image URL in the response
+                'barcode_image_url': image_url  # return the image URL in the response
             }
     else:
         print("Image data not available.")
         return {
             'result': "Image data not available. Unable to generate content.",
-            'barcode_image_url': image_url  # Return the image URL in the response
+            'barcode_image_url': image_url  # return the image URL in the response
         }
-
-# Example usage:
-# spoken_text = "Describe the nutritional content."
-# base64_image = "your_base64_encoded_image_string_here"
-# result = generate_barcode_response(spoken_text, base64_image)
-# print(result)

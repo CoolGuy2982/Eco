@@ -15,14 +15,12 @@ document.addEventListener('DOMContentLoaded', function () {
             'static/images/trees/level10.png',
         ];
 
-    // Retrieve EcoPoints and Level from localStorage
     const ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
     let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
 
     const treeName = localStorage.getItem('treeName') || 'Your Tree';
     document.getElementById('treeName').innerText = treeName;
 
-    // Update progress based on EcoPoints
     function updateProgress() {
         const progressCircle = document.getElementById('progressCircle');
         const levelText = document.getElementById('treeLevel');
@@ -44,15 +42,11 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('ecoPointsButton').innerText = `${ecoPoints} EcoPoints`;
     }
 
-    // Handle tree click
     document.getElementById('treeProgress').addEventListener('click', function () {
         window.location.href = '/ecopoints';
     });
-
-    // Initial progress update
     updateProgress();
 
-    // Retrieve past responses and update the recent scans section
     let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
     const container = document.querySelector('.recent-scans');
 
@@ -149,7 +143,6 @@ function isInStandaloneMode() {
 return ('standalone' in window.navigator) && (window.navigator.standalone);
 }
 
-// Retrieve the 'dismissed' state from localStorage
 var dismissed = localStorage.getItem('addToHomeScreenDismissed');
 
 if (isIOS() && !isInStandaloneMode() && !dismissed) {
@@ -164,7 +157,6 @@ document.getElementById('subscriptionPopup').style.display = 'block';
 
 function closePopup() {
 document.getElementById('addToHomeScreen').style.display = 'none';
-// Save a flag in localStorage when the user dismisses the popup
 localStorage.setItem('addToHomeScreenDismissed', 'true');
 }
 

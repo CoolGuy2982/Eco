@@ -3,16 +3,15 @@ import threading
 from .utils.image_analysis import analyze_image
 from .utils.google_drive import upload_to_drive
 import base64
-import requests  # Standard requests module
+import requests 
 from bs4 import BeautifulSoup
 import urllib.parse
 from google.oauth2 import id_token
-from google.auth.transport import requests as google_requests  # Renamed to avoid conflict
+from google.auth.transport import requests as google_requests  # renamed to avoid conflict
 import os
 import google.generativeai as genai
 import time
 
-# Create a Blueprint instance for the main app
 main = Blueprint('main', __name__)
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
@@ -135,9 +134,9 @@ def analysis():
 def analyze():
     data = request.get_json()
     base64_image = data.get('image')
-    spoken_text = data.get('text')  # Ensure key matches 'text'
+    spoken_text = data.get('text')  #make sure key matches 'text'
     
-    # Log received data
+    #log received data
     print("Received spoken text:", spoken_text)
     print("Received image data (truncated):", base64_image[:50], "...")
 
@@ -158,12 +157,12 @@ def scrape_address():
     what = request.args.get('what', '')
     latitude = request.args.get('latitude', '')
     longitude = request.args.get('longitude', '')
-    keyword = urllib.parse.quote_plus(what)  # Encode the keyword properly
+    keyword = urllib.parse.quote_plus(what) 
     url = f"https://search.earth911.com/?what={keyword}&latitude={latitude}&longitude={longitude}&max_distance=25"
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     print(url)
-    # Extract address parts using BeautifulSoup
+    # extract address parts using BeautifulSoup
     address1 = soup.find(class_='address1').text if soup.find(class_='address1') else 'Not found'
     address3 = soup.find(class_='address3').text if soup.find(class_='address3') else 'Not found'
 
@@ -183,7 +182,6 @@ def scrape_products():
     soup = BeautifulSoup(response.text, 'html.parser')
 
     products = []
-    # Fetching top three products
     product_items = soup.select('.boost-pfs-filter-product-item')[:3]
     for item in product_items:
         image = item.select_one('.boost-pfs-filter-product-item-main-image.Image--lazyLoad')
@@ -208,10 +206,10 @@ def scrape_products():
             'image_url': image_url,
             'title': title,
             'price': price,
-            'link': f"https://earthhero.com{link}"  # Assuming relative URLs
+            'link': f"https://earthhero.com{link}"  # assuming relative URLs
         })
 
-    # Log the image URLs for debugging
+    # log the image urls for debugging
     print("Image URLs:", [product['image_url'] for product in products])
 
     return jsonify(products)
@@ -263,35 +261,29 @@ Also make the response very friendly because you want them to come back and give
 @main.route('/video', methods=['POST'])
 def process_video():
     video = request.files['video']
-    text = request.form.get('text', '')  # Optional additional user context
+    text = request.form.get('text', '')  
 
-    # Combining the system prompt with any user-provided context
     full_prompt = system_prompt + "\nUser Context: " + text
     
-    if video and video.content_length < 30 * 1024 * 1024:  # Check if file size < 30 MB
+    if video and video.content_length < 30 * 1024 * 1024:  # check if file size < 30 MB
         video_path = f"./tmp/{video.filename}"
-        video.save(video_path)  # Save video to a temporary directory
+        video.save(video_path)  # save video to a temporary directory
 
         try:
-            # Upload the video using the File API
             video_file = genai.upload_file(path=video_path)
 
-            # Check the file state until it's either processed or fails
             while video_file.state.name == "PROCESSING":
                 time.sleep(10)
                 video_file = genai.get_file(video_file.name)
 
             if video_file.state.name == "FAILED":
                 return jsonify({"error": "Video processing failed"}), 500
-
-            # Make the LLM request
             model = genai.GenerativeModel(model_name="gemini-1.5-flash")
             response = model.generate_content([video_file, full_prompt], request_options={"timeout": 600})
             print(response.text)
             return jsonify({"result": response.text})
         
         finally:
-            # Clean up: delete the uploaded video file from the server
             if os.path.exists(video_path):
                 os.remove(video_path)
 

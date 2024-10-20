@@ -160,19 +160,17 @@ Take a deep breath and work on this problem step-by-step.
         image_response = image_model.generate_content(image_prompt_parts)
         image_analysis_result = json.loads(image_response.text)
 
-        # Log the spoken text
         print("Spoken Text:")
         print(spoken_text)
 
-        # Log the image model response
         print("Image Model Response:")
         print(json.dumps(image_analysis_result, indent=2))
 
         response_text = image_analysis_result["Response"]
         text_tool = image_analysis_result["Text_Tool"]
-        material_info = image_analysis_result.get("Material")  # Get item info if available
+        material_info = image_analysis_result.get("Material")  # get item info if available
 
-        # Select the appropriate function based on the tool
+        # select the appropriate function based on the tool
         if text_tool == "A":
             result = generate_nature_response(response_text, spoken_text, image_parts[0])
         elif text_tool == "B":
@@ -198,7 +196,7 @@ Take a deep breath and work on this problem step-by-step.
         else:
             raise ValueError("Invalid Text_Tool")
 
-        # Log the text model response
+        # log the text model response
         print("Text Model Response:")
         print(json.dumps(result, indent=2))
         result["text_tool"] = text_tool
@@ -206,10 +204,10 @@ Take a deep breath and work on this problem step-by-step.
         result["material_info"] = material_info
 
 
-        # Check if keyword is not included in the result
+        # check if keyword is not included in the result
         if "keyword" not in result:
             result["keyword"] = []
-        #it is impossible for the other three things to not be present, they are requisite
+        # it is impossible for the other three things to not be present, they are requisite
 
         return result
 

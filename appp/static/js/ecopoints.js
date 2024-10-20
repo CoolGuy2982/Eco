@@ -1,7 +1,7 @@
 let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
 let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
 
-const goals = [50, 110, 220, 350, 500, 650, 800, 950, 1100, 1300]; // Goals for each level
+const goals = [50, 110, 220, 350, 500, 650, 800, 950, 1100, 1300];
 const rewards = [
     [
         { 
@@ -51,7 +51,7 @@ const rewards = [
             link: "https://sites.google.com/view/sparkfirley/spark" 
         },
     ],
-    // Levels 4-10 gift cards with "Coming Soon"
+    // levels 4-10 gift cards with "Coming Soon"
     [
         { 
             name: "Coming Soon", 
@@ -61,7 +61,6 @@ const rewards = [
             link: "" 
         },
     ]
-    // Add more rewards as needed
 ];
 let claimedRewards = {};
 
@@ -101,7 +100,7 @@ function updateUI() {
     });
 
     const upgradeButton = document.getElementById('upgradeButton');
-    if (ecoPoints >= goals[level]) { // Correct comparison for the next level
+    if (ecoPoints >= goals[level]) { // needs correct comparison for the next level
         upgradeButton.classList.remove('disabled');
         upgradeButton.disabled = false;
     } else {
@@ -112,7 +111,7 @@ function updateUI() {
 
 function upgradeTree() {
     const nextLevel = level + 1;
-    if (ecoPoints >= goals[level]) { // Correct comparison for the next level
+    if (ecoPoints >= goals[level]) { 
         level = nextLevel;
         localStorage.setItem('level', level);
         alert(`You've upgraded to level ${level}!`);
@@ -186,7 +185,6 @@ function claimReward(reward, index) {
     document.getElementById('claimedCode').style.display = 'block';
     document.getElementById('screenshotMessage').textContent = "Take a screenshot! Tap the picture above.";
 
-    // Show confetti
     const confetti = document.getElementById('confetti');
     confetti.style.display = 'block';
     setTimeout(() => {
@@ -221,7 +219,6 @@ function startConfetti() {
     }());
 }
 
-// Load claimed rewards from localStorage
 if (localStorage.getItem('claimedRewards')) {
     claimedRewards = JSON.parse(localStorage.getItem('claimedRewards'));
 }

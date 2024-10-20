@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             console.error('Error checking permissions:', error);
-            requestPermissions(); // Fallback to request permissions if check fails
+            requestPermissions(); 
         }
     };
 
@@ -145,20 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const captureImageAndSend = () => {
-        // Hide the enter text prompt button
         enterTextPrompt.style.display = 'none';
-    
-        // Show loading animation
         loadingAnimation.style.display = 'flex';
-    
-        // Set canvas dimensions to match the video stream
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-    
-        // Draw the current video frame on the canvas
+
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-        // If the focus box was used, draw a red rectangle around it on the canvas
         if (isFocusBoxUsed) {
             const boxRect = focusBox.getBoundingClientRect();
             const videoRect = video.getBoundingClientRect();
@@ -168,25 +162,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
             const x = (boxRect.left - videoRect.left) * scaleX;
             const y = (boxRect.top - videoRect.top) * scaleY;
-            const size = Math.min(boxRect.width, boxRect.height) * scaleX; // Ensure the box is square
+            const size = Math.min(boxRect.width, boxRect.height) * scaleX; 
     
             context.strokeStyle = 'red';
             context.lineWidth = 5;
             context.strokeRect(x, y, size, size);
         }
-    
-        // Get the captured image data from the canvas
+
         const imageData = canvas.toDataURL('image/jpeg');
     
-        // Store the captured image data in sessionStorage
         sessionStorage.setItem('capturedImage', imageData);
     
-        // Display the captured image and ensure it's centered and fills the screen
         displayCapturedImage(imageData);
     
-        // Send the captured image and optional text prompt to the server
         sendImageToServer(imageData, textPrompt);
-        // Reset text prompt and focus box usage
         textPrompt = null;
         isFocusBoxUsed = false;
     };
@@ -210,7 +199,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let photoID = null;
 
-        // Upload the image to get the photo ID
         fetch('/upload', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -219,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             photoID = data.photoID;
-            // Proceed with sending the image and spoken text for analysis
+
             return fetch('/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -326,22 +314,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateVoiceAnimation = (volume) => {
-        // Update voice animation based on volume (if implemented)
+        // update voice animation based on volume if we actually get around to doing htis 
     };
 
     const toggleMode = () => {
         var userAgent = navigator.userAgent;
         var isWebView = /(iPhone|iPod|iPad|Android).*(AppleWebKit(?!.*Safari)|Version\/4.0 Chrome\/[.0-9]* Mobile Safari\/[.0-9]*$)/.test(userAgent);
     
-        // Check if the browser is Safari
         var isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
     
         if (isWebView || isSafari) {
-            // Running in a WebView or Safari, show the browser warning
             toggleSwitch.checked = false;
             showBrowserWarning();
         } else {
-            // Not in a WebView or Safari, proceed with normal toggle logic
             isVoiceMode = !isVoiceMode;
             localStorage.setItem('isVoiceMode', isVoiceMode);
             if (isVoiceMode) {
@@ -404,17 +389,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const rect = video.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-            const size = 100; // Size of the square focus box
+            const size = 100;
 
             focusBox.style.left = `${x - size / 2}px`;
             focusBox.style.top = `${y - size / 2}px`;
             focusBox.style.width = `${size}px`;
             focusBox.style.height = `${size}px`;
-            focusBox.style.display = 'block';  // Show focus box
+            focusBox.style.display = 'block'; 
 
             zoomContainer.style.left = `${x - 100}px`;
             zoomContainer.style.top = `${y + 110}px`;
-            zoomContainer.style.display = 'flex';  // Show zoom container
+            zoomContainer.style.display = 'flex'; 
             
             resetFocusBoxTimeout();
             resetZoomSliderTimeout();
@@ -483,25 +468,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const displayCapturedImage = (imageData) => {
-        // Set the image source to the captured image
         capturedImage.src = imageData;
-    
-        // Ensure the captured image fills the entire screen and is centered
+
         capturedImageContainer.style.display = 'flex';
         capturedImage.style.width = '100%';
         capturedImage.style.height = '100%';
         capturedImage.style.objectFit = 'cover';
     
-        // Hide the video feed and show the captured image
         video.style.display = 'none';
     
-        // Hide the loading animation
+        // hide the loading animation
         loadingAnimation.style.display = 'none';
     
-        // Hide the camera buttons to prevent interactions during the image display
         document.getElementById('buttonContainerCamera').style.display = 'none';
     
-        // Prevent scrolling by setting the body overflow to hidden
         document.body.style.overflow = 'hidden';
     };
     
