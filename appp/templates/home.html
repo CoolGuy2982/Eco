@@ -7,7 +7,7 @@
     <title>EcoLens</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+    <link href="static/css/home.css" rel="stylesheet">
     <link rel="manifest" href="/static/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="EcoLens Analysis">
@@ -18,7 +18,7 @@
         <header class="fixed-top w-full bg-green-500 py-3 flex justify-center items-center px-4">
             <div class="flex items-center space-x-1">
                 <span class="text-xl font-bold text-green-900">Ec</span>
-                <img src="{{ url_for('static', filename='images/header_pic.png') }}" alt="camera logo" class="h-6 text-green-900"> <!-- Darker green icon -->
+                <img src="static/images/header_pic.png" alt="camera logo" class="h-6 text-green-900"> <!-- Darker green icon -->
                 <span class="text-xl font-bold text-green-900">lens</span>
             </div>
         </header>
@@ -210,7 +210,7 @@
         
 
     </div>
-    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="/static/js/home.js"></script>
 </body>
 
 </html>
