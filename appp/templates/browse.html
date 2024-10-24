@@ -6,7 +6,7 @@
     <title>Browse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="icon" type="image/png" href="static/images/favicon.png">
     <link rel="manifest" href="/static/manifest.json">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="EcoLens Analysis">
@@ -137,10 +137,8 @@
         </div>
     </div>
 
-    <!--dark overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
 
-<!--popup -->
 <div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
     <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
     <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4" width="50" height="50">
@@ -159,7 +157,7 @@
         height: 0;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-top: 96px solid white; /* Adjust this value to match the height of your popup and the space to the bottom */
+        border-top: 96px solid white; 
     }
 </style>
 
