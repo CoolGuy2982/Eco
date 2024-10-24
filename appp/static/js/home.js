@@ -1,3 +1,4 @@
+// js for home page, image carousel, etc.
 document.addEventListener('DOMContentLoaded', function () {
     const levelGoals = [50, 110, 220, 350, 500, 650, 800, 950, 1100, 1300];
     const levelColors = ['#a8f28a', '#87CEEB', '#f2994a', '#eb5757', '#6fcf97', '#56ccf2', '#bb6bd9', '#2f80ed', '#9b51e0', '#27ae60'];

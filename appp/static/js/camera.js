@@ -1,3 +1,4 @@
+// js code to manage the camera page such as camera functionality, uploading, context, zoom, and more
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');

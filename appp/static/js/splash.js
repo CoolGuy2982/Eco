@@ -1,3 +1,4 @@
+// js for splash page, future login, more
 document.addEventListener("DOMContentLoaded", function(event) {
   setTimeout(function() {
       window.location.href = "/home"; 

@@ -1,3 +1,4 @@
+// potential future use to process voice for easy user interaction
 class VoiceProcessor extends AudioWorkletProcessor {
   constructor() {
       super();

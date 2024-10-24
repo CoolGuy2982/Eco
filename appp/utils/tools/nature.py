@@ -1,6 +1,9 @@
 import google.generativeai as genai
 import os
 
+# this file houses the function to generate a nature related response and give those insights from the image if the image analysis deems it to most valuable for nature insights
+# it sends the image again and user context for response generation. This allows for complex insights to be generated in a personalized way.
+
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 

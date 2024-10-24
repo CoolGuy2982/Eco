@@ -1,3 +1,4 @@
+// js for ecopoints page
 let ecoPoints = localStorage.getItem('ecoPoints') ? parseInt(localStorage.getItem('ecoPoints')) : 0;
 let level = localStorage.getItem('level') ? parseInt(localStorage.getItem('level')) : 0;
 

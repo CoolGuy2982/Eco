@@ -7,6 +7,9 @@ import requests
 import threading
 import google.generativeai as genai
 
+# this file is used to house the function to scan the barcode and retreive a product image from a databse and return that image along with user context to Gemini 1.5 Flash agent. 
+# this response from that image is then sent back to image_analysis (and from the endpoint) gets sent back to the user
+
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 

@@ -1,3 +1,4 @@
+// javascript code for the browse page
 const isMobileDevice = () => {
   return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 };

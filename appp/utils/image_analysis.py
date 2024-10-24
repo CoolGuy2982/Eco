@@ -14,7 +14,8 @@ from .tools.plants import generate_plant_response
 from .tools.biodiversity import generate_biodiversity_response
 from .tools.microscope import generate_microscope_response
 from .tools.barcode import generate_barcode_response
-
+# this file is likely the most critical one. It is used to route the image to the appropriate expert and give the best response to users. 
+# oftentimes, users are not going to want to upload a text prompt, they just want to snap the photo and get the insights. This helps us determine what the user may want
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 

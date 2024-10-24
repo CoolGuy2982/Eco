@@ -3,7 +3,9 @@ import os
 
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
-
+# this file houses the function to generate food related response and give those insights from the image if the image analysis deems it to most valuable for biodiversity insights
+# it sends the image again and user context for response generation. This allows for complex insights to be generated in a personalized way.
+# user can snap a picture of the fridge and return a response
 def generate_food_response(response_text, spoken_text, base64_image):
     text_prompt = f"""
 You are in the app EcoLens, an app that takes in an image and gives sutainability suggestions by looking at the image and routing it to a expert that can best give advice for the image to help the user. 

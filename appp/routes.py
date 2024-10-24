@@ -11,7 +11,7 @@ from google.auth.transport import requests as google_requests  # renamed to avoi
 import os
 import google.generativeai as genai
 import time
-
+# routes.py is critical because it has all the endpoints and is how through flask framework the frontend and backend can interact
 main = Blueprint('main', __name__)
 
 CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')

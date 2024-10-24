@@ -1,3 +1,4 @@
+// javascript code to process image the received analysis for analysis page 
 function saveResponseLocally(data) {
   try {
     let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];

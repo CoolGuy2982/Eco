@@ -1,4 +1,5 @@
 # youtube_search.py
+# We use this to search youtube based on the inputted stuff
 from googleapiclient.discovery import build
 
 def create_youtube_service(credentials):

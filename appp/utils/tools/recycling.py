@@ -10,6 +10,9 @@ from googleapiclient.discovery import build
 import google.auth
 from google.auth.transport.requests import Request
 
+# this file houses the function to generate a recycling related response and give those insights from the image if the image analysis deems it to most valuable for recycling insights
+# it sends the image again and user context for response generation. This allows for complex insights to be generated in a personalized way.
+
 SCOPES = [
     'https://www.googleapis.com/auth/cloud-platform',
     'https://www.googleapis.com/auth/generative-language.retriever',
