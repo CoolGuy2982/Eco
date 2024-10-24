@@ -44,15 +44,11 @@
             
             <div class="w-full flex justify-center mt-4">
                 <div class="flex w-full max-w-sm space-x-4">
-                    <!-- ecoPoints Button -->
-                    <!-- ecoPoints Button -->
                     <a href="/ecopoints" class="flex-1">
                         <button id="ecoPointsButton" class="w-full bg-gray-600 text-white py-2 rounded-lg text-sm font-bold">
                             0 EcoPoints
                         </button>
                     </a>
-                    <!-- Browse all apps button -->
-                    <!-- Browse all apps button -->
                     <a href="/browse" class="flex-1">
                         <button class="w-full bg-black text-white py-2 rounded-lg text-sm font-bold">
                             Browse All Apps
@@ -61,8 +57,6 @@
                 </div>
             </div>
             
-            <!--scan now button -->
-            <!--scan now button -->
             <a href="/camera" class="block bg-green-600 text-white text-md font-semibold py-3 px-6 rounded-lg mt-6 mx-auto hover:bg-green-700">
                 Scan Now
             </a>
@@ -71,42 +65,42 @@
             <div class="horizontal-scroll mt-4">
                 <a href="/generaleco" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/ecoleaves.jpg') }}" alt="General Eco" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/ecoleaves.jpg" alt="General Eco" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">General Eco</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
                 <a href="/nature" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/natureicon.jpg') }}" alt="Nature" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/natureicon.jpg" alt="Nature" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">Nature</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
                 <a href="/recycling" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/purplerecycle.jpg') }}" alt="Recycling" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/purplerecycle.jpg" alt="Recycling" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">Recycling</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
                 <a href="/greenwashing" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/greenmask.jpg') }}" alt="Greenwashing" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/greenmask.jpg" alt="Greenwashing" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">Greenwashing</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
                 <a href="/composting" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/compost.jpg') }}" alt="Composting" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/compost.jpg" alt="Composting" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">Composting</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
                 </a>
                 <a href="/food" class="item flex items-center justify-between bg-white p-3 rounded-lg shadow-sm mb-0.5">
                     <div class="flex items-center">
-                        <img src="{{ url_for('static', filename='images/browse_page/food.jpg') }}" alt="Food" class="h-8 w-8 mr-3">
+                        <img src="static/images/browse_page/food.jpg" alt="Food" class="h-8 w-8 mr-3">
                         <span class="text-sm font-semibold text-gray-700 mr-2">Food</span>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400"></i>
@@ -115,11 +109,9 @@
             
 
             <div class="mt-4 relative w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-lg" onclick="location.href='https://microlens.firley.net'">
-            <div class="mt-4 relative w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-lg" onclick="location.href='https://microlens.firley.net'">
                 <div class="relative w-full h-48">
                     <iframe class="absolute inset-0 w-full h-full" src="https://docs.lume.io/examples/lava-lamp/example.html" allowfullscreen></iframe>
                     <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
-                        <span class="text-white font-bold text-xl">Check out MicroLens</span>
                         <span class="text-white font-bold text-xl">Check out MicroLens</span>
                     </div>
                 </div>
@@ -168,7 +160,7 @@
             <div class="info-card" onclick="location.href='https://youtube.com/v/LgzrCXc49To?feature=share'" style="cursor: pointer;">
                 <div class="info-content text-left">
                     <h3>Tips</h3>
-                    <p>How to Use EcoLens</p>
+                    <p>EcoLens Tutorial</p>
                 </div>                
                 <div class="info-icon flex items-center justify-end">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -176,46 +168,36 @@
                     </svg>
                 </div>
             </div>
-<!-- Dark overlay -->
-<!-- Dark overlay -->
 <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-40" style="display: none;"></div>
 
-<!-- Popup -->
 <div id="popup" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-white border border-gray-300 p-4 shadow-lg z-50 w-11/12 max-w-xs text-center" style="display: none;">
     <div id="closeButton" class="close absolute top-2 right-2 cursor-pointer text-xl font-bold">&times;</div>
     <img src="static/images/favicon.png" alt="M icon" class="mx-auto mb-4" width="50" height="50">
     <p class="text-sm">To add this web app to the home screen: tap <img src="static/images/share-ios.png" alt="Share button icon" class="inline-block" width="20" height="20"> and then <strong>Add to Home Screen</strong>.</p>
 </div>
 
-<!-- Long triangle pointing down -->
-<!-- Long triangle pointing down -->
 <div id="triangle-container" class="fixed bottom-0 left-1/2 transform -translate-x-1/2 z-50" style="display: none;">
     <div class="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-white"></div>
 </div>
 
 </main>
 
-<nav class="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 shadow-lg z-20">
-    <div class="flex justify-around items-center py-2">
-        <a href="#" class="text-center">
-            <i class="fas fa-home fa-lg text-green-600"></i>
-            <p class="text-xs text-gray-700 mt-1">Home</p>
-        </a>
-        <a href="/camera" class="text-center">
-            <i class="fas fa-camera fa-lg text-gray-700"></i>
-            <p class="text-xs text-gray-700 mt-1">Scan</p>
-        </a>
-        <a href="/browse" class="text-center">
-            <i class="fas fa-th-large fa-lg text-gray-700"></i>
-            <p class="text-xs text-gray-700 mt-1">Apps</p>
-        </a>
-    </div>
-</nav>
-
-
-
-        
-
+        <nav class="fixed inset-x-0 bottom-0 bg-white border-t border-gray-300 shadow-lg z-20">
+            <div class="flex justify-around items-center py-2">
+                <a href="#" class="text-center">
+                    <i class="fas fa-home fa-lg text-green-600"></i>
+                    <p class="text-xs text-gray-700 mt-1">Home</p>
+                </a>
+                <a href="/camera" class="text-center">
+                    <i class="fas fa-camera fa-lg text-gray-700"></i>
+                    <p class="text-xs text-gray-700 mt-1">Scan</p>
+                </a>
+                <a href="/browse" class="text-center">
+                    <i class="fas fa-th-large fa-lg text-gray-700"></i>
+                    <p class="text-xs text-gray-700 mt-1">Apps</p>
+                </a>
+            </div>
+        </nav>
     </div>
     <script src="/static/js/home.js"></script>
 </body>
