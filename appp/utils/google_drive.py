@@ -4,43 +4,52 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 from io import BytesIO
 from google.oauth2 import service_account
-from google.auth import default
-from flask import current_app
 
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
-# this file houses the function used in the upload route to upload taken images to a google drive folder for our viewing and user data analysis to see what kinds of things users are taking photos of
-
-#creds, project = default()
-
-#SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
-#creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+# folder ID of the Google Drive folder where files will be uploaded
+DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw' 
 
 def get_credentials():
-    # Use default credentials when deployed
+    """Get credentials either from the default environment or from a service account file."""
     try:
-        creds, project = default()
+        #try to get default credentials (e.g., when running in a deployed environment like App Engine, Cloud Run, etc.)
+        creds, project = default(scopes=SCOPES)
         return creds
     except Exception as e:
-        # fallback to service account key file locally
+        # if default credentials don't work, try using a service account key file locally
+        print("Using the local key")
         SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
-        creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE)
+        if not SERVICE_ACCOUNT_FILE:
+            raise Exception("Service account file path is not set in environment variables.")
+        
+        creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         return creds
 
-drive_service = build('drive', 'v3', credentials= get_credentials())
-
-DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw'  # Drive folder ID accessed from folder link
-                                                       # This folder houses the images
+# Create a Google Drive service using the obtained credentials
+drive_service = build('drive', 'v3', credentials=get_credentials())
 
 def upload_to_drive(file_name, file_data):
-    file_metadata = {
-        'name': file_name,
-        'parents': [DRIVE_FOLDER_ID]
-    }
-    media = MediaIoBaseUpload(BytesIO(file_data), mimetype='image/jpeg')
-    file = drive_service.files().create(
-        body=file_metadata,
-        media_body=media,
-        fields='id'
-    ).execute()
+    """Upload a file to Google Drive."""
+    try:
+        # Prepare metadata for the file (file name and folder to upload to)
+        file_metadata = {
+            'name': file_name,
+            'parents': [DRIVE_FOLDER_ID]
+        }
 
-    return file.get('id')
+        # create a media upload object with file data and MIME type
+        media = MediaIoBaseUpload(BytesIO(file_data), mimetype='image/jpeg')
+
+        # make the API request to upload the file to GDrive
+        file = drive_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+
+        return file.get('id')
+    except Exception as e:
+        print(f"Error uploading file to Google Drive: {str(e)}")
+        return None
+

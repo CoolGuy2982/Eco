@@ -83,7 +83,7 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
     aqa_response = generate_answer(corpus_resource_name, user_query)
     print("HEre's the full AQA response: \n", aqa_response)
     answerable_probability = aqa_response.answerable_probability
-    if answerable_probability <= 0.9:
+    if answerable_probability <=1.1:
         model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                        generation_config={
                                             "temperature": 0.3,
