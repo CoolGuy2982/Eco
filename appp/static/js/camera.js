@@ -42,17 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'https://www.firley.net/products/ecolens-redirect';
         }
         setupEventListeners();
-        if (isVoiceMode) {
-            startVoiceRecognition();
-            toggleSwitch.checked = true;
-            switchToVoiceMode();
-        } else {
-            stopVoiceRecognition();
-            toggleSwitch.checked = false;
-            switchToCameraMode();
-        }
-        checkPermissions();
+    
+        // we are delaying setup to help android handle the initial camera load better
+        setTimeout(() => {
+            if (localStorage.getItem('permissionsGranted') === 'true') {
+                setupMediaStream();
+            } else {
+                checkPermissions();
+            }
+        }, 200);
     };
+    
 
     const isMobileDevice = () => {
         return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
@@ -100,10 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const setupMediaStream = async () => {
         if (stream) {
             video.srcObject = stream;
+            video.setAttribute('playsinline', true);
             video.play();
             return;
         }
-
+    
         try {
             const mediaStream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
@@ -116,9 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 startAudioProcessing();
             }
         } catch (error) {
-            console.error('Error accessing camera: ', error);
+            console.error('Environment camera failed, using user-facing camera as fallback.', error);
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.play();
+            imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
         }
     };
+    
 
     const stopMediaStream = () => {
         if (stream) {
@@ -139,11 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.hidden) {
             stopMediaStream();
         } else {
+            // refresh the camera if permissions are granted and the page is back in focus
             if (localStorage.getItem('permissionsGranted') === 'true') {
                 setupMediaStream();
             }
         }
     };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
 
     const captureImageAndSend = () => {
         enterTextPrompt.style.display = 'none';
