@@ -97,34 +97,50 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const setupMediaStream = async () => {
-        if (stream) {
-            video.srcObject = stream;
-            video.setAttribute('playsinline', true);
-            video.play();
-            return;
+    let preferredCameraFacing = 'environment'; // weca n store preferred initial camera
+
+const setupMediaStream = async () => {
+    if (stream) {
+        video.srcObject = stream;
+        video.play();
+        return;
+    }
+
+    try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: preferredCameraFacing, width: { ideal: 1920 }, height: { ideal: 1080 } }
+        });
+        stream = mediaStream;
+        video.srcObject = stream;
+        video.setAttribute('playsinline', true);  // inline display on mobile
+        video.play();
+        imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
+        if (isVoiceMode) {
+            startAudioProcessing();
         }
-    
-        try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } }
-            });
-            stream = mediaStream;
-            video.srcObject = stream;
-            video.play();
-            imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
-            if (isVoiceMode) {
-                startAudioProcessing();
+    } catch (error) {
+        console.error(`Error accessing ${preferredCameraFacing} camera. Retrying...`, error);
+        
+        // with the environment-facing camera on failure
+        if (preferredCameraFacing === 'environment') {
+            try {
+                const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                stream = mediaStream;
+                video.srcObject = stream;
+                video.play();
+            } catch (retryError) {
+                console.error('Retry for environment camera failed. Using user-facing camera instead.', retryError);
+                const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                stream = mediaStream;
+                video.srcObject = stream;
+                video.play();
             }
-        } catch (error) {
-            console.error('Environment camera failed, using user-facing camera as fallback.', error);
-            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-            stream = mediaStream;
-            video.srcObject = stream;
-            video.play();
-            imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
         }
-    };
+    }
+};
+
     
 
     const stopMediaStream = () => {
