@@ -154,7 +154,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
     }}
     """
 
-    corpus_resource_name = "corpora/my-corpus-94qlvnd3wanj"
+    corpus_resource_name = "corpora/my-corpus-dz1zhwuxelzw"
 
     try:
         # handle the user query with RAG

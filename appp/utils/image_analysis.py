@@ -17,8 +17,8 @@ from .tools.barcode import generate_barcode_response
 # this file is likely the most critical one. It is used to route the image to the appropriate expert and give the best response to users. 
 # oftentimes, users are not going to want to upload a text prompt, they just want to snap the photo and get the insights. This helps us determine what the user may want
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+print("here before something goes wrong")
 genai.configure(api_key=GOOGLE_API_KEY)
-
 def analyze_image(base64_image, spoken_text):
     img_data = base64.b64decode(base64_image)
 

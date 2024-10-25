@@ -142,7 +142,7 @@ def generate_greenwashing_response(response_text, spoken_text, material_info, ba
     }}
     """
 
-    corpus_resource_name = "corpora/my-corpus-94qlvnd3wanj"
+    corpus_resource_name = "corpora/my-corpus-dz1zhwuxelzw"
 
     try:
         rag_response = handle_user_query(corpus_resource_name, text_prompt, base64_image)
