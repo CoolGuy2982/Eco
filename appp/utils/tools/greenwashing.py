@@ -16,8 +16,10 @@ from google.auth.transport.requests import Request
 SCOPES = [
     'https://www.googleapis.com/auth/cloud-platform',
     'https://www.googleapis.com/auth/generative-language.retriever',
-    'https://www.googleapis.com/auth/youtube.force-ssl'
+    'https://www.googleapis.com/auth/youtube.force-ssl',
+    'https://www.googleapis.com/auth/generative-language'
 ]
+
 
 #creds, project = google.auth.default(scopes=SCOPES)
 
@@ -26,15 +28,30 @@ SCOPES = [
 
 def get_credentials():
     try:
+        # Attempt to use default credentials (works in Google Cloud)
         creds, project = default(scopes=SCOPES)
+        # Check if the credentials are service account credentials
+        if isinstance(creds, Credentials):
+            print("Using service account credentials (loaded as default credentials).")
+        else:
+            print("Using default user credentials.")
         return creds
     except Exception as e:
-        SERVICE_ACCOUNT_FILE = 'service_account_key.json'
+        print(f"Default credentials failed: {e}")
+        
+        # Fallback to service account credentials
+        SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 'service_account_key.json')
+
+        if not os.path.exists(SERVICE_ACCOUNT_FILE):
+            raise Exception("The GOOGLE_APPLICATION_CREDENTIALS environment variable is not set or points to an invalid file.")
+
+        print("Using service account credentials from file.")
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         return creds
-    
+
 retriever_service_client = glm.RetrieverServiceClient(credentials=get_credentials())
 generative_service_client = glm.GenerativeServiceClient(credentials=get_credentials())
+
 
 def create_youtube_service():
     youtube = build('youtube', 'v3',credentials= get_credentials())

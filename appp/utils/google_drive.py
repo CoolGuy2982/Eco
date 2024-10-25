@@ -4,27 +4,40 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
 from io import BytesIO
 from google.oauth2 import service_account
-
-SCOPES = ['https://www.googleapis.com/auth/drive.file']
+from google.oauth2.service_account import Credentials
 
 # folder ID of the Google Drive folder where files will be uploaded
 DRIVE_FOLDER_ID = '14_AeV9n8Nt5pZNwuigD6aE_nwXoW8_aw' 
 
+# Set your required scopes here
+SCOPES = [
+    'https://www.googleapis.com/auth/cloud-platform',
+    'https://www.googleapis.com/auth/generative-language',
+    'https://www.googleapis.com/auth/drive.file'
+]
+
 def get_credentials():
-    """Get credentials either from the default environment or from a service account file."""
     try:
-        #try to get default credentials (e.g., when running in a deployed environment like App Engine, Cloud Run, etc.)
+        # Attempt to use default credentials (works in Google Cloud)
         creds, project = default(scopes=SCOPES)
+        print("Using default credentials.")
         return creds
     except Exception as e:
-        # if default credentials don't work, try using a service account key file locally
-        print("Using the local key")
-        SERVICE_ACCOUNT_FILE = os.getenv('GCP_SERVICE_ACCOUNT_KEY_PATH')
-        if not SERVICE_ACCOUNT_FILE:
-            raise Exception("Service account file path is not set in environment variables.")
+        print(f"Default credentials failed: {e}")
+
+        # Fallback to service account credentials
+        SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
         
-        creds = service_account.Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+        if not SERVICE_ACCOUNT_FILE:
+            raise Exception("The GOOGLE_APPLICATION_CREDENTIALS environment variable is not set or points to an invalid file.")
+
+        print("Using service account credentials from file.")
+        creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         return creds
+
+# Test credentials
+creds = get_credentials()
+print(f"Using credentials: {creds}")
 
 # Create a Google Drive service using the obtained credentials
 drive_service = build('drive', 'v3', credentials=get_credentials())

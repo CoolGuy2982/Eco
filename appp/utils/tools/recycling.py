@@ -16,31 +16,45 @@ from google.auth.transport.requests import Request
 SCOPES = [
     'https://www.googleapis.com/auth/cloud-platform',
     'https://www.googleapis.com/auth/generative-language.retriever',
-    'https://www.googleapis.com/auth/youtube.force-ssl'
+    'https://www.googleapis.com/auth/youtube.force-ssl',
+    'https://www.googleapis.com/auth/generative-language'
 ]
+
 
 #creds, project = google.auth.default(scopes=SCOPES)
 
 #SERVICE_ACCOUNT_FILE = 'service_account_key.json'
 #creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-
 def get_credentials():
-    # Use default credentials when deployed
     try:
+        # Attempt to use default credentials (works in Google Cloud)
         creds, project = default(scopes=SCOPES)
+        # Check if the credentials are service account credentials
+        if isinstance(creds, Credentials):
+            print("Using service account credentials (loaded as default credentials).")
+        else:
+            print("Using default user credentials.")
         return creds
     except Exception as e:
-        # fallback to service account key file locally
-        SERVICE_ACCOUNT_FILE = 'service_account_key.json'
+        print(f"Default credentials failed: {e}")
+        
+        # Fallback to service account credentials
+        SERVICE_ACCOUNT_FILE = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 'service_account_key.json')
+
+        if not os.path.exists(SERVICE_ACCOUNT_FILE):
+            raise Exception("The GOOGLE_APPLICATION_CREDENTIALS environment variable is not set or points to an invalid file.")
+
+        print("Using service account credentials from file.")
         creds = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
         return creds
-    
+
 retriever_service_client = glm.RetrieverServiceClient(credentials=get_credentials())
 generative_service_client = glm.GenerativeServiceClient(credentials=get_credentials())
 
+
 def create_youtube_service():
-    youtube = build('youtube', 'v3', credentials= get_credentials())
+    youtube = build('youtube', 'v3',credentials= get_credentials())
     return youtube
 
 def search_youtube_video(query):
@@ -83,7 +97,8 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
     aqa_response = generate_answer(corpus_resource_name, user_query)
     print("HEre's the full AQA response: \n", aqa_response)
     answerable_probability = aqa_response.answerable_probability
-    if answerable_probability <=1.1:
+    if answerable_probability <= 1.2:
+        print("AQA Probability low")
         model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                        generation_config={
                                             "temperature": 0.3,
@@ -93,7 +108,7 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
                                             "response_mime_type": "application/json"
                                         },
                                         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
-        response = model.generate_content([base64_image, user_query])
+        response = model.generate_content([user_query, base64_image])
         return response.text
 
     try:
@@ -157,21 +172,17 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
     corpus_resource_name = "corpora/my-corpus-dz1zhwuxelzw"
 
     try:
-        # handle the user query with RAG
         rag_response = handle_user_query(corpus_resource_name, text_prompt, base64_image)
 
         if rag_response is None:
             return {'error': "Query response structure is unexpected."}
 
         try:
-            # attempt to parse the response
-            cleaned_rag_response = rag_response.strip()
-            text_analysis_result = json.loads(cleaned_rag_response)
+            text_analysis_result = json.loads(rag_response)
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
         except json.JSONDecodeError:
-            #if JSON parsing fails, use Gemini 1.5 Flash model
             print("Houston we have a problem.")
             model = genai.GenerativeModel(model_name='gemini-1.5-flash',
                                            generation_config={
@@ -182,8 +193,8 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
                                                 "response_mime_type": "application/json"
                                             },
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
-            alt_response = model.generate_content([base64_image, text_prompt])
-            # parse the fallback model's JSON response
+            alt_response = model.generate_content([text_prompt, base64_image])
+
             print(alt_response)
 
             fallback_result = alt_response.text
@@ -195,7 +206,6 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
         result = {'result': response, 'keyword': keyword}
 
-        # use youtube API to get video ID, regardless of the response source
         if video_suggestion:
             video_id = search_youtube_video(video_suggestion)
             if video_id:
@@ -205,4 +215,3 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
     except Exception as e:
         return {'error': str(e)}
-
