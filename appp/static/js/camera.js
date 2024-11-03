@@ -108,7 +108,11 @@ const setupMediaStream = async () => {
 
     try {
         const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: preferredCameraFacing, width: { ideal: 1920 }, height: { ideal: 1080 } }
+            video: { 
+                facingMode: "environment", 
+                width: { exact: 1920 },
+                height: { exact: 1080 }
+            }
         });
         stream = mediaStream;
         video.srcObject = stream;
