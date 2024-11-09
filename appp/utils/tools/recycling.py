@@ -109,6 +109,8 @@ def handle_user_query(corpus_resource_name, user_query, base64_image, results_co
                                         },
                                         safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
         response = model.generate_content([user_query, base64_image])
+        print("1.5 Flash Recycling response: ")
+        print(response.text)
         return response.text
 
     try:
@@ -173,7 +175,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
     try:
         rag_response = handle_user_query(corpus_resource_name, text_prompt, base64_image)
-
+        print(rag_response)
         if rag_response is None:
             return {'error': "Query response structure is unexpected."}
 
@@ -194,7 +196,7 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
                                             },
                                             safety_settings=[{"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_MEDIUM_AND_ABOVE"}])
             alt_response = model.generate_content([text_prompt, base64_image])
-
+            print("Alt response: ")
             print(alt_response)
 
             fallback_result = alt_response.text
@@ -206,11 +208,17 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
         result = {'result': response, 'keyword': keyword}
 
-        if video_suggestion:
+        print("The video thing: ")
+        print(video_suggestion)
+        
+        if video_suggestion is not None:
             video_id = search_youtube_video(video_suggestion)
-            if video_id:
-                result['video_suggestion'] = video_id
+            print("Video ID from yt search")
+            print(video_id)
+        if video_id:
+            result['video_suggestion'] = video_id
 
+        print(result['video_suggestion'])
         return result
 
     except Exception as e:

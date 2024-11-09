@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <!-- page for analysis that is received from model -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoLens Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -15,79 +16,21 @@
     <style>
         .response-json {
             white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #f4f4f4;
+            word-wrap: break-word; 
+            background-color: #f4f4f4; 
             border: 1px solid #ddd;
             border-radius: 5px;
             padding: 10px;
-            margin: 10px 0;
+            margin: 10px 0; 
             font-size: 14px;
-            overflow-x: auto;
+            overflow-x: auto; 
         }
 
         @media (max-width: 600px) {
             .response-json {
                 font-size: 12px;
-                padding: 8px;
+                padding: 8px; /*les padding for mobile */
             }
-        }
-
-        .product-card {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            overflow: hidden;
-            padding: 20px;
-            max-width: 100%;
-            background: #333;
-            border-radius: 16px;
-            color: #fff;
-            position: relative;
-        }
-
-        .product-card .product {
-            flex: 1;
-            text-align: center;
-        }
-
-        .product img {
-            width: 80%;
-            max-width: 250px;
-            height: auto;
-            border-radius: 10px;
-            margin: 10px auto;
-            transition: opacity 0.5s ease-in-out;
-        }
-
-        .carousel {
-            display: flex;
-            overflow: hidden;
-            width: 100%;
-            position: relative;
-        }
-
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .product-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .carousel-item {
-            min-width: 100%;
-            box-sizing: border-box;
-            opacity: 0.5;
-            filter: blur(2px);
-            transition: opacity 0.5s ease, filter 0.5s ease;
-        }
-
-        .carousel-item.active {
-            opacity: 1;
-            filter: blur(0);
         }
     </style>
 </head>
@@ -106,123 +49,21 @@
         <main id="map-container" class="map-container">
             <h2 class="section-title">Recycling Locations</h2>
         </main>
-        <section id="product-container" class="product-container" style="display: none;">
+        
+        <section id="product-container" class="product-container">
             <h2 class="section-title">Recommended Products</h2>
-            <div class="carousel">
-                <div class="carousel-track">
-                    <!-- Product cards will be dynamically inserted here -->
-                </div>
+            <div id="card-stack" class="card-stack">
+                <!-- Cards will be populated dynamically -->
             </div>
-        </section>
+        </section>        
+
         <section id="video-container" class="video-container" aria-label="Video Content"></section>
         <aside id="responses-container" class="responses-container" aria-label="JSON Data Display"></aside>
     </nav>
+    <!-- where we add gmaps API key -->
     <script type="text/javascript">
         var googleMapsApiKey = "{{ google_maps_api_key }}";
     </script>
     <script src="{{ url_for('static', filename='js/analysis.js') }}"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // JavaScript to support swipe functionality for carousel and dynamic product loading
-            let currentIndex = 0;
-            const carouselTrack = document.querySelector('.carousel-track');
-            let products = [];
-
-            // Function to dynamically add products to the carousel
-            function loadProducts(productsData) {
-                carouselTrack.innerHTML = '';
-                productsData.forEach((product, index) => {
-                    const productCard = document.createElement('div');
-                    productCard.classList.add('carousel-item');
-                    if (index === 0) productCard.classList.add('active');
-
-                    productCard.innerHTML = `
-                        <div class="product-card">
-                            <div class="product">
-                                <a href="${product.link}" target="_blank">
-                                    <img src="${product.image_url}" alt="${product.title}" role="img">
-                                    <h3>${product.title}</h3>
-                                    <p>${product.price}</p>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    carouselTrack.appendChild(productCard);
-                });
-
-                products = document.querySelectorAll('.carousel-item');
-            }
-
-            // Fetch products and load into carousel (this function simulates the functionality from analysis.js)
-            function fetchAndDisplayProducts(keyword) {
-                fetch(`/scrape_products?keyword=${keyword}`)
-                    .then(response => response.json())
-                    .then(productsData => {
-                        if (productsData.length > 0) {
-                            loadProducts(productsData);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error fetching products:', error);
-                    });
-            }
-
-            function showProduct(index) {
-                currentIndex = index;
-                const offset = -index * 100;
-                carouselTrack.style.transform = `translateX(${offset}%)`;
-
-                products.forEach((item, idx) => {
-                    if (idx === index) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
-                });
-            }
-
-            function nextProduct() {
-                currentIndex = (currentIndex + 1) % products.length;
-                showProduct(currentIndex);
-            }
-
-            function prevProduct() {
-                currentIndex = (currentIndex - 1 + products.length) % products.length;
-                showProduct(currentIndex);
-            }
-
-            document.querySelector('.carousel-track').addEventListener('touchstart', handleTouchStart, false);
-            document.querySelector('.carousel-track').addEventListener('touchmove', handleTouchMove, false);
-
-            let xDown = null;
-
-            function handleTouchStart(evt) {
-                xDown = evt.touches[0].clientX;
-            }
-
-            function handleTouchMove(evt) {
-                if (!xDown) {
-                    return;
-                }
-
-                let xUp = evt.touches[0].clientX;
-                let xDiff = xDown - xUp;
-
-                if (xDiff > 0) {
-                    nextProduct();
-                } else {
-                    prevProduct();
-                }
-
-                xDown = null;
-            }
-
-            // Initial load of carousel with empty data
-            showProduct(currentIndex);
-
-            // Example: Fetch products with a default keyword for demo purposes
-            fetchAndDisplayProducts('sustainable');
-        });
-    </script>
 </body>
 </html>

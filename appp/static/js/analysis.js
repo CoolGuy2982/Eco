@@ -131,7 +131,6 @@ function requestGeolocationPermission() {
   );
 }
 
-
 function displayError(errorMessage) {
   const errorInfo = document.createElement('div');
   errorInfo.id = 'error-info';
@@ -164,13 +163,8 @@ function displayMap(addresses, sectionTitle) {
 
 function formatBoldAndNewLine(text) {
   text = text.replace(/\*\*(.*?)\*\*:/g, '<strong>$1</strong>:<br>');
-
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
   text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
-  
-  text = text.replace(/^\*([^\n]*)/gm, '<br>* $1');
-  
   return text;
 }
 
@@ -188,118 +182,3 @@ function displayYouTubeVideos(videoIDs) {
     videoContainer.appendChild(iframeContainer);
   });
 }
-
-function fetchAndDisplayProducts(keyword, data) {
-  const keywordString = keyword;
-  fetch(`/scrape_products?keyword=${keywordString}`)
-    .then(response => response.json())
-    .then(products => {
-      if (products.length > 0) {
-        let currentIndex = 0;
-
-        const productContainer = document.getElementById('product-container');
-        productContainer.style.display = 'block';
-        const productCard = productContainer.querySelector('.product-card');
-
-        updateProductDisplay(products, currentIndex);
-
-        window.showNextProduct = function() {
-          currentIndex = (currentIndex + 1) % products.length;
-          updateProductDisplay(products, currentIndex);
-        };
-
-        window.showPreviousProduct = function() {
-          currentIndex = (currentIndex - 1 + products.length) % products.length;
-          updateProductDisplay(products, currentIndex);
-        };
-
-        function updateProductDisplay(products, index) {
-          const product = products[index];
-          const productElement = productCard.querySelector('.product');
-          productElement.querySelector('a').href = product.link;
-          productElement.querySelector('img').src = product.image_url;
-          productElement.querySelector('img').alt = product.title;
-          productElement.querySelector('h3').textContent = product.title;
-          productElement.querySelector('p').textContent = product.price;
-        }
-
-        const completeData = {
-          ...data,
-          products,
-          date: new Date().toISOString()
-        };
-        console.log('Saving complete analysis data with products:', completeData);
-        saveResponseLocally(completeData);
-      }
-    })
-    .catch(error => {
-      console.error('Error fetching products:', error);
-      displayError('Error fetching products: ' + error.message);
-      document.getElementById('product-container').style.display = 'none';
-    });
-}
-
-window.onload = function() {
-  // displayPastResponses();
-  const data = JSON.parse(sessionStorage.getItem('AIResponse'));
-  if (!data) {
-    console.error('No AI response data found in session storage.');
-    displayError('No AI response data found in session storage.');
-    return;
-  }
-  displayEcoPoint();
-  const analysisResult = document.getElementById('analysis-result');
-  const mapContainer = document.getElementById('map-container');
-  const videoContainer = document.getElementById('video-container');
-
-  if (data.result) {
-    analysisResult.innerHTML = formatBoldAndNewLine(data.result);
-    incrementEcoPoint();
-  } else {
-    analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
-  }
-
-  if (data.text_tool === 'J' && data.barcode_image_url) {
-    const barcodeImage = document.createElement('img');
-    barcodeImage.src = data.barcode_image_url;
-    barcodeImage.alt = 'Barcode Image';
-    barcodeImage.style.borderRadius = '12px';
-    barcodeImage.style.display = 'block';
-    barcodeImage.style.marginTop = '20px';
-    barcodeImage.style.width = '100%';
-    barcodeImage.style.maxWidth = '400px'; 
-    barcodeImage.style.marginLeft = 'auto';
-    barcodeImage.style.marginRight = 'auto';
-
-    analysisResult.appendChild(barcodeImage);
-  }
-
-  const initialData = {
-    result: data.result || null,
-    video_suggestion: data.video_suggestion || null,
-    date: new Date().toISOString(),
-    barcode_image_url: data.barcode_image_url || null
-  };
-  saveResponseLocally(initialData);
-
-  if (data.text_tool === 'B' && data.keyword) {
-    fetchAddressAndDisplay(data.keyword, data);
-  } else {
-    mapContainer.style.display = 'none'; // hide the map container if its ot recycling mode
-  }
-
-  if (data.keyword) {
-    fetchAndDisplayProducts(data.keyword, data); //   get and display products based on the keyword
-  }
-
-  if (data.video_suggestion) {
-    displayYouTubeVideos([data.video_suggestion]);
-    videoContainer.style.display = 'block';
-  } else {
-    videoContainer.style.display = 'none';
-  }
-
-  sessionStorage.removeItem('AIResponse'); //clean up after displaying
-
-  requestGeolocationPermission();
-};
