@@ -99,47 +99,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let preferredCameraFacing = 'environment'; // weca n store preferred initial camera
 
-const setupMediaStream = async () => {
-    if (stream) {
-        video.srcObject = stream;
-        video.play();
-        return;
-    }
-
-    try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: preferredCameraFacing, width: { ideal: 1920 }, height: { ideal: 1080 } }
-        });
-        stream = mediaStream;
-        video.srcObject = stream;
-        video.setAttribute('playsinline', true);  // inline display on mobile
-        video.play();
-        imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
-        if (isVoiceMode) {
-            startAudioProcessing();
+    const setupMediaStream = async () => {
+        if (stream) {
+            video.srcObject = stream;
+            video.play();
+            return;
         }
-    } catch (error) {
-        console.error(`Error accessing ${preferredCameraFacing} camera. Retrying...`, error);
-        
-        // with the environment-facing camera on failure
-        if (preferredCameraFacing === 'environment') {
-            try {
-                const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' } 
-                });
-                stream = mediaStream;
-                video.srcObject = stream;
-                video.play();
-            } catch (retryError) {
-                console.error('Retry for environment camera failed. Using user-facing camera instead.', retryError);
-                const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
-                stream = mediaStream;
-                video.srcObject = stream;
-                video.play();
+    
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: preferredCameraFacing,
+                    width: { min: 1280, ideal: 1920, max: 3840 },
+                    height: { min: 720, ideal: 1080, max: 2160 },
+                    frameRate: { ideal: 30, max: 60 }
+                }
+            });
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.setAttribute('playsinline', true);  // inline display on mobile
+            video.play();
+            imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
+            if (isVoiceMode) {
+                startAudioProcessing();
+            }
+        } catch (error) {
+            console.error(`Error accessing ${preferredCameraFacing} camera. Retrying...`, error);
+    
+            // Retry with the environment-facing camera on failure
+            if (preferredCameraFacing === 'environment') {
+                try {
+                    const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: {
+                            facingMode: 'environment',
+                            width: { min: 1280, ideal: 1920, max: 3840 },
+                            height: { min: 720, ideal: 1080, max: 2160 },
+                            frameRate: { ideal: 30, max: 60 }
+                        }
+                    });
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.play();
+                } catch (retryError) {
+                    console.error('Retry for environment camera failed. Using user-facing camera instead.', retryError);
+                    const mediaStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'user',
+                            width: { min: 1280, ideal: 1920, max: 3840 },
+                            height: { min: 720, ideal: 1080, max: 2160 },
+                            frameRate: { ideal: 30, max: 60 }
+                        }
+                    });
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.play();
+                }
             }
         }
-    }
-};
+    };
+    
 
     
 
