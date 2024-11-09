@@ -126,63 +126,71 @@ body, html {
   align-items: center;
   justify-content: center;
   position: relative;
+  width: 100%;
+}
+
+.carousel {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  min-width: 100%;
+  box-sizing: border-box;
+  opacity: 0.5;
+  filter: blur(2px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.carousel-item.active {
+  opacity: 1;
+  filter: blur(0);
 }
 
 .product-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  background-color: #333;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 20px;
+  max-width: 100%;
+  background: #333;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  color: white;
+  color: #fff;
   position: relative;
-  width: 100%;
-  max-width: 100%; 
-  padding: 10px; 
 }
 
-.product {
-  width: 100%;
+.product-card .product {
+  flex: 1;
   text-align: center;
 }
 
 .product img {
-  width: 100%;
+  width: 80%;
+  max-width: 250px;
   height: auto;
-  border-radius: 8px; 
-  margin-bottom: 10px; 
+  border-radius: 10px;
+  margin: 10px auto;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .product h3 {
   font-size: 1em;
   margin: 10px 0;
-  color: white; /* Text color matching the design */
+  color: white;
 }
 
 .product p {
   font-size: 1em;
-  color: white; /* White text color for price */
-}
-
-.carousel-nav {
-  background-color: transparent;
-  border: none;
-  color: black;
-  font-size: 2em;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  z-index: 1;
-  padding: 0 10px;
-}
-
-.carousel-nav.prev {
-  left: 0;
-}
-
-.carousel-nav.next {
-  right: 0;
+  color: white;
 }
 
 .eco-point {
@@ -196,7 +204,7 @@ body, html {
   opacity: 0;
   transition: opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
   position: relative;
-  width: calc(100% - 20px); /*same width as the text container */
+  width: calc(100% - 20px);
   display: none;
 }
 
