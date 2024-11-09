@@ -11,20 +11,15 @@
     <link rel="manifest" href="/static/manifest.json">
      <!-- page for camera-->
     <script>
-        function redirectBasedOnDevice() {
-          // Check if the device is a desktop or laptop
-          const isDesktop = window.innerWidth > 1024;
-      
-          // Check if it's a standalone mobile web app (PWA)
-          const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-      
-          if (isDesktop) {
-            // Redirect to the laptop URL
-            window.location.href = "https://www.firley.net/products/ecolens-redirect";
-          } else if (!isStandalone) {
-            // Redirect to the /setup endpoint if on mobile but not a standalone app
-            window.location.href = "/setup";
-          }
+        function redirectBasedOnDevice() 
+        {
+              // Check if the device is a desktop or laptop
+              const isDesktop = window.innerWidth > 1024;
+          
+              if (isDesktop) {
+                // Redirect to the laptop URL
+                window.location.href = "https://www.firley.net/products/ecolens-redirect";
+              } 
         }
       
         // Call the function to check the device and redirect
