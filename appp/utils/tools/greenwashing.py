@@ -57,20 +57,50 @@ def create_youtube_service():
     youtube = build('youtube', 'v3',credentials= get_credentials())
     return youtube
 
-def search_youtube_video(query):
+def search_youtube_video(query, keyword):
     youtube = create_youtube_service()
-    search_response = youtube.search().list(
-        q=query,
-        part='id,snippet',
-        maxResults=1
-    ).execute()
 
-    if 'items' in search_response and len(search_response['items']) > 0:
-        video_id = search_response['items'][0]['id']['videoId']
-        return video_id
-    else:
-        return None
+    # preset video ids based on common keywords
+    preset_videos = {
+        "bottle": "JvhS58YoA6A",  # ddiy project with plastic bottles
+        "box": "JhfP7l1uH4Y",     # diy crafts using cardboard boxes
+        "paper": "EeoUcfkG9go",   # recycled paper projects
+        "can": "L0A8HY9Gdgs",     # Aluminum can upcycling ideas
+        "wrapper": "8hDXZ8cY5oU", # creative use of food wrappers
+        "container": "G2CprwP5AK4", # DIY ideas using plastic containers
+        "bag": "P_TmV66e6rk",     # diy projects with shopping bags
+        "cup": "T2aJ4DXgV4M",     # crafts using disposable cups
+        "jar": "dF9TNo37jYw",     # Reusing glass jars creatively
+        "cardboard": "F0TJSjSk5DU" # projects with cardboard materials
+    }
 
+    try:
+        search_response = youtube.search().list(
+            q=query,
+            part='id,snippet',
+            maxResults=1
+        ).execute()
+
+        if 'items' in search_response and len(search_response['items']) > 0:
+            item = search_response['items'][0]
+            if 'id' in item and 'videoId' in item['id']:
+                video_id = item['id']['videoId']
+                return video_id
+            else:
+                print("The search result does not contain a videoId.")
+                return None
+        else:
+            print("No items found in the search response.")
+            return None
+
+    except Exception as e:
+        print(f"YouTube API call failed: {e}")
+        
+        # Use preset video ID based on the keyword
+        fallback_video_id = preset_videos.get(keyword.lower(), 'dQw4w9WgXcQ')  # Default to Rickroll if no match
+        print(f"Using fallback video for keyword '{keyword}': {fallback_video_id}")
+        return fallback_video_id
+    
 def query_corpus(corpus_resource_name, user_query, results_count=5):
     query_request = glm.QueryCorpusRequest(
         name=corpus_resource_name,
