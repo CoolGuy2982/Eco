@@ -1,9 +1,8 @@
-// JavaScript code to process image and handle the analysis page 
+// JavaScript code to process image and handle the analysis page
 
 function saveResponseLocally(data) {
   try {
       let pastResponses = JSON.parse(localStorage.getItem('pastResponses')) || [];
-      console.log('Initial pastResponses:', pastResponses);
       const existingIndex = pastResponses.findIndex(response => response.date === data.date);
 
       if (existingIndex > -1) {
@@ -14,19 +13,16 @@ function saveResponseLocally(data) {
 
       try {
           localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
-          console.log('Past responses updated:', pastResponses);
       } catch (error) {
           if (error.code === 22) {
               console.warn('Quota exceeded, removing oldest entries');
               while (error.code === 22 && pastResponses.length > 0) {
-                  pastResponses.shift(); 
+                  pastResponses.shift();
                   try {
                       localStorage.setItem('pastResponses', JSON.stringify(pastResponses));
                       error = null;
-                      console.log('Past responses updated after removing oldest entry:', pastResponses);
                   } catch (e) {
                       error = e;
-                      console.warn('Still exceeding quota, removing more entries');
                   }
               }
           }
@@ -71,7 +67,6 @@ function fetchAddressAndDisplay(keyword, data) {
               fetch(url)
                   .then(response => response.json())
                   .then(addressData => {
-                      console.log('Scraped Address:', addressData.address);
                       const cleanedAddress = addressData.address.replace(/[^\x20-\x7E]/g, '');
                       const earth911Link = `https://search.earth911.com/?what=${keywordString}&latitude=${latitude}&longitude=${longitude}&max_distance=25`;
                       const sectionTitle = document.createElement('a');
@@ -80,7 +75,6 @@ function fetchAddressAndDisplay(keyword, data) {
                       sectionTitle.className = 'section-title';
 
                       if (addressData.address === "Not found, Not found") {
-                          console.log('Address not valid:', cleanedAddress);
                           document.getElementById('map-container').style.display = 'none';
                       } else if (cleanedAddress.startsWith(', ')) {
                           sectionTitle.textContent = 'Mail In Location';
@@ -97,7 +91,6 @@ function fetchAddressAndDisplay(keyword, data) {
                           address: cleanedAddress,
                           date: new Date().toISOString()
                       };
-                      console.log('Saving complete analysis data:', completeData);
                       saveResponseLocally(completeData);
                   })
                   .catch(error => {
@@ -175,17 +168,105 @@ function formatBoldAndNewLine(text) {
 
 function displayYouTubeVideos(videoIDs) {
   const videoContainer = document.getElementById('video-container');
-  videoContainer.innerHTML = '<div class="section-title">Videos</div>';
-  videoIDs.forEach(id => {
-      const iframeContainer = document.createElement('div');
-      iframeContainer.className = 'video-frame-container';
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${id}`;
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-      iframeContainer.appendChild(iframe);
-      videoContainer.appendChild(iframeContainer);
+  videoContainer.innerHTML = '<h2 class="section-title">DIY Videos</h2>';
+
+  const videoCarousel = document.createElement('div');
+  videoCarousel.className = 'video-carousel';
+
+  videoIDs.forEach((id, index) => {
+      const videoItem = document.createElement('div');
+      videoItem.className = 'video-item';
+      if (index === 0) {
+          videoItem.classList.add('active');
+      }
+      videoItem.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      `;
+      videoCarousel.appendChild(videoItem);
   });
+
+  // Video Controls
+  const videoControls = document.createElement('div');
+  videoControls.className = 'video-controls';
+
+  const prevButton = document.createElement('button');
+  prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+  prevButton.setAttribute('aria-label', 'Previous Video');
+
+  const nextButton = document.createElement('button');
+  nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+  nextButton.setAttribute('aria-label', 'Next Video');
+
+  videoControls.appendChild(prevButton);
+  videoControls.appendChild(nextButton);
+  videoCarousel.appendChild(videoControls);
+
+  videoContainer.appendChild(videoCarousel);
+
+  // Add Event Listeners for Video Carousel
+  let currentVideoIndex = 0;
+
+  function showVideo(index) {
+      const videos = videoCarousel.querySelectorAll('.video-item');
+      if (index < 0) {
+          currentVideoIndex = videos.length - 1;
+      } else if (index >= videos.length) {
+          currentVideoIndex = 0;
+      } else {
+          currentVideoIndex = index;
+      }
+
+      videos.forEach((video, idx) => {
+          if (idx === currentVideoIndex) {
+              video.classList.add('active');
+              video.classList.remove('previous', 'next');
+          } else {
+              video.classList.remove('active', 'previous', 'next');
+          }
+      });
+  }
+
+  prevButton.addEventListener('click', () => {
+      showVideo(currentVideoIndex - 1);
+  });
+
+  nextButton.addEventListener('click', () => {
+      showVideo(currentVideoIndex + 1);
+  });
+
+  // Swipe functionality for video carousel
+  let videoStartX = 0;
+  let videoCurrentX = 0;
+  let videoIsDragging = false;
+  const videoThreshold = 50; // Minimum swipe distance for video carousel
+
+  videoCarousel.addEventListener('touchstart', (e) => {
+      videoStartX = e.touches[0].clientX;
+      videoIsDragging = true;
+  }, { passive: true });
+
+  videoCarousel.addEventListener('touchmove', (e) => {
+      if (!videoIsDragging) return;
+      videoCurrentX = e.touches[0].clientX - videoStartX;
+  }, { passive: false });
+
+  videoCarousel.addEventListener('touchend', (e) => {
+      if (!videoIsDragging) return;
+      videoIsDragging = false;
+
+      if (Math.abs(videoCurrentX) > videoThreshold) {
+          if (videoCurrentX > 0) {
+              showVideo(currentVideoIndex - 1);
+          } else {
+              showVideo(currentVideoIndex + 1);
+          }
+      }
+
+      videoCurrentX = 0;
+  });
+
+  // Initialize the first video
+  showVideo(currentVideoIndex);
 }
 
 function fetchAndDisplayProducts(keyword, data) {
@@ -218,13 +299,26 @@ function fetchAndDisplayProducts(keyword, data) {
                               card.classList.add('last');
                           }
 
-                          card.innerHTML = `
+                          // Wrap card content in an anchor tag for navigation
+                          const cardContent = document.createElement('a');
+                          cardContent.href = product.link;
+                          cardContent.target = '_blank';
+                          cardContent.style.display = 'flex';
+                          cardContent.style.flexDirection = 'column';
+                          cardContent.style.width = '100%';
+                          cardContent.style.height = '100%';
+                          cardContent.style.textDecoration = 'none';
+                          cardContent.style.color = 'inherit';
+
+                          cardContent.innerHTML = `
                               <img src="${product.image_url}" alt="${product.title}">
                               <div class="labels">
                                   <h3>${product.title}</h3>
                                   <p>${product.price}</p>
                               </div>
                           `;
+
+                          card.appendChild(cardContent);
 
                           // Add swipe functionality to the active card
                           if (index === 0) {
@@ -274,7 +368,7 @@ function preloadImages(imageUrls) {
 
 function addSwipeListeners(card, products, cardStack) {
   let startX, startY, currentX, currentY, isDragging = false;
-
+  let startTime;
   const threshold = 100; // Minimum swipe distance
 
   card.addEventListener('touchstart', touchStart, { passive: true });
@@ -285,6 +379,12 @@ function addSwipeListeners(card, products, cardStack) {
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
       isDragging = true;
+      startTime = new Date().getTime();
+
+      // Haptic feedback on touch start
+      if (navigator.vibrate) {
+          navigator.vibrate(10);
+      }
   }
 
   function touchMove(e) {
@@ -293,9 +393,13 @@ function addSwipeListeners(card, products, cardStack) {
       currentY = e.touches[0].clientY - startY;
 
       // Apply rotation based on horizontal movement
-      const rotate = currentX / 20; // Adjust rotation factor as needed
+      const rotate = currentX / 20;
       card.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotate}deg)`;
       card.style.transition = 'none';
+
+      // Visual feedback: scaling
+      const scale = Math.max(0.95, 1 - Math.abs(currentX) / window.innerWidth);
+      card.style.opacity = scale;
 
       e.preventDefault(); // Prevent scrolling
   }
@@ -306,36 +410,46 @@ function addSwipeListeners(card, products, cardStack) {
 
       const deltaX = currentX;
       const deltaY = currentY;
+      const endTime = new Date().getTime();
+      const timeTaken = endTime - startTime;
+
+      // Calculate velocity
+      const velocity = Math.sqrt(deltaX * deltaX + deltaY * deltaY) / timeTaken;
 
       // Determine swipe direction
       if (Math.abs(deltaX) > threshold) {
           // Swipe Left or Right
           const direction = deltaX > 0 ? 'right' : 'left';
-          swipeCard(direction, deltaY);
+          swipeCard(direction, deltaY, velocity);
       } else {
           // Return card to original position
-          card.style.transition = 'transform 0.3s ease';
+          card.style.transition = 'transform 0.3s ease-out';
           card.style.transform = 'translate(0px, 0px) rotate(0deg)';
+          card.style.opacity = '1';
       }
   }
 
-  function swipeCard(direction, deltaY) {
-      // Animate card out of view
+  function swipeCard(direction, deltaY, velocity) {
+      // Animate card out of view with velocity
       const exitX = direction === 'right' ? window.innerWidth : -window.innerWidth;
       const exitY = deltaY > 0 ? window.innerHeight : -window.innerHeight;
+      const duration = Math.max(300 / velocity, 200); // Adjust duration based on velocity
 
-      card.style.transition = 'transform 0.5s ease';
+      card.style.transition = `transform ${duration}ms ease-out`;
       card.style.transform = `translate(${exitX}px, ${exitY}px) rotate(${direction === 'right' ? 45 : -45}deg)`;
       card.style.opacity = '0';
+
+      // Haptic feedback on successful swipe
+      if (navigator.vibrate) {
+          navigator.vibrate([50, 30, 50]);
+      }
 
       // After animation, move the card to the bottom of the stack
       card.addEventListener('transitionend', () => {
           card.style.transition = 'none';
           card.style.transform = 'translate(0px, 0px) rotate(0deg)';
           card.style.opacity = '1';
-          card.classList.remove('active');
-          card.classList.remove('next');
-          card.classList.remove('last');
+          card.classList.remove('active', 'next', 'last');
 
           // Move the first product to the end
           products.push(products.shift());
@@ -363,7 +477,18 @@ function addSwipeListeners(card, products, cardStack) {
               newCard.classList.add('last');
           }
 
-          newCard.innerHTML = `
+          // Wrap card content in an anchor tag for navigation
+          const cardContent = document.createElement('a');
+          cardContent.href = product.link;
+          cardContent.target = '_blank';
+          cardContent.style.display = 'flex';
+          cardContent.style.flexDirection = 'column';
+          cardContent.style.width = '100%';
+          cardContent.style.height = '100%';
+          cardContent.style.textDecoration = 'none';
+          cardContent.style.color = 'inherit';
+
+          cardContent.innerHTML = `
               <img src="${product.image_url}" alt="${product.title}">
               <div class="labels">
                   <h3>${product.title}</h3>
@@ -371,6 +496,7 @@ function addSwipeListeners(card, products, cardStack) {
               </div>
           `;
 
+          newCard.appendChild(cardContent);
           cardStack.appendChild(newCard);
       });
   }
@@ -391,7 +517,7 @@ window.onload = function() {
       analysisResult.innerHTML = formatBoldAndNewLine(data.result);
       incrementEcoPoint();
   } else {
-      analysisResult.innerHTML = 'Sorry bout dat, I prolly messed something up. pls try again :)';
+      analysisResult.innerHTML = 'Sorry, something went wrong. Please try again.';
   }
 
   if (data.text_tool === 'J' && data.barcode_image_url) {
