@@ -66,9 +66,16 @@ def search_youtube_video(query):
     ).execute()
 
     if 'items' in search_response and len(search_response['items']) > 0:
-        video_id = search_response['items'][0]['id']['videoId']
-        return video_id
+        item = search_response['items'][0]
+        # Check if the 'id' field contains a 'videoId'
+        if 'id' in item and 'videoId' in item['id']:
+            video_id = item['id']['videoId']
+            return video_id
+        else:
+            print("The search result does not contain a videoId.")
+            return None
     else:
+        print("No items found in the search response.")
         return None
 
 def query_corpus(corpus_resource_name, user_query, results_count=5):

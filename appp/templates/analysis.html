@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- page for analysis that is received from model -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Page for analysis that is received from model -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EcoLens Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -29,7 +29,7 @@
         @media (max-width: 600px) {
             .response-json {
                 font-size: 12px;
-                padding: 8px; /*les padding for mobile */
+                padding: 8px; /* Padding for mobile */
             }
         }
     </style>
@@ -49,18 +49,16 @@
         <main id="map-container" class="map-container">
             <h2 class="section-title">Recycling Locations</h2>
         </main>
-        
-        <section id="product-container" class="product-container">
+        <section id="product-container" class="product-container" style="display: none;">
             <h2 class="section-title">Recommended Products</h2>
-            <div id="card-stack" class="card-stack">
-                <!-- Cards will be populated dynamically -->
+            <div class="card-stack">
+                <!-- Cards will be dynamically inserted here -->
             </div>
-        </section>        
-
+        </section>
         <section id="video-container" class="video-container" aria-label="Video Content"></section>
         <aside id="responses-container" class="responses-container" aria-label="JSON Data Display"></aside>
     </nav>
-    <!-- where we add gmaps API key -->
+    <!-- Where we add Google Maps API key -->
     <script type="text/javascript">
         var googleMapsApiKey = "{{ google_maps_api_key }}";
     </script>

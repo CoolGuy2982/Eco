@@ -1,8 +1,9 @@
-/* css for analysis page */
+/* CSS for analysis page */
 html, body {
   overflow: auto;
   -ms-overflow-style: none; 
   scrollbar-width: none;  
+  touch-action: manipulation; /* Enhance touch responsiveness */
 }
 
 html::-webkit-scrollbar, body::-webkit-scrollbar {
@@ -13,7 +14,7 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #fff; /* White background for better contrast */
 }
 
 .wrapper {
@@ -48,10 +49,10 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 8px;
-  height: 8px;
+  width: 24px;
+  height: 24px;
   margin-right: 10px;
-  font-size: 1em;
+  font-size: 1.5em;
   color: #000;
   text-decoration: none;
 }
@@ -85,7 +86,7 @@ body, html {
 
 .nav-item i {
   font-size: 20px;
-  margin-bottom: 15px; 
+  margin-bottom: 5px; 
   margin-top: 10px;
 }
 
@@ -128,61 +129,115 @@ body, html {
   position: relative;
 }
 
+.card-stack {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Adjust as needed */
+    height: 450px; /* Reduced vertical height */
+    margin: 0 auto;
+    perspective: 1000px; /* Enable 3D perspective */
+}
+
 .product-card {
-  display: flex;
-  align-items: center;
-  background-color: #333;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  color: white;
-  position: relative;
-  width: 100%;
-  max-width: 100%; 
-  padding: 10px; 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333; /* Dark gray background */
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transition: transform 0.5s ease, opacity 0.5s ease, filter 0.5s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    border: 4px solid; /* For gradient border */
+    border-image: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #1dd1a1, #5f27cd) 1; /* Gradient colorful border */
 }
 
-.product {
-  width: 100%;
-  text-align: center;
+.product-card img {
+    width: 80%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    object-fit: cover;
 }
 
-.product img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px; 
-  margin-bottom: 10px; 
+.product-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #fff; /* White text for contrast */
 }
 
-.product h3 {
-  font-size: 1em;
-  margin: 10px 0;
-  color: white; /* Text color matching the design */
+.product-card p {
+    font-size: 1em;
+    color: #ddd; /* Light gray for price */
+    text-align: center;
 }
 
-.product p {
-  font-size: 1em;
-  color: white; /* White text color for price */
+.product-card.active {
+    /* Highlight the top card */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    transform: scale(1) translateZ(0);
+    z-index: 3;
+    filter: none; /* No blur */
 }
 
-.carousel-nav {
-  background-color: transparent;
-  border: none;
-  color: black;
-  font-size: 2em;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  z-index: 1;
-  padding: 0 10px;
+.product-card.next {
+    /* Style for the second card */
+    transform: scale(0.95) translate(-10px, -20px) rotate(-5deg);
+    z-index: 2;
+    opacity: 0.9;
+    filter: blur(2px);
 }
 
-.carousel-nav.prev {
-  left: 0;
+.product-card.last {
+    /* Style for the third card */
+    transform: scale(0.9) translate(-20px, -40px) rotate(-10deg);
+    z-index: 1;
+    opacity: 0.8;
+    filter: blur(4px);
 }
 
-.carousel-nav.next {
-  right: 0;
+/* Text and Price Labels */
+.product-card .labels {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.product-card .labels h3,
+.product-card .labels p {
+    margin: 5px 0;
+}
+
+/* Disable text selection on cards */
+.product-card {
+    user-select: none;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .card-stack {
+        max-width: 90%;
+        height: 400px;
+    }
+
+    .product-card h3 {
+        font-size: 1em;
+    }
+
+    .product-card p {
+        font-size: 0.9em;
+    }
 }
 
 .eco-point {
@@ -196,7 +251,7 @@ body, html {
   opacity: 0;
   transition: opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
   position: relative;
-  width: calc(100% - 20px); /*same width as the text container */
+  width: calc(100% - 20px); /* Same width as the text container */
   display: none;
 }
 
@@ -205,74 +260,3 @@ body, html {
   display: block;
   margin-bottom: 10px;
 } 
-
-html, body {
-  touch-action: manipulation; /* Prevent zoom */
-  overflow: hidden;
-  user-select: none;
-}
-
-.product-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  width: 100%;
-  height: 400px;
-  overflow: hidden;
-}
-
-.card-stack {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 350px;
-}
-
-.product-card {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  overflow: hidden;
-  opacity: 0;
-  z-index: 0;
-}
-
-.product-card img {
-  width: 100%;
-  height: 80%;
-  object-fit: cover;
-  border-bottom: 1px solid #ddd;
-}
-
-.product-card h3,
-.product-card p {
-  margin: 10px;
-  color: #333;
-  text-align: center;
-}
-
-.product-card.active {
-  opacity: 1;
-  transform: translateX(-50%) scale(1);
-  z-index: 2;
-}
-
-.product-card.prev,
-.product-card.next {
-  opacity: 0.5;
-  transform: translateX(-50%) scale(0.9);
-  z-index: 1;
-}
-
-.product-card.hidden {
-  display: none;
-}
