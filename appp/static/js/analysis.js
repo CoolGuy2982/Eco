@@ -170,104 +170,28 @@ function displayYouTubeVideos(videoIDs) {
   const videoContainer = document.getElementById('video-container');
   videoContainer.innerHTML = '<h2 class="section-title">DIY Videos</h2>';
 
-  const videoCarousel = document.createElement('div');
-  videoCarousel.className = 'video-carousel';
+  videoIDs.forEach((id) => {
+      // Create the video frame container
+      const videoFrameContainer = document.createElement('div');
+      videoFrameContainer.className = 'video-frame-container';
 
-  videoIDs.forEach((id, index) => {
-      const videoItem = document.createElement('div');
-      videoItem.className = 'video-item';
-      if (index === 0) {
-          videoItem.classList.add('active');
-      }
-      videoItem.innerHTML = `
-          <iframe src="https://www.youtube.com/embed/${id}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      `;
-      videoCarousel.appendChild(videoItem);
+      // Create the iframe
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${id}?modestbranding=1&controls=0&rel=0&showinfo=0`;
+      iframe.className = 'youtube-iframe';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+
+      // Append iframe to the container
+      videoFrameContainer.appendChild(iframe);
+
+      // Append the container to the video wrapper
+      videoContainer.appendChild(videoFrameContainer);
   });
 
-  // Video Controls
-  const videoControls = document.createElement('div');
-  videoControls.className = 'video-controls';
-
-  const prevButton = document.createElement('button');
-  prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
-  prevButton.setAttribute('aria-label', 'Previous Video');
-
-  const nextButton = document.createElement('button');
-  nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
-  nextButton.setAttribute('aria-label', 'Next Video');
-
-  videoControls.appendChild(prevButton);
-  videoControls.appendChild(nextButton);
-  videoCarousel.appendChild(videoControls);
-
-  videoContainer.appendChild(videoCarousel);
-
-  // Add Event Listeners for Video Carousel
-  let currentVideoIndex = 0;
-
-  function showVideo(index) {
-      const videos = videoCarousel.querySelectorAll('.video-item');
-      if (index < 0) {
-          currentVideoIndex = videos.length - 1;
-      } else if (index >= videos.length) {
-          currentVideoIndex = 0;
-      } else {
-          currentVideoIndex = index;
-      }
-
-      videos.forEach((video, idx) => {
-          if (idx === currentVideoIndex) {
-              video.classList.add('active');
-              video.classList.remove('previous', 'next');
-          } else {
-              video.classList.remove('active', 'previous', 'next');
-          }
-      });
-  }
-
-  prevButton.addEventListener('click', () => {
-      showVideo(currentVideoIndex - 1);
-  });
-
-  nextButton.addEventListener('click', () => {
-      showVideo(currentVideoIndex + 1);
-  });
-
-  // Swipe functionality for video carousel
-  let videoStartX = 0;
-  let videoCurrentX = 0;
-  let videoIsDragging = false;
-  const videoThreshold = 50; // Minimum swipe distance for video carousel
-
-  videoCarousel.addEventListener('touchstart', (e) => {
-      videoStartX = e.touches[0].clientX;
-      videoIsDragging = true;
-  }, { passive: true });
-
-  videoCarousel.addEventListener('touchmove', (e) => {
-      if (!videoIsDragging) return;
-      videoCurrentX = e.touches[0].clientX - videoStartX;
-  }, { passive: false });
-
-  videoCarousel.addEventListener('touchend', (e) => {
-      if (!videoIsDragging) return;
-      videoIsDragging = false;
-
-      if (Math.abs(videoCurrentX) > videoThreshold) {
-          if (videoCurrentX > 0) {
-              showVideo(currentVideoIndex - 1);
-          } else {
-              showVideo(currentVideoIndex + 1);
-          }
-      }
-
-      videoCurrentX = 0;
-  });
-
-  // Initialize the first video
-  showVideo(currentVideoIndex);
+  videoContainer.style.display = 'block';
 }
+
 
 function fetchAndDisplayProducts(keyword, data) {
   const keywordString = keyword;
