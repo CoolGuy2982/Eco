@@ -176,43 +176,84 @@ def scrape_products():
     if not keyword:
         return jsonify({'error': 'No keyword provided'}), 400
 
-    encoded_keyword = urllib.parse.quote_plus(keyword)  # Encode the keyword properly
-    url = f"https://earthhero.com/search?q={encoded_keyword}"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # scraping logic for Ecoternatives
+    ecoternatives_url = f"https://ecoternatives.co/search?q={keyword}"
+    eco_response = requests.get(ecoternatives_url)
+    eco_soup = BeautifulSoup(eco_response.text, 'html.parser')
 
-    products = []
-    product_items = soup.select('.boost-pfs-filter-product-item')[:3]
-    for item in product_items:
-        image = item.select_one('.boost-pfs-filter-product-item-main-image.Image--lazyLoad')
-        image_url = image.get('data-src', '') if image else 'No image found'
-        
-        title_tag = item.select_one('.boost-pfs-filter-product-item-title')
+    eco_products = []
+    eco_product_items = eco_soup.select('.card-wrapper .card.card--standard')  # More specific selector
+
+    for item in eco_product_items:
+        # Skip blog posts, articles, or pages by checking for specific labels
+        blog_label = item.select_one('.badge')
+        if blog_label and 'Blog' in blog_label.text:
+            continue
+
+        # Extract image URL
+        image_tag = item.select_one('.card__media img')
+        image_url = image_tag.get('src', '') if image_tag else 'No image found'
+
+        # Extract product title and link
+        title_tag = item.select_one('.card__heading a.full-unstyled-link')
         title = title_tag.text.strip() if title_tag else 'No title found'
-        
-        # Select the price from the regular price class
-        price_tag = item.select_one('.boost-pfs-filter-product-item-regular-price')
-
-        # If not found, select the price from the sale price class
-        if not price_tag:
-            price_tag = item.select_one('.boost-pfs-filter-product-item-sale-price')
-
-        # If still not found, set price to 'No price found'
-        price = price_tag.text.strip() if price_tag else 'No price found'
-        
         link = title_tag.get('href', '') if title_tag else 'No link found'
+        full_link = f"https://ecoternatives.co{link}"
 
-        products.append({
+        # Extract price
+        price_tag = item.select_one('.price-item--regular')
+        price = price_tag.text.strip() if price_tag else 'No price found'
+
+        eco_products.append({
             'image_url': image_url,
             'title': title,
             'price': price,
-            'link': f"https://earthhero.com{link}"  # assuming relative URLs
+            'link': full_link
         })
 
-    # log the image urls for debugging
-    print("Image URLs:", [product['image_url'] for product in products])
 
-    return jsonify(products)
+    # Step 2 - Scrape the next 6 products from earthhero.com
+    encoded_keyword = urllib.parse.quote_plus(keyword)
+    earthhero_url = f"https://earthhero.com/search?q={encoded_keyword}"
+    earthhero_response = requests.get(earthhero_url)
+    earthhero_soup = BeautifulSoup(earthhero_response.text, 'html.parser')
+
+    earthhero_products = []
+    earthhero_product_items = earthhero_soup.select('.boost-pfs-filter-product-item')[:6]
+
+    for item in earthhero_product_items:
+        # Extract image URL
+        image = item.select_one('.boost-pfs-filter-product-item-main-image.Image--lazyLoad')
+        image_url = image.get('data-src', '') if image else 'No image found'
+
+        # Extract product title and link
+        title_tag = item.select_one('.boost-pfs-filter-product-item-title')
+        title = title_tag.text.strip() if title_tag else 'No title found'
+        link = title_tag.get('href', '') if title_tag else 'No link found'
+        full_link = f"https://earthhero.com{link}"
+
+        # Extract price
+        price_tag = item.select_one('.boost-pfs-filter-product-item-regular-price')
+        if not price_tag:
+            price_tag = item.select_one('.boost-pfs-filter-product-item-sale-price')
+        price = price_tag.text.strip() if price_tag else 'No price found'
+
+        earthhero_products.append({
+            'image_url': image_url,
+            'title': title,
+            'price': price,
+            'link': full_link
+        })
+
+    # Step 3: Combine the products from both sources
+    combined_products = eco_products + earthhero_products
+
+    # Log the image URLs for debugging
+    print("Image URLs (Ecoternatives):", [product['image_url'] for product in eco_products])
+    print("Image URLs (EarthHero):", [product['image_url'] for product in earthhero_products])
+
+    return jsonify(combined_products)
+
 
 @main.route('/past-responses', methods=['GET'])
 def past_responses_page():

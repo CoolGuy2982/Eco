@@ -95,17 +95,30 @@ body, html {
   color: #10B981;
 }
 
-.video-frame-container, .map-frame-wrapper {
+/* Video frame container with dynamic padding */
+.video-frame-container {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
-  margin-bottom: 0; 
+  margin-bottom: 0;
+  border-radius: 24px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Map frame wrapper with fixed padding (16:9 aspect ratio) */
+.map-frame-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Fixed 16:9 aspect ratio */
+  margin-bottom: 0;
   border-radius: 24px;
   background-color: #f9f9f9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.video-frame-container iframe, .map-frame-wrapper iframe {
+.video-frame-container iframe,
+.map-frame-wrapper iframe {
   position: absolute;
   top: 0;
   left: 0;

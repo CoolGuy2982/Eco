@@ -166,117 +166,158 @@ function formatBoldAndNewLine(text) {
   return text;
 }
 
-function displayYouTubeVideos(videoIDs) {
-  const videoContainer = document.getElementById('video-container');
-  videoContainer.innerHTML = '<div class="section-title">Videos</div>';
-  videoIDs.forEach(id => {
-      const iframeContainer = document.createElement('div');
-      iframeContainer.className = 'video-frame-container';
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${id}`;
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      iframe.allowFullscreen = true;
-      iframeContainer.appendChild(iframe);
-      videoContainer.appendChild(iframeContainer);
-  });
+function displayYouTubeVideos(videoData) {
+    const videoContainer = document.getElementById('video-container');
+    videoContainer.innerHTML = ''; // Clear previous content
+
+    // Extract video ID and aspect ratio from the response
+    const videoSuggestion = videoData?.video_suggestion;
+    const aspectRatio = videoData?.aspect_ratio || 16 / 9;
+
+    // Log the value and type of videoSuggestion
+    console.log("Received video suggestion:", videoSuggestion, "Type:", typeof videoSuggestion);
+
+    // Check for a valid non-empty string
+    if (typeof videoSuggestion !== 'string' || videoSuggestion.trim() === '') {
+        console.log("No valid video suggestion available:", videoSuggestion);
+        videoContainer.style.display = 'none'; // Hide the container if no video is found
+        return;
+    }
+
+    // Display the section title since there is a valid video suggestion
+    const sectionTitle = document.createElement('div');
+    sectionTitle.className = 'section-title';
+    sectionTitle.textContent = 'Videos';
+    videoContainer.appendChild(sectionTitle);
+
+    // Create the iframe container
+    const iframeContainer = document.createElement('div');
+    iframeContainer.className = 'video-frame-container';
+
+    // Create the iframe element for YouTube video
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${videoSuggestion}`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+
+    iframeContainer.appendChild(iframe);
+    videoContainer.appendChild(iframeContainer);
+
+    // Dynamically set padding-top based on aspect ratio
+    const paddingPercentage = (100 / aspectRatio).toFixed(2);
+    iframeContainer.style.paddingTop = `${paddingPercentage}%`;
+
+    // Ensure the container is visible
+    videoContainer.style.display = 'block';
+
+    console.log("Displaying video with ID:", videoSuggestion);
 }
+
 
 
 function fetchAndDisplayProducts(keyword, data) {
-  const keywordString = keyword;
-  fetch(`/scrape_products?keyword=${keywordString}`)
-      .then(response => response.json())
-      .then(products => {
-          if (products.length > 0) {
-              const productContainer = document.getElementById('product-container');
-              const cardStack = productContainer.querySelector('.card-stack');
-              productContainer.style.display = 'block';
+    const keywordString = keyword;
+    fetch(`/scrape_products?keyword=${keywordString}`)
+        .then(response => response.json())
+        .then(products => {
+            const productContainer = document.getElementById('product-container');
+            const cardStack = productContainer.querySelector('.card-stack');
 
-              // Preload images
-              preloadImages(products.map(product => product.image_url))
-                  .then(() => {
-                      // Clear existing cards
-                      cardStack.innerHTML = '';
+            if (products.length > 0) {
+                productContainer.style.display = 'block';
 
-                      // Limit to top 3 products for stacking effect
-                      const topProducts = products.slice(0, 3);
+                // Preload images
+                preloadImages(products.map(product => product.image_url))
+                    .then(() => {
+                        // Clear existing cards
+                        cardStack.innerHTML = '';
 
-                      topProducts.forEach((product, index) => {
-                          const card = document.createElement('div');
-                          card.classList.add('product-card');
-                          if (index === 0) {
-                              card.classList.add('active');
-                          } else if (index === 1) {
-                              card.classList.add('next');
-                          } else if (index === 2) {
-                              card.classList.add('last');
-                          }
+                        // Limit to top 3 products for stacking effect
+                        const topProducts = products.slice(0, 3);
 
-                          // Wrap card content in an anchor tag for navigation
-                          const cardContent = document.createElement('a');
-                          cardContent.href = product.link;
-                          cardContent.target = '_blank';
-                          cardContent.style.display = 'flex';
-                          cardContent.style.flexDirection = 'column';
-                          cardContent.style.width = '100%';
-                          cardContent.style.height = '100%';
-                          cardContent.style.textDecoration = 'none';
-                          cardContent.style.color = 'inherit';
+                        topProducts.forEach((product, index) => {
+                            const card = document.createElement('div');
+                            card.classList.add('product-card');
+                            if (index === 0) {
+                                card.classList.add('active');
+                            } else if (index === 1) {
+                                card.classList.add('next');
+                            } else if (index === 2) {
+                                card.classList.add('last');
+                            }
 
-                          cardContent.innerHTML = `
-                              <img src="${product.image_url}" alt="${product.title}">
-                              <div class="labels">
-                                  <h3>${product.title}</h3>
-                                  <p>${product.price}</p>
-                              </div>
-                          `;
+                            // Wrap card content in an anchor tag for navigation
+                            const cardContent = document.createElement('a');
+                            cardContent.href = product.link;
+                            cardContent.target = '_blank';
+                            cardContent.style.display = 'flex';
+                            cardContent.style.flexDirection = 'column';
+                            cardContent.style.width = '100%';
+                            cardContent.style.height = '100%';
+                            cardContent.style.textDecoration = 'none';
+                            cardContent.style.color = 'inherit';
 
-                          card.appendChild(cardContent);
+                            cardContent.innerHTML = `
+                                <img src="${product.image_url}" alt="${product.title}">
+                                <div class="labels">
+                                    <h3>${product.title}</h3>
+                                    <p>${product.price}</p>
+                                </div>
+                            `;
 
-                          // Add swipe functionality to the active card
-                          if (index === 0) {
-                              addSwipeListeners(card, products, cardStack);
-                          }
+                            card.appendChild(cardContent);
 
-                          cardStack.appendChild(card);
-                      });
+                            // Add swipe functionality to the active card
+                            if (index === 0) {
+                                addSwipeListeners(card, products, cardStack);
+                            }
 
-                      // If there are more than 3 products, store the remaining for cycling
-                      if (products.length > 3) {
-                          cardStack.dataset.cycle = JSON.stringify(products.slice(3));
-                      }
+                            cardStack.appendChild(card);
+                        });
 
-                      const completeData = {
-                          ...data,
-                          products,
-                          date: new Date().toISOString()
-                      };
-                      saveResponseLocally(completeData);
-                  })
-                  .catch(error => {
-                      console.error('Error preloading images:', error);
-                      displayError('Error loading product images.');
-                      document.getElementById('product-container').style.display = 'none';
-                  });
-          }
-      })
-      .catch(error => {
-          console.error('Error fetching products:', error);
-          displayError('Error fetching products: ' + error.message);
-          document.getElementById('product-container').style.display = 'none';
-      });
+                        // If there are more than 3 products, store the remaining for cycling
+                        if (products.length > 3) {
+                            cardStack.dataset.cycle = JSON.stringify(products.slice(3));
+                        }
+
+                        const completeData = {
+                            ...data,
+                            products,
+                            date: new Date().toISOString()
+                        };
+                        saveResponseLocally(completeData);
+                    })
+                    .catch(error => {
+                        console.error('Error preloading images:', error);
+                        displayError('Some images failed to load, but the products will still be displayed.');
+                    });                    
+            } else {
+                // Hide product container if no products are returned
+                productContainer.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            displayError('Error fetching products: ' + error.message);
+            document.getElementById('product-container').style.display = 'none';
+        });
 }
 
 function preloadImages(imageUrls) {
-  const promises = imageUrls.map(url => {
-      return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.src = url;
-          img.onload = resolve;
-          img.onerror = reject;
-      });
-  });
-  return Promise.all(promises);
+    const promises = imageUrls.map(url => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = url;
+
+            img.onload = resolve;
+            img.onerror = () => {
+                console.warn(`Image failed to load: ${url}`);
+                resolve(); // Resolve even if the image fails to load
+            };
+        });
+    });
+
+    return Promise.all(promises);
 }
 
 function addSwipeListeners(card, products, cardStack) {
@@ -455,9 +496,9 @@ window.onload = function() {
   }
 
   if (data.video_suggestion) {
-      displayYouTubeVideos([data.video_suggestion]);
-      videoContainer.style.display = 'block';
-  }
+    displayYouTubeVideos(data); // Pass the entire data object
+    videoContainer.style.display = 'block';
+    }
 
   sessionStorage.removeItem('AIResponse');
   requestGeolocationPermission();

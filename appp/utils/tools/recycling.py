@@ -57,50 +57,73 @@ def create_youtube_service():
     youtube = build('youtube', 'v3',credentials= get_credentials())
     return youtube
 
-def search_youtube_video(query, keyword):
+def search_youtube_video(query, keyword=None):
     youtube = create_youtube_service()
 
-    # preset video ids based on common keywords
+    # Preset video IDs for specific keywords
     preset_videos = {
-        "bottle": "JvhS58YoA6A",  # ddiy project with plastic bottles
-        "box": "JhfP7l1uH4Y",     # diy crafts using cardboard boxes
-        "paper": "EeoUcfkG9go",   # recycled paper projects
-        "can": "L0A8HY9Gdgs",     # Aluminum can upcycling ideas
-        "wrapper": "8hDXZ8cY5oU", # creative use of food wrappers
-        "container": "G2CprwP5AK4", # DIY ideas using plastic containers
-        "bag": "P_TmV66e6rk",     # diy projects with shopping bags
-        "cup": "T2aJ4DXgV4M",     # crafts using disposable cups
-        "jar": "dF9TNo37jYw",     # Reusing glass jars creatively
-        "cardboard": "F0TJSjSk5DU" # projects with cardboard materials
+        "bottle": "JvhS58YoA6A",
+        "box": "JhfP7l1uH4Y",
+        "paper": "EeoUcfkG9go",
+        "can": "L0A8HY9Gdgs",
+        "wrapper": "8hDXZ8cY5oU",
+        "container": "G2CprwP5AK4",
+        "bag": "P_TmV66e6rk",
+        "cup": "T2aJ4DXgV4M",
+        "jar": "dF9TNo37jYw",
+        "cardboard": "F0TJSjSk5DU"
     }
 
     try:
+        # Perform YouTube search
         search_response = youtube.search().list(
             q=query,
             part='id,snippet',
             maxResults=1
         ).execute()
 
-        if 'items' in search_response and len(search_response['items']) > 0:
+        if 'items' in search_response and search_response['items']:
             item = search_response['items'][0]
             if 'id' in item and 'videoId' in item['id']:
                 video_id = item['id']['videoId']
-                return video_id
-            else:
-                print("The search result does not contain a videoId.")
-                return None
-        else:
-            print("No items found in the search response.")
-            return None
+
+                # Fetch video details for dimensions
+                video_details = youtube.videos().list(
+                    part='contentDetails,player',
+                    id=video_id
+                ).execute()
+
+                if 'items' in video_details and video_details['items']:
+                    content_details = video_details['items'][0].get('contentDetails', {})
+                    player_details = video_details['items'][0].get('player', {})
+
+                    # Extract video dimensions if available (fallback to default 16:9)
+                    video_height = player_details.get('embedHeight')
+                    video_width = player_details.get('embedWidth')
+
+                    if video_height and video_width:
+                        aspect_ratio = round(float(video_width) / float(video_height), 2)
+                    else:
+                        aspect_ratio = 16 / 9  # Default fallback
+
+                    return {
+                        'video_id': video_id,
+                        'aspect_ratio': aspect_ratio
+                    }
+
+        # Fallback to preset video if no valid result
+        fallback_video_id = preset_videos.get(keyword.lower() if keyword else "", 'dQw4w9WgXcQ')
+        return {
+            'video_id': fallback_video_id,
+            'aspect_ratio': 16 / 9  # Default fallback
+        }
 
     except Exception as e:
         print(f"YouTube API call failed: {e}")
-        
-        # Use preset video ID based on the keyword
-        fallback_video_id = preset_videos.get(keyword.lower(), 'dQw4w9WgXcQ')  # Default to Rickroll if no match
-        print(f"Using fallback video for keyword '{keyword}': {fallback_video_id}")
-        return fallback_video_id
-
+        return {
+            'video_id': 'dQw4w9WgXcQ',
+            'aspect_ratio': 16 / 9  # Default fallback
+        }
 
 def query_corpus(corpus_resource_name, user_query, results_count=5):
     query_request = glm.QueryCorpusRequest(
@@ -204,9 +227,18 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
     corpus_resource_name = "corpora/my-corpus-dz1zhwuxelzw"
 
+    # Initialize the result dictionary at the beginning
+    result = {
+        'result': None,
+        'keyword': None,
+        'video_suggestion': None,
+        'aspect_ratio': None
+    }
+
     try:
         rag_response = handle_user_query(corpus_resource_name, text_prompt, base64_image)
         print(rag_response)
+
         if rag_response is None:
             return {'error': "Query response structure is unexpected."}
 
@@ -215,6 +247,10 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
+
+            # Populate the result dictionary
+            result['result'] = response
+            result['keyword'] = keyword
         except json.JSONDecodeError:
             print("Houston we have a problem.")
             model = genai.GenerativeModel(model_name='gemini-1.5-flash',
@@ -232,27 +268,45 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
 
             fallback_result = alt_response.text
 
+            # Parse the fallback response
             text_analysis_result = json.loads(fallback_result)
             response = text_analysis_result.get("Response", "No response generated.")
             keyword = text_analysis_result.get("Keyword", "Unknown")
             video_suggestion = text_analysis_result.get("Video_Suggestion")
 
-        result = {'result': response, 'keyword': keyword}
+            # Populate the result dictionary
+            result['result'] = response
+            result['keyword'] = keyword
 
-        print("The video thing: ")
-        print(video_suggestion)
-        
-        if video_suggestion is not None:
+        print("The video suggestion query: ", video_suggestion)
+
+        if video_suggestion:
             try:
-                video_id = search_youtube_video(video_suggestion)
-                #print("Video ID from yt search")
-                #print(video_id)
-                result['video_suggestion'] = video_id
-            except Exception:
-                # Set the video ID to the Rick Roll video on error
-                result['video_suggestion'] = 'dQw4w9WgXcQ'
+                # Call the YouTube search function and log the returned data
+                video_data = search_youtube_video(video_suggestion)
+                print("Video data returned:", video_data)
 
-        print(result['video_suggestion'])
+                # Directly extract video_id and aspect_ratio without extra checks
+                video_id = video_data.get('video_id', None)
+                aspect_ratio = video_data.get('aspect_ratio', 16 / 9)
+
+                if video_id:
+                    # Populate the result dictionary
+                    result['video_suggestion'] = video_id
+                    result['aspect_ratio'] = round(aspect_ratio, 2)
+                    print(f"Using video ID: {video_id} with aspect ratio: {aspect_ratio}")
+                else:
+                    print("No valid video ID found. Skipping video suggestion.")
+            except Exception as e:
+                # Catch any exceptions during the try block
+                print(f"Error while processing video suggestion: {e}")
+                result['video_suggestion'] = 'dQw4w9WgXcQ'
+                result['aspect_ratio'] = 16 / 9  # Default fallback
+
+
+
+        print("Video suggestion:", result.get('video_suggestion', 'None'))
+        print("Aspect ratio:", result.get('aspect_ratio', 'Unknown'))
         return result
 
     except Exception as e:
