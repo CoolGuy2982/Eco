@@ -219,12 +219,14 @@ def generate_recycling_response(response_text, spoken_text, material_info, base6
         print(video_suggestion)
         
         if video_suggestion is not None:
-            video_id = search_youtube_video(video_suggestion)
-            print("Video ID from yt search")
-            print(video_id)
-        if video_id:
-            result['video_suggestion'] = video_id
-
+            try:
+                video_id = search_youtube_video(video_suggestion)
+                #print("Video ID from yt search")
+                #print(video_id)
+                result['video_suggestion'] = video_id
+            except Exception:
+                # Set the video ID to the Rick Roll video on error
+                result['video_suggestion'] = 'dQw4w9WgXcQ'
         print(result['video_suggestion'])
         return result
 

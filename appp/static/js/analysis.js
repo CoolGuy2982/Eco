@@ -168,28 +168,17 @@ function formatBoldAndNewLine(text) {
 
 function displayYouTubeVideos(videoIDs) {
   const videoContainer = document.getElementById('video-container');
-  videoContainer.innerHTML = '<h2 class="section-title">DIY Videos</h2>';
-
-  videoIDs.forEach((id) => {
-      // Create the video frame container
-      const videoFrameContainer = document.createElement('div');
-      videoFrameContainer.className = 'video-frame-container';
-
-      // Create the iframe
+  videoContainer.innerHTML = '<div class="section-title">Videos</div>';
+  videoIDs.forEach(id => {
+      const iframeContainer = document.createElement('div');
+      iframeContainer.className = 'video-frame-container';
       const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${id}?modestbranding=1&controls=0&rel=0&showinfo=0`;
-      iframe.className = 'youtube-iframe';
+      iframe.src = `https://www.youtube.com/embed/${id}`;
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
-
-      // Append iframe to the container
-      videoFrameContainer.appendChild(iframe);
-
-      // Append the container to the video wrapper
-      videoContainer.appendChild(videoFrameContainer);
+      iframeContainer.appendChild(iframe);
+      videoContainer.appendChild(iframeContainer);
   });
-
-  videoContainer.style.display = 'block';
 }
 
 
