@@ -3,6 +3,8 @@
 # EcoLens 🌍  
 EcoLens is an open-source mobile web app designed to help people live more sustainably. Powered by AI, it analyzes images to provide insights on recycling, greenwashing, biodiversity, and more. Whether you're looking to identify plants, reduce waste, or find sustainable alternatives, EcoLens makes eco-friendly living accessible to all.
 
+Deploy on your own or use our deployed and updated official version here (works best on iOS devices as a mobile web app): https://ecolens.firley.net
+
 ---
 
 ## Features ✨  
