@@ -1,0 +1,382 @@
+/* CSS for analysis page */
+html, body {
+  overflow: auto;
+  -ms-overflow-style: none; 
+  scrollbar-width: none;  
+  touch-action: manipulation; /* Enhance touch responsiveness */
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  display: none;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #fff; /* White background for better contrast */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  padding-bottom: 70px;
+}
+
+.response-container, #imageDisplay, .map-container, .video-container, .product-container {
+  width: 100%;
+  max-width: 90%;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 24px; /* Unified border-radius */
+  overflow: hidden;
+  position: relative; 
+  margin-bottom: 20px; /* Added margin to prevent overlap */
+}
+
+.response-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.chevron-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  font-size: 1.5em;
+  color: #000;
+  text-decoration: none;
+}
+
+.title-text {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
+  z-index: 1000;
+}
+
+.nav-item {
+  text-align: center;
+  color: #6B7280;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+}
+
+.nav-item i {
+  font-size: 20px;
+  margin-bottom: 5px; 
+  margin-top: 10px;
+}
+
+.nav-item.active {
+  color: #10B981;
+}
+
+/* Video frame container with dynamic padding */
+.video-frame-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0;
+  border-radius: 24px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Map frame wrapper with fixed padding (16:9 aspect ratio) */
+.map-frame-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Fixed 16:9 aspect ratio */
+  margin-bottom: 0;
+  border-radius: 24px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.video-frame-container iframe,
+.map-frame-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  border: none;
+}
+
+.section-title {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  text-align: left;
+  width: 100%;
+}
+
+.product-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.card-stack {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Adjust as needed */
+    height: 400px; /* Adjusted vertical height */
+    margin: 0 auto;
+    perspective: 1000px; /* Enable 3D perspective */
+    overflow: visible; /* Allow peeking without cutting off */
+}
+
+/* Main product card styling */
+.product-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #222;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out, filter 0.5s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+/* Enhanced animated gradient border */
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  padding: 3px;
+  background: linear-gradient(120deg, #a29bfe, #74b9ff, #55efc4, #ffeaa7, #fd79a8);
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease-in-out infinite, shine 4s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Gradient shimmer and shine effect */
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shine {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+/* Twinkling star orbit animation */
+.twinkle-star {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, rgba(255, 255, 255, 0.5));
+  box-shadow: 0 0 12px 6px rgba(255, 255, 255, 0.7);
+  animation: starOrbit 6s linear infinite;
+}
+
+/* Keyframes for twinkling star orbit */
+@keyframes starOrbit {
+  0% {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  25% {
+    top: 50%;
+    left: 100%;
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  75% {
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Shooting star effect */
+.shooting-star {
+  position: absolute;
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: shootingStarMove 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Shooting star animation */
+@keyframes shootingStarMove {
+  0% {
+    top: -20px;
+    left: -20px;
+    opacity: 0;
+  }
+  10% {
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  50% {
+    top: 100%;
+    left: 100%;
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    top: 120%;
+    left: 120%;
+    opacity: 0;
+  }
+}
+
+.product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 0; /* Remove inner rounding to match card */
+    object-fit: cover;
+    flex-grow: 1;
+    background-color: #444; /* Consistent background behind images */
+}
+
+.product-card .labels {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.product-card .labels h3,
+.product-card .labels p {
+    margin: 5px 0;
+}
+
+.product-card.active {
+    /* Highlight the top card */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    transform: scale(1) translateZ(0);
+    z-index: 3;
+    filter: none; /* No blur */
+}
+
+.product-card.next {
+    /* Style for the second card */
+    transform: scale(0.95) translate(-10px, -20px) rotate(-3deg);
+    z-index: 2;
+    opacity: 0.9;
+    filter: blur(2px);
+}
+
+.product-card.last {
+    /* Style for the third card */
+    transform: scale(0.9) translate(-20px, -40px) rotate(-6deg);
+    z-index: 1;
+    opacity: 0.8;
+    filter: blur(4px);
+}
+
+/* Disable text selection on cards */
+.product-card {
+    user-select: none;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .card-stack {
+        max-width: 90%;
+        height: 350px;
+    }
+
+    .product-card h3 {
+        font-size: 1em;
+    }
+
+    .product-card p {
+        font-size: 0.9em;
+    }
+}
+
+.eco-point {
+  background-color: #10B981;
+  color: white;
+  font-size: 1.5em;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 10px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, margin-top 0.5s ease-in-out;
+  position: relative;
+  width: calc(100% - 20px); /* Same width as the text container */
+  display: none;
+}
+
+.eco-point.visible {
+  opacity: 1;
+  display: block;
+  margin-bottom: 10px;
+}

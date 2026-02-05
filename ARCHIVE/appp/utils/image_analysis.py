@@ -13,7 +13,7 @@ from .tools.recipe import generate_recipe_response
 from .tools.plants import generate_plant_response
 from .tools.biodiversity import generate_biodiversity_response
 from .tools.microscope import generate_microscope_response
-from .tools.barcode import generate_barcode_response
+from ..barcode import generate_barcode_response
 # this file is likely the most critical one. It is used to route the image to the appropriate expert and give the best response to users. 
 # oftentimes, users are not going to want to upload a text prompt, they just want to snap the photo and get the insights. This helps us determine what the user may want
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -26,7 +26,7 @@ def analyze_image(base64_image, spoken_text):
         image_model = genai.GenerativeModel(
             model_name="gemini-1.5-pro",
             generation_config={
-                "temperature": 0.4,
+                "temperature": 0.1,
                 "top_p": 1,
                 "top_k": 32,
                 "max_output_tokens": 1000,

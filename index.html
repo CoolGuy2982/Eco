@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoLens Camera</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/pw/AP1GczNq6vJL8fXDZlrexOD4J7rtafM6K7ZjXZr4Axg-eEpI7CwodvGfTBJE-0EW5HQEvnuKEdJuEacwZ7SA0RIWObeOHQRplu4Y-8PiFqXdjvLK6PZUvRcg9uYg_vH3CW4HgUgGZleEcGaRjFG3vOLzOzB6=w913-h913-s-no-gm?authuser=0">
+    <link rel="manifest" href="/manifest.json">
+     <!-- page for camera-->
+    <script>
+        function redirectBasedOnDevice() 
+        {
+              // Check if the device is a desktop or laptop
+              const isDesktop = window.innerWidth > 1024;
+          
+              if (isDesktop) {
+                // Redirect to the laptop URL
+                window.location.href = "https://www.firley.net/ecolens-redirect";
+              } 
+        }
+      
+        // Call the function to check the device and redirect
+        redirectBasedOnDevice();
+      </script>      
+    <style>
+        .button-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        #enterTextPrompt {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 10;
+        }
+        .navigation-bar {
+            height: 60px;
+        }
+        /* css for camera page */
+.toggle-dot {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  background-color: white;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  transition: transform 0.3s ease-in-out;
+  visibility: hidden;
+}
+
+input:checked ~ .toggle-dot {
+  transform: translateX(34px);
+  visibility: hidden;
+}
+
+.toggle-container {
+  width: 70px;
+  height: 40px;
+  visibility: hidden;
+}
+
+.toggle-container .block {
+  background-color: gray; 
+  visibility: hidden;
+}
+
+input:checked ~ .block {
+  background-color: green; 
+  visibility: hidden;
+}
+
+#loadingAnimation {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#capturedImageContainer {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 10;
+  justify-content: center;
+  align-items: center;
+}
+
+#capturedImage {
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 10;
+}
+
+.safe-area {
+  padding: 10px;
+  padding-top: calc(env(safe-area-inset-top) + 10px);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
+}
+
+.fixed-navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  padding: 12px 0;
+  border-top: 2px solid #E5E7EB;
+  width: 100%;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.button-container {
+  position: fixed;
+  bottom: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  z-index: 11;
+}
+
+.top-container {
+  font-size: 1.5rem;
+  padding: 1rem;
+  margin-top: 10px;
+}
+
+.toggle-container {
+  width: 70px;
+  height: 40px;
+}
+
+.icon-size {
+  font-size: 2rem;
+}
+
+.menu-bar {
+  display: none;
+  position: fixed;
+  bottom: calc(20vh + 4rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 11;
+}
+
+.menu-bar.active {
+  display: flex;
+  gap: 1rem;
+}
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  backdrop-filter: blur(10px);
+  opacity: 65;
+  padding: 10px;
+  z-index: 15;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.triangle-btn {
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.triangle-btn.up::before, .triangle-btn.down::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: solid #000000;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+}
+
+.triangle-btn.up::before {
+  transform: rotate(-135deg);
+}
+
+.triangle-btn.down::before {
+  transform: rotate(45deg);
+}
+
+#takePhotoButton {
+  background-color: white;
+  border-radius: 50%;
+  border: 2px solid lightgray;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: pulse 2s infinite;
+  bottom: 5%;
+}
+
+#enterTextPrompt {
+  bottom: 18%; /* Align vertically with takePhotoButton */
+  background-color: white;
+  border-radius: 50%;
+  padding: 4px;
+  right: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+}
+
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+#focusBox {
+  width: 200px;
+  height: 200px;
+  margin-top: 150vh;
+}
+
+#zoomSlider {
+  width: 200px;
+  margin-top: 10px;
+}
+
+
+#zoomContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 150vh;
+}
+
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bouncing-loader > div {
+  width: 15px;
+  height: 15px;
+  margin: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+
+.bouncing-loader > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bouncing-loader > div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bouncing-loader {
+  to {
+    opacity: 0.1;
+    transform: translate3d(0, -1rem, 0);
+  }
+}
+
+#textPromptModal {
+  z-index: 20;
+}
+
+#browserWarningModal {
+  z-index: 30;
+}
+
+#browserWarningOkButton {
+  margin-top: 20px;
+}
+
+#video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh; 
+  object-fit: cover; 
+}
+
+#videoModeToggle {
+  position: fixed;
+  bottom: 18%;
+  left: 5%;
+  background-color: white;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  z-index: 5;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hidden {
+  display: none;
+}
+
+#recordVideoButton {
+  border: 4px solid white;
+  border-radius: 50%;
+  background-color: transparent;
+  height: 80px;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#recordVideoButton i {
+  border-radius: 50%;
+  background-color: red;
+  width: 60px;
+  height: 60px; 
+  transition: all 0.3s ease;
+}
+
+#recordVideoButton.active i {
+  border-radius: 15%;
+  width: 40px;
+  height: 40px; 
+}
+
+.suggested-prompt {
+  border: 2px solid;
+  padding: 8px 16px;
+  border-radius: 12px; /*changed to a more rectangular, rounded corner */
+  background-color: transparent;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  flex: 1 1 45%;
+  text-align: center;
+  min-width: 120px;
+}
+
+.suggested-prompt:hover {
+  background-color: currentColor;
+  color: white;
+}
+
+#saveTextPrompt {
+  background-color: black;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
+
+.text-prompt-button {
+  background-color: white;
+  border-radius: 50%;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  right: 50%;
+  transform: translate(140px, -40px);
+}
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="top-bar fixed top-0 left-0 right-0 bg-white bg-opacity-65 backdrop-blur-md p-2 z-15 shadow-md flex justify-center items-center">
+        <div class="triangle-btn up" id="toggleMenu"></div>
+    </div>
+
+    <div class="relative w-full h-screen">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+            <video id="video" autoplay playsinline class="absolute top-0 left-0 w-full h-full object-cover"></video>
+        </div>
+        <div id="capturedImageContainer" class="absolute flex items-center justify-center w-full h-full">
+            <img id="capturedImage" src="" alt="Captured image" class="object-cover h-full">
+        </div>
+        <div id="loadingAnimation" class="absolute flex items-center justify-center w-full h-full">
+            <div class="bouncing-loader">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+        <div id="focusBox" class="absolute border-2 border-yellow-500 hidden"></div>
+        <div id="zoomContainer" class="absolute hidden">
+            <input type="range" id="zoomSlider" min="1" max="3" step="0.1">
+        </div>
+
+        <div class="">
+            <label for="toggleSwitch" class="">
+                <div class="relative toggle-container">
+                    <input type="checkbox" id="toggleSwitch" class="sr-only">
+                    <div class=""></div>
+                    <div class="toggle-dot"></div>
+                </div>
+            </label>
+        </div>
+
+        <div id="menuBar" class="menu-bar">
+            <label for="uploadButton" class="bg-white rounded-full p-4">
+                <i class="fas fa-images text-gray-800 text-2xl"></i>
+                <input type="file" id="uploadButton" class="hidden">
+            </label>
+            <button id="switchCameraButton" class="bg-white rounded-full p-4">
+                <i class="fas fa-sync-alt text-gray-800 text-2xl"></i>
+            </button>
+        </div>
+
+        <div id="buttonContainerCamera" class="button-container">
+            <button id="takePhotoButton" class="bg-white rounded-full p-4">
+                <i class=""></i>
+            </button>
+        </div>
+
+        <div id="enterTextPrompt" class="bg-white rounded-full p-4">
+            <i class="fas fa-keyboard text-gray-800 text-2xl"></i>
+        </div>        
+
+        <div id="textPromptModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-4">
+                <label for="textPrompt" class="block text-lg font-semibold mb-2">Add Relevant Information:</label>
+                <textarea id="textPrompt" class="w-full p-2 border rounded mb-4 h-28 resize-none" placeholder="Describe your object or ask a relevant question"></textarea>
+                
+                <div class="mb-2">
+                    <h4 class="text-sm font-semibold mb-1">Suggested Prompts:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="suggested-prompt border-green-500 text-green-500" onclick="document.getElementById('textPrompt').value='What is the sustainability rating of this item?'">Sustainability Rating</button>
+                        <button class="suggested-prompt border-blue-500 text-blue-500" onclick="document.getElementById('textPrompt').value='How can I recycle this product?'">Recycle Information</button>
+                        <button class="suggested-prompt border-yellow-500 text-yellow-500" onclick="document.getElementById('textPrompt').value='What are the environmental impacts of this item?'">Environmental Impact</button>
+                    </div>
+                </div>
+        
+                <div class="flex justify-center space-x-4">
+                    <button id="cancelTextPrompt" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                    <button id="saveTextPrompt" class="bg-black text-white px-4 py-2 rounded">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="browserWarningModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center w-80">
+                <p class="text-lg text-gray-700 mb-4">Voice Mode is not available here yet, but when it will be, it'll be amazing</p>
+                <button id="browserWarningOkButton" class="bg-gray-700 text-white px-4 py-2 rounded">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-x-0 bottom-0 bg-white bg-opacity-65 backdrop-blur-md py-2 navigation-bar">
+        <nav class="flex justify-around items-center text-gray-600 h-full">
+            <a href="/home" class="text-center">
+                <i class="fas fa-home fa-lg"></i>
+                <p class="text-xs mt-1">Home</p>
+            </a>
+            <a href="/camera" class="text-center">
+                <i class="fas fa-camera fa-lg" style="color: #008080;"></i>
+                <p class="text-xs mt-1">Scan</p>
+            </a>
+            <a href="/browse" class="text-center">
+                <i class="fas fa-th-large fa-lg"></i>
+                <p class="text-xs mt-1">Apps</p>
+            </a>
+        </nav>
+    </div>
+
+    <canvas id="canvas" class="hidden"></canvas>
+    <script>
+        // js code to manage the camera page such as camera functionality, uploading, context, zoom, and more
+document.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const uploadButton = document.getElementById('uploadButton');
+    const loadingAnimation = document.getElementById('loadingAnimation');
+    const capturedImageContainer = document.getElementById('capturedImageContainer');
+    const capturedImage = document.getElementById('capturedImage');
+    const context = canvas.getContext('2d');
+    const toggleSwitch = document.getElementById('toggleSwitch');
+    const takePhotoButton = document.getElementById('takePhotoButton');
+    const switchCameraButton = document.getElementById('switchCameraButton');
+    const enterTextPrompt = document.getElementById('enterTextPrompt');
+    const menuBar = document.getElementById('menuBar');
+    const toggleMenu = document.getElementById('toggleMenu');
+    const focusBox = document.getElementById('focusBox');
+    const zoomSlider = document.getElementById('zoomSlider');
+    const zoomContainer = document.getElementById('zoomContainer');
+    const textPromptModal = document.getElementById('textPromptModal');
+    const textPromptInput = document.getElementById('textPrompt');
+    const cancelTextPrompt = document.getElementById('cancelTextPrompt');
+    const saveTextPrompt = document.getElementById('saveTextPrompt');
+    const browserWarningModal = document.getElementById('browserWarningModal');
+    const browserWarningOkButton = document.getElementById('browserWarningOkButton');
+    let stream = null;
+    let imageCapture = null;
+    let recognition;
+    let audioContext;
+    let analyser;
+    let microphone;
+    let audioWorkletNode;
+    let isVoiceMode = localStorage.getItem('isVoiceMode') === 'true';
+    let textPrompt = null;
+    let zoomLevel = 1;
+    let focusBoxTimeout;
+    let zoomSliderTimeout;
+    let debounceTimeout;
+    let isFocusBoxUsed = false;
+
+    const initialize = () => {
+        if (!isMobileDevice()) {
+            window.location.href = 'https://www.firley.net/products/ecolens-redirect';
+        }
+        setupEventListeners();
+    
+        // we are delaying setup to help android handle the initial camera load better
+        setTimeout(() => {
+            if (localStorage.getItem('permissionsGranted') === 'true') {
+                setupMediaStream();
+            } else {
+                checkPermissions();
+            }
+        }, 200);
+    };
+    
+
+    const isMobileDevice = () => {
+        return /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+    };
+
+    const checkPermissions = async () => {
+        const permissionsGranted = localStorage.getItem('permissionsGranted') === 'true';
+        const permissionsGrantedAt = parseInt(localStorage.getItem('permissionsGrantedAt'), 10);
+        const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+        const isPermissionsValid = Date.now() - permissionsGrantedAt < thirtyDaysInMilliseconds;
+
+        if (permissionsGranted && isPermissionsValid) {
+            setupMediaStream();
+            return;
+        }
+
+        try {
+            const cameraPermission = await navigator.permissions.query({ name: 'camera' });
+            const microphonePermission = await navigator.permissions.query({ name: 'microphone' });
+
+            if (cameraPermission.state === 'granted' && microphonePermission.state === 'granted') {
+                setupMediaStream();
+            } else {
+                requestPermissions();
+            }
+        } catch (error) {
+            console.error('Error checking permissions:', error);
+            requestPermissions(); 
+        }
+    };
+
+    const requestPermissions = async () => {
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            if (mediaStream) {
+                localStorage.setItem('permissionsGranted', 'true');
+                localStorage.setItem('permissionsGrantedAt', Date.now().toString());
+                setupMediaStream();
+            }
+        } catch (error) {
+            console.error('Error requesting camera and microphone permissions:', error);
+        }
+    };
+
+    let preferredCameraFacing = 'environment'; // weca n store preferred initial camera
+
+    const setupMediaStream = async () => {
+        if (stream) {
+            video.srcObject = stream;
+            video.play();
+            return;
+        }
+    
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: preferredCameraFacing,
+                    width: { min: 1280, ideal: 1920, max: 3840 },
+                    height: { min: 720, ideal: 1080, max: 2160 },
+                    frameRate: { ideal: 30, max: 60 }
+                }
+            });
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.setAttribute('playsinline', true);  // inline display on mobile
+            video.play();
+            imageCapture = new ImageCapture(stream.getVideoTracks()[0]);
+            if (isVoiceMode) {
+                startAudioProcessing();
+            }
+        } catch (error) {
+            console.error(`Error accessing ${preferredCameraFacing} camera. Retrying...`, error);
+    
+            // Retry with the environment-facing camera on failure
+            if (preferredCameraFacing === 'environment') {
+                try {
+                    const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: {
+                            facingMode: 'environment',
+                            width: { min: 1280, ideal: 1920, max: 3840 },
+                            height: { min: 720, ideal: 1080, max: 2160 },
+                            frameRate: { ideal: 30, max: 60 }
+                        }
+                    });
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.play();
+                } catch (retryError) {
+                    console.error('Retry for environment camera failed. Using user-facing camera instead.', retryError);
+                    const mediaStream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            facingMode: 'user',
+                            width: { min: 1280, ideal: 1920, max: 3840 },
+                            height: { min: 720, ideal: 1080, max: 2160 },
+                            frameRate: { ideal: 30, max: 60 }
+                        }
+                    });
+                    stream = mediaStream;
+                    video.srcObject = stream;
+                    video.play();
+                }
+            }
+        }
+    };
+    
+
+    
+
+    const stopMediaStream = () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        if (recognition) {
+            recognition.stop();
+        }
+        if (audioContext) {
+            audioContext.close();
+        }
+        stream = null;
+        recognition = null;
+        audioContext = null;
+    };
+
+    const handleVisibilityChange = () => {
+        if (document.hidden) {
+            stopMediaStream();
+        } else {
+            // refresh the camera if permissions are granted and the page is back in focus
+            if (localStorage.getItem('permissionsGranted') === 'true') {
+                setupMediaStream();
+            }
+        }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+
+    const captureImageAndSend = () => {
+        enterTextPrompt.style.display = 'none';
+        loadingAnimation.style.display = 'flex';
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+        if (isFocusBoxUsed) {
+            const boxRect = focusBox.getBoundingClientRect();
+            const videoRect = video.getBoundingClientRect();
+    
+            const scaleX = video.videoWidth / videoRect.width;
+            const scaleY = video.videoHeight / videoRect.height;
+    
+            const x = (boxRect.left - videoRect.left) * scaleX;
+            const y = (boxRect.top - videoRect.top) * scaleY;
+            const size = Math.min(boxRect.width, boxRect.height) * scaleX; 
+    
+            context.strokeStyle = 'red';
+            context.lineWidth = 5;
+            context.strokeRect(x, y, size, size);
+        }
+
+        const imageData = canvas.toDataURL('image/jpeg');
+    
+        sessionStorage.setItem('capturedImage', imageData);
+    
+        displayCapturedImage(imageData);
+    
+        sendImageToServer(imageData, textPrompt);
+        textPrompt = null;
+        isFocusBoxUsed = false;
+    };
+    
+
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const imageData = e.target.result;
+            sessionStorage.setItem('capturedImage', imageData);
+            displayCapturedImage(imageData);
+            sendImageToServer(imageData, textPrompt);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const sendImageToServer = (imageData, spokenText) => {
+        console.log('Sending image and spoken text to server:', spokenText);
+        loadingAnimation.style.display = 'flex';
+
+        let photoID = null;
+
+        fetch('/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: imageData.split(',')[1] })
+        })
+        .then(response => response.json())
+        .then(data => {
+            photoID = data.photoID;
+
+            return fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData.split(',')[1], text: spokenText || '', photoID: photoID })
+            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            data.photoID = photoID;
+            sessionStorage.setItem('AIResponse', JSON.stringify(data));
+            window.location.href = '/analysis';
+        })
+        .catch(err => {
+            console.error('Error sending image:', err);
+            loadingAnimation.style.display = 'none';
+        });
+    };
+
+    const startVoiceRecognition = () => {
+        recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+            clearTimeout(debounceTimeout);
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    console.log('Final transcript:', transcript);
+                    textPrompt = transcript;
+                    stopVoiceRecognition();
+                    captureImageAndSend();
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+        };
+
+        recognition.onstart = () => {
+            startAudioProcessing();
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Voice recognition error:', event.error);
+            if (event.error === 'no-speech') {
+                if (isVoiceMode) {
+                    startVoiceRecognition();
+                }
+            } else {
+                if (event.error !== 'aborted') {
+                    startVoiceRecognition();
+                }
+            }
+        };
+
+        recognition.onend = () => {
+            console.log('Voice recognition ended');
+            if (isVoiceMode && !textPrompt) {
+                startVoiceRecognition();
+            }
+        };
+
+        recognition.start();
+    };
+
+    const stopVoiceRecognition = () => {
+        if (recognition) {
+            recognition.onend = null;
+            recognition.stop();
+            recognition = null;
+        }
+        if (audioContext) {
+            audioContext.close();
+            audioContext = null;
+        }
+    };
+
+    const startAudioProcessing = async () => {
+        if (audioContext) audioContext.close();
+
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+
+        try {
+            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            microphone = audioContext.createMediaStreamSource(audioStream);
+
+            await audioContext.audioWorklet.addModule('voice-processor.js');
+            audioWorkletNode = new AudioWorkletNode(audioContext, 'voice-processor');
+
+            microphone.connect(analyser);
+            analyser.connect(audioWorkletNode);
+            audioWorkletNode.connect(audioContext.destination);
+
+            audioWorkletNode.port.onmessage = (event) => {
+                const average = event.data;
+                updateVoiceAnimation(average);
+            };
+        } catch (error) {
+            console.error('Error accessing microphone: ', error);
+        }
+    };
+
+    const updateVoiceAnimation = (volume) => {
+        // update voice animation based on volume if we actually get around to doing htis 
+    };
+
+    const toggleMode = () => {
+        var userAgent = navigator.userAgent;
+        var isWebView = /(iPhone|iPod|iPad|Android).*(AppleWebKit(?!.*Safari)|Version\/4.0 Chrome\/[.0-9]* Mobile Safari\/[.0-9]*$)/.test(userAgent);
+    
+        var isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+    
+        if (isWebView || isSafari) {
+            toggleSwitch.checked = false;
+            showBrowserWarning();
+        } else {
+            isVoiceMode = !isVoiceMode;
+            localStorage.setItem('isVoiceMode', isVoiceMode);
+            if (isVoiceMode) {
+                startVoiceRecognition();
+                switchToVoiceMode();
+            } else {
+                stopVoiceRecognition();
+                switchToCameraMode();
+            }
+        }
+    }; 
+    
+
+    const switchToVoiceMode = () => {
+        document.getElementById('buttonContainerCamera').style.display = 'none';
+        capturedImageContainer.style.display = 'none';
+        video.style.display = 'block';
+    };
+
+    const switchToCameraMode = () => {
+        document.getElementById('buttonContainerCamera').style.display = 'flex';
+    };
+
+    const showBrowserWarning = () => {
+        browserWarningModal.classList.remove('hidden');
+    };
+
+    const setupEventListeners = () => {
+        toggleSwitch.addEventListener('change', toggleMode);
+        uploadButton.addEventListener('change', handleImageUpload);
+        takePhotoButton.addEventListener('click', captureImageAndSend);
+        switchCameraButton.addEventListener('click', switchCamera);
+        enterTextPrompt.addEventListener('click', () => {
+            openTextPromptModal();
+        });
+        cancelTextPrompt.addEventListener('click', closeTextPromptModal);
+        saveTextPrompt.addEventListener('click', saveTextPromptModal);
+        browserWarningOkButton.addEventListener('click', () => {
+            browserWarningModal.classList.add('hidden');
+        });
+
+        toggleMenu.addEventListener('click', () => {
+            if (menuBar.classList.contains('active')) {
+                menuBar.classList.remove('active');
+                toggleMenu.classList.remove('down');
+                toggleMenu.classList.add('up');
+                takePhotoButton.style.bottom = '15vh';
+            } else {
+                menuBar.classList.add('active');
+                toggleMenu.classList.remove('up');
+                toggleMenu.classList.add('down');
+                takePhotoButton.style.bottom = 'calc(15vh + 5rem)';
+            }
+        });
+
+        video.addEventListener('click', (event) => {
+            console.log("Video was clicked");
+            focusBox.style.marginTop = '0vh';
+            zoomContainer.style.marginTop = '0vh';
+            const rect = video.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const size = 100;
+
+            focusBox.style.left = `${x - size / 2}px`;
+            focusBox.style.top = `${y - size / 2}px`;
+            focusBox.style.width = `${size}px`;
+            focusBox.style.height = `${size}px`;
+            focusBox.style.display = 'block'; 
+
+            zoomContainer.style.left = `${x - 100}px`;
+            zoomContainer.style.top = `${y + 110}px`;
+            zoomContainer.style.display = 'flex'; 
+            
+            resetFocusBoxTimeout();
+            resetZoomSliderTimeout();
+            isFocusBoxUsed = true;
+        });
+
+        zoomSlider.addEventListener('input', (event) => {
+            zoomLevel = event.target.value;
+            updateZoom();
+            resetZoomSliderTimeout();
+        });
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    };
+
+    const resetFocusBoxTimeout = () => {
+        clearTimeout(focusBoxTimeout);
+        focusBoxTimeout = setTimeout(() => {
+            focusBox.classList.add('hidden');
+        }, 10000);
+    };
+
+    const resetZoomSliderTimeout = () => {
+        clearTimeout(zoomSliderTimeout);
+        zoomSliderTimeout = setTimeout(() => {
+            zoomContainer.classList.add('hidden');
+        }, 10000);
+    };
+
+    const updateZoom = () => {
+        const videoRect = video.getBoundingClientRect();
+        const boxRect = focusBox.getBoundingClientRect();
+        const offsetX = (boxRect.left + boxRect.width / 2) - (videoRect.left + videoRect.width / 2);
+        const offsetY = (boxRect.top + boxRect.height / 2) - (videoRect.top + videoRect.height / 2);
+        const transformOrigin = `${50 + (offsetX / videoRect.width) * 100}% ${50 + (offsetY / videoRect.height) * 100}%`;
+        video.style.transformOrigin = transformOrigin;
+        video.style.transform = `scale(${zoomLevel})`;
+    };
+
+    const switchCamera = async () => {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        const constraints = {
+            video: { facingMode: (video.getAttribute('data-facing-mode') === 'user' ? 'environment' : 'user') }
+        };
+        const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.setAttribute('data-facing-mode', constraints.video.facingMode);
+        stream = mediaStream;
+        video.srcObject = stream;
+        video.play();
+    };
+
+    const openTextPromptModal = () => {
+        textPromptInput.value = textPrompt || '';
+        textPromptModal.classList.remove('hidden');
+    };
+
+    const closeTextPromptModal = () => {
+        textPromptModal.classList.add('hidden');
+    };
+
+    const saveTextPromptModal = () => {
+        textPrompt = textPromptInput.value;
+        closeTextPromptModal();
+    };
+
+    const displayCapturedImage = (imageData) => {
+        capturedImage.src = imageData;
+
+        capturedImageContainer.style.display = 'flex';
+        capturedImage.style.width = '100%';
+        capturedImage.style.height = '100%';
+        capturedImage.style.objectFit = 'cover';
+    
+        video.style.display = 'none';
+    
+        // hide the loading animation
+        loadingAnimation.style.display = 'none';
+    
+        document.getElementById('buttonContainerCamera').style.display = 'none';
+    
+        document.body.style.overflow = 'hidden';
+    };
+    
+
+    initialize();
+});
+
+document.getElementById('takePhotoButton').addEventListener('click', function() {
+    document.getElementById('capturedImageContainer').style.display = 'flex';
+});
+    </script>
+</body>
+</html>

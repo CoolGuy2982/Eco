@@ -12,3 +12,5 @@ Lib
 Scripts
 data/
 AQA.py
+env
+tmp
