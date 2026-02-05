@@ -33,8 +33,8 @@ EcoLens is an open-source mobile web app designed to help people live more susta
 
 ### Prerequisites  
 - Python 3.8+  
-- Flask  
-- Node.js (if using npm for JS dependencies)  
+- Flask
+- Google Cloud Credentials and Gemini API key
 
 ### Steps  
 1. **Clone the Repository**:  
@@ -89,4 +89,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact 📧  
 For questions or support, reach out to us at:  
-**Email**: hello@firley.org  
+**Email**: firleycompany@gmail.com
